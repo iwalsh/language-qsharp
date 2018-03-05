@@ -1,0 +1,21 @@
+{
+  "name": "language-qsharp",
+  "version": "0.0.0",
+  "description": "Q# language support in Atom",
+  "engines": {
+    "atom": "*"
+  },
+  "keywords": [
+    "Q#",
+    "qsharp"
+  ],
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iwalsh/language-qsharp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/iwalsh/language-qsharp/issues"
+  },
+  "license": "MIT"
+}
