@@ -1,6 +1,8 @@
 "scopeName": "source.qsharp"
 "name": "Q#"
-"fileTypes": ["qs"]
+"fileTypes": [
+  "qs"
+],
 "patterns": [
   {
     "include": "#comment"
@@ -39,7 +41,7 @@
             "end": "(?=$)",
             "patterns": [
               {
-                "include": "#markdown-doc-comment"
+                "include": "#documentation-comment"
               }
             ]
           }
@@ -47,9 +49,40 @@
       }
     ]
   },
-  "markdown-doc-comment": {
+  "documentation-comment": {
+    # TODO: Is there a way to include the Markdown grammar here?
     "patterns": [
-      
+      {
+        "include": "#documentation-comment-header"
+      },
+      {
+        "include": "#documentation-comment-cross-reference"
+      }
     ]
+  },
+  "documentation-comment-header": {
+    "name": "markup.heading.1.md.qsharp"
+    "begin": "\\s*(#)\\s+",
+    "beginCaptures": {
+      "1": {
+        "name": "punctuation.definition.comment-header.qsharp"
+      }
+    }
+    "end": "\\s*(?=$)"
+  },
+  "documentation-comment-cross-reference": {
+    "name": "markup.underline.link.qsharp"
+    "begin": "@\"",
+    "beginCaptures": {
+      "0": {
+        "name": "punctuation.definition.cross-reference.begin.qsharp"
+      }
+    }
+    "end": "\"",
+    "endCaptures": {
+      "0": {
+        "name": "punctuation.definition.cross-reference.end.qsharp"
+      }
+    }
   }
 }

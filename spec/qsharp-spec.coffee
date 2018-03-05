@@ -40,6 +40,7 @@ describe "Q# grammar", ->
 
     it "does not include subsequent lines in the comment", ->
       tokens = grammar.tokenizeLines "// Comment!\nNot a comment"
+
       # Line 0
       expect(tokens[0][0].value).toBe "//"
       expect(tokens[0][1].value).toBe " Comment!"
@@ -70,3 +71,52 @@ describe "Q# grammar", ->
       expect(tokens.length).toBe 3
       expect(tokens[0].value).toBe "   "
       expect(tokens[0].scopes).toEqual ["source.qsharp", "punctuation.whitespace.comment.leading.qsharp"]
+
+    it "does not include leading content in the comment", ->
+      {tokens} = grammar.tokenizeLine "Not a comment /// Comment!"
+
+      expect(tokens.length).toBe 3
+      expect(tokens[0].value).toBe "Not a comment "
+      expect(tokens[0].scopes).toEqual ["source.qsharp"]
+      expect(tokens[1].value).toBe "///"
+      expect(tokens[2].value).toBe " Comment!"
+
+    it "does not include subsequent lines in the comment", ->
+      tokens = grammar.tokenizeLines "/// Comment!\nNot a comment"
+
+      # Line 0
+      expect(tokens[0][0].value).toBe "///"
+      expect(tokens[0][1].value).toBe " Comment!"
+      # Line 1
+      expect(tokens[1][0].value).toBe "Not a comment"
+      expect(tokens[1][0].scopes).toEqual ["source.qsharp"]
+
+    it "ignores extra slashes in the comment body", ->
+      {tokens} = grammar.tokenizeLine "/// Comment! // The same comment"
+
+      expect(tokens.length).toBe 2
+      expect(tokens[0].value).toBe "///"
+      expect(tokens[1].value).toBe " Comment! // The same comment"
+      expect(tokens[1].scopes).toEqual ["source.qsharp", "comment.block.documentation.qsharp"]
+
+    it "tokenizes Markdown headers", ->
+      {tokens} = grammar.tokenizeLine "/// # Summary "
+
+      expect(tokens.length).toBe 6
+      expect(tokens[0].value).toBe "///"
+      expect(tokens[2].value).toBe "#"
+      expect(tokens[2].scopes).toEqual ["source.qsharp", "comment.block.documentation.qsharp", "markup.heading.1.md.qsharp", "punctuation.definition.comment-header.qsharp"]
+      expect(tokens[4].value).toBe "Summary"
+      expect(tokens[4].scopes).toEqual ["source.qsharp", "comment.block.documentation.qsharp", "markup.heading.1.md.qsharp"]
+
+    it "tokenizes cross-references", ->
+      {tokens} = grammar.tokenizeLine "/// Check out @\"MyFile\""
+
+      expect(tokens.length).toBe 5
+      expect(tokens[0].value).toBe "///"
+      expect(tokens[2].value).toBe "@\""
+      expect(tokens[2].scopes).toEqual ["source.qsharp", "comment.block.documentation.qsharp", "markup.underline.link.qsharp", "punctuation.definition.cross-reference.begin.qsharp"]
+      expect(tokens[3].value).toBe "MyFile"
+      expect(tokens[3].scopes).toEqual ["source.qsharp", "comment.block.documentation.qsharp", "markup.underline.link.qsharp"]
+      expect(tokens[4].value).toBe "\""
+      expect(tokens[4].scopes).toEqual ["source.qsharp", "comment.block.documentation.qsharp", "markup.underline.link.qsharp", "punctuation.definition.cross-reference.end.qsharp"]
