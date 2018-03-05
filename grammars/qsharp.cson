@@ -1,24 +1,55 @@
-'scopeName': 'source.qs'
-'name': 'Q#'
-'fileTypes': ['qs']
-'patterns': [
+"scopeName": "source.qsharp"
+"name": "Q#"
+"fileTypes": ["qs"]
+"patterns": [
   {
-    'include': '#comment'
+    "include": "#comment"
   }
 ],
-'repository': {
-  'comment': {
-    'patterns': [
+"repository": {
+  "comment": {
+    "patterns": [
       {
-          'name': 'comment.line.double-slash.qs',
-          'begin': '(?<!/)//(?!/)',
-          'beginCaptures': {
-            '0': {
-              'name': 'punctuation.definition.comment.qs'
-            }
+        "begin": "(^\\s+)?(?=//)",
+        "beginCaptures": {
+          "1": {
+            "name": "punctuation.whitespace.comment.leading.qsharp"
+          }
+        },
+        "end": "(?=$)",
+        "patterns": [
+          {
+            "name": "comment.line.double-slash.qsharp",
+            "begin": "(?<!/)//(?!/)",
+            "beginCaptures": {
+              "0": {
+                "name": "punctuation.definition.comment.qsharp"
+              }
+            },
+            "end": "(?=$)"
           },
-        'end': '(?=$)'
+          {
+            "name": "comment.block.documentation.qsharp",
+            "begin": "(?<!/)///(?!/)",
+            "beginCaptures": {
+              "0": {
+                "name": "punctuation.definition.comment.qsharp"
+              }
+            },
+            "end": "(?=$)",
+            "patterns": [
+              {
+                "include": "#markdown-doc-comment"
+              }
+            ]
+          }
+        ]
       }
+    ]
+  },
+  "markdown-doc-comment": {
+    "patterns": [
+      
     ]
   }
 }
