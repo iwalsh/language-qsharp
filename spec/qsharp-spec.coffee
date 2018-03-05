@@ -120,3 +120,60 @@ describe "Q# grammar", ->
       expect(tokens[3].scopes).toEqual ["source.qsharp", "comment.block.documentation.qsharp", "markup.underline.link.qsharp"]
       expect(tokens[4].value).toBe "\""
       expect(tokens[4].scopes).toEqual ["source.qsharp", "comment.block.documentation.qsharp", "markup.underline.link.qsharp", "punctuation.definition.cross-reference.end.qsharp"]
+
+    it "ignores pound signs in the comment body", ->
+      {tokens} = grammar.tokenizeLine "/// My favorite language is Q#"
+
+      expect(tokens.length).toBe 2
+      expect(tokens[0].value).toBe "///"
+      expect(tokens[1].value).toBe " My favorite language is Q#"
+
+    it "does not tokenize Markdown headers other than `#`", ->
+      {tokens} = grammar.tokenizeLine "/// ## Level 2 header"
+      expect(tokens.length).toBe 2
+      expect(tokens[0].value).toBe "///"
+      expect(tokens[1].value).toBe " ## Level 2 header"
+
+  describe '`return` statement', ->
+    it "tokenizes the keyword", ->
+      {tokens} = grammar.tokenizeLine "return ();"
+
+      expect(tokens.length).toBe 3
+      expect(tokens[0].value).toBe "return"
+      expect(tokens[0].scopes).toEqual ["source.qsharp", "keyword.control.flow.return.qsharp"]
+
+  describe '`if` statement', ->
+    it "tokenizes the keyword and punctuation", ->
+      {tokens} = grammar.tokenizeLine "if (i == 1) { X(target); }"
+
+      expect(tokens.length).toBe(10)
+      expect(tokens[0].value).toBe "if"
+      expect(tokens[0].scopes).toEqual ["source.qsharp", "keyword.control.conditional.if.qsharp"]
+      expect(tokens[2].value).toBe "("
+      expect(tokens[2].scopes).toEqual ["source.qsharp", "punctuation.parenthesis.open.qsharp"]
+      expect(tokens[8].value).toBe ")"
+      expect(tokens[8].scopes).toEqual ["source.qsharp", "punctuation.parenthesis.close.qsharp"]
+
+    it "tokenizes `elif` branches", ->
+      {tokens} = grammar.tokenizeLine "elif (i == 2) { Y(target); }"
+
+      expect(tokens.length).toBe(10)
+      expect(tokens[0].value).toBe "elif"
+      expect(tokens[0].scopes).toEqual ["source.qsharp", "keyword.control.conditional.elif.qsharp"]
+      expect(tokens[2].value).toBe "("
+      expect(tokens[2].scopes).toEqual ["source.qsharp", "punctuation.parenthesis.open.qsharp"]
+      expect(tokens[8].value).toBe ")"
+      expect(tokens[8].scopes).toEqual ["source.qsharp", "punctuation.parenthesis.close.qsharp"]
+
+    it "tokenizes `else` branches", ->
+      {tokens} = grammar.tokenizeLine "else { Z(target); }"
+
+      expect(tokens.length).toBe 2
+      expect(tokens[0].value).toBe "else"
+      expect(tokens[0].scopes).toEqual ["source.qsharp", "keyword.control.conditional.else.qsharp"]
+
+    # FIXME
+    # it "does not match bodies without curly braces", ->
+    #   {tokens} = grammar.tokenizeLine "if (i == 1) X(target);"
+    #
+    #   expect(tokens[0].value).not.toBe "if"

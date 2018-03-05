@@ -6,6 +6,9 @@
 "patterns": [
   {
     "include": "#comment"
+  },
+  {
+    "include": "#statement"
   }
 ],
 "repository": {
@@ -21,6 +24,7 @@
         "end": "(?=$)",
         "patterns": [
           {
+            # Double-slash comments
             "name": "comment.line.double-slash.qsharp",
             "begin": "(?<!/)//(?!/)",
             "beginCaptures": {
@@ -31,6 +35,7 @@
             "end": "(?=$)"
           },
           {
+            # Documentation (triple-slash) comments
             "name": "comment.block.documentation.qsharp",
             "begin": "(?<!/)///(?!/)",
             "beginCaptures": {
@@ -62,7 +67,7 @@
   },
   "documentation-comment-header": {
     "name": "markup.heading.1.md.qsharp"
-    "begin": "\\s*(#)\\s+",
+    "begin": "\\G\\s*(#)\\s+",
     "beginCaptures": {
       "1": {
         "name": "punctuation.definition.comment-header.qsharp"
@@ -84,5 +89,95 @@
         "name": "punctuation.definition.cross-reference.end.qsharp"
       }
     }
-  }
+  },
+  "statement": {
+    "patterns": [
+      {
+        "include": "#comment"
+      },
+      {
+        "include": "#return-statement"
+      }
+      {
+        "include": "#if-statement"
+      },
+      {
+        "include": "#else-part"
+      },
+      {
+        "include": "#for-statement"
+      },
+      {
+        "include": "#repeat-statement"
+      },
+    ]
+  },
+  "return-statement": {
+    "begin": "(?<!\\.)\\b(return)\\b",
+    "beginCaptures": {
+      "1": {
+        "name": "keyword.control.flow.return.qsharp"
+      }
+    },
+    "end": "(?=;)"
+    # TODO: inner patterns
+    "patterns": [
+      {
+        "include": "#ref-modifier"
+      },
+      {
+        "include": "#expression"
+      }
+    ]
+  },
+  "if-statement": {
+    "begin": "(?<!\\.)\\b(if)|(elif)\\b\\s*(?=\\()",
+    "beginCaptures": {
+      "1": {
+        "name": "keyword.control.conditional.if.qsharp"
+      },
+      "2": {
+        "name": "keyword.control.conditional.elif.qsharp"
+      },
+    },
+    "end": "(?<=\\})",
+    "patterns": [
+      {
+        "begin": "\\(",
+        "beginCaptures": {
+          "0": {
+            "name": "punctuation.parenthesis.open.qsharp"
+          }
+        },
+        "end": "\\)",
+        "endCaptures": {
+          "0": {
+            "name": "punctuation.parenthesis.close.qsharp"
+          }
+        },
+        "patterns": [
+          {
+            "include": "#expression"
+          }
+        ]
+      },
+      {
+        "include": "#statement"
+      }
+    ]
+  },
+  "else-part": {
+    "begin": "(?<!\\.)\\b(else)\\b",
+    "beginCaptures": {
+      "1": {
+        "name": "keyword.control.conditional.else.qsharp"
+      }
+    },
+    "end": "(?<=\\})",
+    "patterns": [
+      {
+        "include": "#statement"
+      }
+    ]
+  },
 }
