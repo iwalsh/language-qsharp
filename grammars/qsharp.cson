@@ -110,6 +110,12 @@
       {
         "include": "#repeat-statement"
       },
+      {
+        "include": "#until-statement"
+      },
+      {
+        "include": "#fail-statement"
+      }
     ]
   },
   "return-statement": {
@@ -221,6 +227,54 @@
           }
         ]
       },
+    ]
+  },
+  "repeat-statement": {
+    "begin": "(?<!\\.)\\b(repeat)\\b",
+    "beginCaptures": {
+      "1": {
+        "name": "keyword.control.loop.repeat.qsharp"
+      }
+    },
+    "end": "(?=;|})",  # TODO: should semicolons be allowed?
+    "patterns": [
+      {
+        "include": "#statement"
+      }
+    ]
+  },
+  "until-statement": {
+    "begin": "(?<!\\.)\\b(until)\\b\\s*",
+    "beginCaptures": {
+      "1": {
+        "name": "keyword.control.loop.until.qsharp"
+      }
+    },
+    "end": "(?<!\\.)\\b(fixup)\\b\\s*",  # TODO: what about the fixup block?
+    "endCaptures": {
+      "1": {
+        # TODO: Should `fixup` be captured in its own statement, "begin"?
+        "name": "keyword.control.loop.fixup.qsharp"
+      }
+    }
+    "patterns": [
+      {
+        "include": "#expression"  # TODO: enforce boolean expression?
+      }
+    ]
+  },
+  "fail-statement": {
+    "begin": "(?<!\\.)\\b(fail)\\b",
+    "beginCaptures": {
+      "1": {
+        "name": "keyword.control.flow.fail.qsharp"
+      }
+    },
+    "end": "(?=;)",
+    "patterns": [
+      {
+        "include": "#expression"
+      }
     ]
   }
 }

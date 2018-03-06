@@ -193,3 +193,29 @@ describe "Q# grammar", ->
       expect(tokens[5].scopes).toEqual ["source.qsharp", "keyword.control.loop.in.qsharp"]
       expect(tokens[8].value).toBe ")"
       expect(tokens[8].scopes).toEqual ["source.qsharp", "punctuation.parenthesis.close.qsharp"]
+
+  describe "`repeat` statement", ->
+    it "tokenizes the keyword", ->
+      # TODO: need a more complete example?
+      {tokens} = grammar.tokenizeLine "repeat { set sum = sum + 1; }"
+
+      expect(tokens[0].value).toBe "repeat"
+      expect(tokens[0].scopes).toEqual ["source.qsharp", "keyword.control.loop.repeat.qsharp"]
+
+  describe "`until` statement", ->
+    it "tokenizes the keywords", ->
+      {tokens} = grammar.tokenizeLine "} until result == Zero fixup { (); }"
+
+      expect(tokens.length).toBe 7
+      expect(tokens[1].value).toBe "until"
+      expect(tokens[1].scopes).toEqual ["source.qsharp", "keyword.control.loop.until.qsharp"]
+      expect(tokens[4].value).toBe "fixup"
+      expect(tokens[4].scopes).toEqual ["source.qsharp", "keyword.control.loop.fixup.qsharp"]
+
+  describe "`fail` statement", ->
+    it "tokenizes the keyword", ->
+      {tokens} = grammar.tokenizeLine "fail \"It crashed!\"";
+
+      expect(tokens.length).toBe 2
+      expect(tokens[0].value).toBe "fail"
+      expect(tokens[0].scopes).toEqual ["source.qsharp", "keyword.control.flow.fail.qsharp"]
