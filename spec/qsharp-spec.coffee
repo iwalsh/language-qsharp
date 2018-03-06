@@ -134,7 +134,7 @@ describe "Q# grammar", ->
       expect(tokens[0].value).toBe "///"
       expect(tokens[1].value).toBe " ## Level 2 header"
 
-  describe '`return` statement', ->
+  describe "`return` statement", ->
     it "tokenizes the keyword", ->
       {tokens} = grammar.tokenizeLine "return ();"
 
@@ -142,7 +142,7 @@ describe "Q# grammar", ->
       expect(tokens[0].value).toBe "return"
       expect(tokens[0].scopes).toEqual ["source.qsharp", "keyword.control.flow.return.qsharp"]
 
-  describe '`if` statement', ->
+  describe "`if` statement", ->
     it "tokenizes the keyword and punctuation", ->
       {tokens} = grammar.tokenizeLine "if (i == 1) { X(target); }"
 
@@ -177,3 +177,19 @@ describe "Q# grammar", ->
     #   {tokens} = grammar.tokenizeLine "if (i == 1) X(target);"
     #
     #   expect(tokens[0].value).not.toBe "if"
+
+  describe "`for` statement", ->
+    it "tokenizes the keywords and punctuation", ->
+      {tokens} = grammar.tokenizeLine "for (i in 0 .. 5) { set sum = sum + 1; }"
+
+      expect(tokens.length).toBe 10
+      expect(tokens[0].value).toBe "for"
+      expect(tokens[0].scopes).toEqual ["source.qsharp", "keyword.control.loop.for.qsharp"]
+      expect(tokens[2].value).toBe "("
+      expect(tokens[2].scopes).toEqual ["source.qsharp", "punctuation.parenthesis.open.qsharp"]
+      expect(tokens[3].value).toBe "i"
+      expect(tokens[3].scopes).toEqual ["source.qsharp", "entity.name.variable.local.qsharp"]
+      expect(tokens[5].value).toBe "in"
+      expect(tokens[5].scopes).toEqual ["source.qsharp", "keyword.control.loop.in.qsharp"]
+      expect(tokens[8].value).toBe ")"
+      expect(tokens[8].scopes).toEqual ["source.qsharp", "punctuation.parenthesis.close.qsharp"]
