@@ -9,6 +9,9 @@
   },
   {
     "include": "#statement"
+  },
+  {
+    "include": "#storage-modifiers"  # TODO: probably shouldn't be at top-level
   }
 ],
 "repository": {
@@ -276,5 +279,21 @@
         "include": "#expression"
       }
     ]
-  }
+  },
+  "storage-modifiers": {
+    "patterns": [
+      {
+        "name": "storage.modifiers.let.qsharp",
+        "match": "(?<!\\.)\\b(let)\\b"
+      },
+      {
+        "name": "storage.modifiers.mutable.qsharp",
+        "match": "(?<!\\.)\\b(mutable)\\b"
+      },
+      {
+        "name": "storage.modifiers.set.qsharp",
+        "match": "(?<!\\.)\\b(set)\\b"
+      }
+    ]
+  },
 }

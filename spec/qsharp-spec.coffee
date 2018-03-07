@@ -219,3 +219,25 @@ describe "Q# grammar", ->
       expect(tokens.length).toBe 2
       expect(tokens[0].value).toBe "fail"
       expect(tokens[0].scopes).toEqual ["source.qsharp", "keyword.control.flow.fail.qsharp"]
+
+  describe "storage modifiers", ->
+    it "tokenizes the `let` keyword", ->
+      {tokens} = grammar.tokenizeLine "let (a, (b, c)) = (1, (2, 3));"
+
+      expect(tokens.length).toBe 2
+      expect(tokens[0].value).toBe "let"
+      expect(tokens[0].scopes).toEqual ["source.qsharp", "storage.modifiers.let.qsharp"]
+
+    it "tokenizes the `mutable` keyword", ->
+      {tokens} = grammar.tokenizeLine "mutable counter = 0;"
+
+      expect(tokens.length).toBe 2
+      expect(tokens[0].value).toBe "mutable"
+      expect(tokens[0].scopes).toEqual ["source.qsharp", "storage.modifiers.mutable.qsharp"]
+
+    it "tokenizes the `set` keyword", ->
+      {tokens} = grammar.tokenizeLine "set counter = counter + 1;"
+
+      expect(tokens.length).toBe 2
+      expect(tokens[0].value).toBe "set"
+      expect(tokens[0].scopes).toEqual ["source.qsharp", "storage.modifiers.set.qsharp"]
