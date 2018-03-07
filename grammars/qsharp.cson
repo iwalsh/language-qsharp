@@ -12,6 +12,9 @@
   },
   {
     "include": "#storage-modifiers"  # TODO: probably shouldn't be at top-level
+  },
+  {
+    "include": "#literal"  # TODO: shouldn't be at top-level
   }
 ],
 "repository": {
@@ -293,7 +296,68 @@
       {
         "name": "storage.modifiers.set.qsharp",
         "match": "(?<!\\.)\\b(set)\\b"
+      },
+      {
+        "name": "storage.modifiers.new.qsharp",
+        "match": "(?<!\\.)\\b(new)\\b"
       }
     ]
+  },
+  "literal": {
+    "patterns": [
+      {
+      "include": "#boolean-literal"
+      },
+      # TODO: implement more literal types
+      {
+        "include": "#numeric-literal"
+      },
+      {
+        "include": "#string-literal"
+      },
+      # TODO: interpolated-string-literal
+      {
+        "include": "#tuple-literal"
+      }
+    ]
+  },
+  "boolean-literal": {
+    "patterns": [
+      {
+        "name": "constant.language.boolean.true.qsharp",
+        "match": "(?<!\\.)\\btrue\\b"
+      },
+      {
+        "name": "constant.language.boolean.false.qsharp",
+        "match": "(?<!\\.)\\bfalse\\b"
+      }
+    ]
+  },
+  "string-literal": {
+    "name": "string.quoted.double.qsharp",
+    "begin": "(?<!\$)\"",
+    "beginCaptures": {
+      "0": {
+        "name": "punctuation.definition.string.begin.qsharp"
+      }
+    },
+    "end": "(\")|((?:[^\\\\\\n])$)",
+    "endCaptures": {
+      "1": {
+        "name": "punctuation.definition.string.end.qsharp"
+      },
+      "2": {
+        "name": "invalid.illegal.newline.qsharp"
+      }
+    },
+    "patterns": [
+      {
+        "include": "#string-character-escape"
+      }
+    ]
+  },
+  "string-character-escape": {
+    "name": "constant.character.escape.qsharp",
+    "match": "\\\\."
   },
 }

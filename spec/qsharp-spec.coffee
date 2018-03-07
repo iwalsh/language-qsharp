@@ -241,3 +241,48 @@ describe "Q# grammar", ->
       expect(tokens.length).toBe 2
       expect(tokens[0].value).toBe "set"
       expect(tokens[0].scopes).toEqual ["source.qsharp", "storage.modifiers.set.qsharp"]
+
+    it "tokenizes the `new` keyword", ->
+      {tokens} = grammar.tokenizeLine "mutable ary = new Int[i+1];"
+
+      expect(tokens.length).toBe 4
+      expect(tokens[2].value).toBe "new"
+      expect(tokens[2].scopes).toEqual ["source.qsharp", "storage.modifiers.new.qsharp"]
+
+  describe "literals", ->
+    it "tokenizes boolean `true`", ->
+      {tokens} = grammar.tokenizeLine "mutable condition = true;"
+
+      expect(tokens.length).toBe 4
+      expect(tokens[2].value).toBe "true"
+      expect(tokens[2].scopes).toEqual ["source.qsharp", "constant.language.boolean.true.qsharp"]
+
+    it "tokenizes boolean `false`", ->
+      {tokens} = grammar.tokenizeLine "mutable condition = false;"
+
+      expect(tokens.length).toBe 4
+      expect(tokens[2].value).toBe "false"
+      expect(tokens[2].scopes).toEqual ["source.qsharp", "constant.language.boolean.false.qsharp"]
+
+    it "tokenizes string punctuation", ->
+      {tokens} = grammar.tokenizeLine "\"Hello world!\""
+
+      expect(tokens.length).toBe 3
+      expect(tokens[0].value).toBe "\""
+      expect(tokens[0].scopes).toEqual ["source.qsharp", "string.quoted.double.qsharp", "punctuation.definition.string.begin.qsharp"]
+      expect(tokens[2].value).toBe "\""
+      expect(tokens[2].scopes).toEqual ["source.qsharp", "string.quoted.double.qsharp", "punctuation.definition.string.end.qsharp"]
+
+    it "tokenizes escaped characters in strings", ->
+      {tokens} = grammar.tokenizeLine "\"Hello \\t world!\""
+
+      expect(tokens.length).toBe 5
+      expect(tokens[2].value).toBe "\\t"
+      expect(tokens[2].scopes).toEqual ["source.qsharp", "string.quoted.double.qsharp", "constant.character.escape.qsharp"]
+
+    it "tokenizes illegal newlines in strings", ->
+      {tokens} = grammar.tokenizeLine "\"Hello \n world!\""
+
+      expect(tokens.length).toBe 5
+      expect(tokens[2].value).toBe " "
+      expect(tokens[2].scopes).toEqual ["source.qsharp", "string.quoted.double.qsharp", "invalid.illegal.newline.qsharp"]
