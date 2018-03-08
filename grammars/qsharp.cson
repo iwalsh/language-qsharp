@@ -103,7 +103,10 @@
       },
       {
         "include": "#literal"
-      }
+      },
+      {
+        "include": "#expression-operators"
+      },
     ]
   },
   "statement": {
@@ -436,6 +439,39 @@
       {
         "include": "#expression"
       }
+    ]
+  },
+  # TODO: need tests for these operators
+  "expression-operators": {
+    "patterns": [
+      {
+        "name": "keyword.operator.assignment.qsharp",
+        "match": "\\="
+      },
+      {
+        "name": "keyword.operator.arithmetic.qsharp",
+        "match": "%|\\*|/|-|\\+|\\^"
+      },
+      {
+        "name": "keyword.operator.logical.qsharp",
+        "match": "\\!|&&|\\|\\|"
+      },
+      {
+        "name": "keyword.operator.comparison.qsharp",
+        "match": "==|!="
+      },
+      {
+        "name": "keyword.operator.relational.qsharp",
+        "match": "<=|>=|<|>"
+      },
+      {
+        "name": "keyword.operator.bitwise.qsharp",
+        "match": "\\&\\&\\&|~~~|\\^\\^\\^|\\|\\|\\|"
+      },
+      {
+        "name": "keyword.operator.bitwise.shift.qsharp",
+        "match": "<<<|>>>"
+      },
     ]
   }
 }
