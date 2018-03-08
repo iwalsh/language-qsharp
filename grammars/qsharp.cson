@@ -96,6 +96,16 @@
       }
     }
   },
+  "expression": {
+    "patterns": [
+      {
+        "include": "#interpolated-string"
+      },
+      {
+        "include": "#literal"
+      }
+    ]
+  },
   "statement": {
     "patterns": [
       {
@@ -315,7 +325,6 @@
       {
         "include": "#string-literal"
       },
-      # TODO: interpolated-string-literal
       {
         "include": "#tuple-literal"
       }
@@ -360,4 +369,53 @@
     "name": "constant.character.escape.qsharp",
     "match": "\\\\."
   },
+  "interpolated-string": {
+    "name": "string.quoted.double.qsharp",
+    "begin": "\\$\"",
+    "beginCaptures": {
+      "0": {
+        "name": "punctuation.definition.string.begin.qsharp"
+      }
+    },
+    "end": "(\")|((?:[^\\\\\\n])$)",
+    "endCaptures": {
+      "1": {
+        "name": "punctuation.definition.string.end.qsharp"
+      },
+      "2": {
+        "name": "invalid.illegal.newline.qsharp"
+      }
+    },
+    "patterns": [
+      {
+        "include": "#string-character-escape"
+      },
+      {
+        "include": "#interpolation"
+      }
+    ]
+  },
+  "interpolation": {
+    "name": "meta.interpolation.qsharp",
+    "begin": "(?<=[^\\{])((?:\\{\\{)*)(\\{)(?=[^\\{])",
+    "beginCaptures": {
+      "1": {
+        "name": "string.quoted.double.qsharp"
+      },
+      "2": {
+        "name": "punctuation.definition.interpolation.begin.qsharp"
+      }
+    },
+    "end": "\\}",
+    "endCaptures": {
+      "0": {
+        "name": "punctuation.definition.interpolation.end.qsharp"
+      }
+    },
+    "patterns": [
+      {
+        "include": "#expression"
+      }
+    ]
+  }
 }

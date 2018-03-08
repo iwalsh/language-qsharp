@@ -130,9 +130,24 @@ describe "Q# grammar", ->
 
     it "does not tokenize Markdown headers other than `#`", ->
       {tokens} = grammar.tokenizeLine "/// ## Level 2 header"
+
       expect(tokens.length).toBe 2
       expect(tokens[0].value).toBe "///"
       expect(tokens[1].value).toBe " ## Level 2 header"
+
+  describe "interpolated strings", ->
+    it "tokenizes the punctuation and content", ->
+      {tokens} = grammar.tokenizeLine "fail $\"Syndrome {syn} is incorrect\";"
+
+      expect(tokens.length).toBe 10
+      expect(tokens[2].value).toBe "$\""
+      expect(tokens[2].scopes).toEqual ["source.qsharp", "string.quoted.double.qsharp", "punctuation.definition.string.begin.qsharp"]
+      expect(tokens[4].value).toBe "{"
+      expect(tokens[4].scopes).toEqual ["source.qsharp", "string.quoted.double.qsharp", "meta.interpolation.qsharp", "punctuation.definition.interpolation.begin.qsharp"]
+      expect(tokens[5].value).toBe "syn"
+      expect(tokens[5].scopes).toEqual ["source.qsharp", "string.quoted.double.qsharp", "meta.interpolation.qsharp"]
+      expect(tokens[6].value).toBe "}"
+      expect(tokens[6].scopes).toEqual ["source.qsharp", "string.quoted.double.qsharp", "meta.interpolation.qsharp", "punctuation.definition.interpolation.end.qsharp"]
 
   describe "`return` statement", ->
     it "tokenizes the keyword", ->
@@ -216,9 +231,20 @@ describe "Q# grammar", ->
     it "tokenizes the keyword", ->
       {tokens} = grammar.tokenizeLine "fail \"It crashed!\"";
 
-      expect(tokens.length).toBe 2
+      expect(tokens.length).toBe 5
       expect(tokens[0].value).toBe "fail"
       expect(tokens[0].scopes).toEqual ["source.qsharp", "keyword.control.flow.fail.qsharp"]
+
+    it "tokenizes the string", ->
+      {tokens} = grammar.tokenizeLine "fail \"Error\";";
+
+      expect(tokens.length).toBe 6
+      expect(tokens[2].value).toBe "\""
+      expect(tokens[2].scopes).toEqual ["source.qsharp", "string.quoted.double.qsharp", "punctuation.definition.string.begin.qsharp"]
+      expect(tokens[3].value).toBe "Error"
+      expect(tokens[3].scopes).toEqual ["source.qsharp", "string.quoted.double.qsharp"]
+      expect(tokens[4].value).toBe "\""
+      expect(tokens[4].scopes).toEqual ["source.qsharp", "string.quoted.double.qsharp", "punctuation.definition.string.end.qsharp"]
 
   describe "storage modifiers", ->
     it "tokenizes the `let` keyword", ->
