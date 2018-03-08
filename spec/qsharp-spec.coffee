@@ -161,24 +161,24 @@ describe "Q# grammar", ->
     it "tokenizes the keyword and punctuation", ->
       {tokens} = grammar.tokenizeLine "if (i == 1) { X(target); }"
 
-      expect(tokens.length).toBe(10)
+      expect(tokens.length).toBe(11)
       expect(tokens[0].value).toBe "if"
       expect(tokens[0].scopes).toEqual ["source.qsharp", "keyword.control.conditional.if.qsharp"]
       expect(tokens[2].value).toBe "("
       expect(tokens[2].scopes).toEqual ["source.qsharp", "punctuation.parenthesis.open.qsharp"]
-      expect(tokens[8].value).toBe ")"
-      expect(tokens[8].scopes).toEqual ["source.qsharp", "punctuation.parenthesis.close.qsharp"]
+      expect(tokens[9].value).toBe ")"
+      expect(tokens[9].scopes).toEqual ["source.qsharp", "punctuation.parenthesis.close.qsharp"]
 
     it "tokenizes `elif` branches", ->
       {tokens} = grammar.tokenizeLine "elif (i == 2) { Y(target); }"
 
-      expect(tokens.length).toBe(10)
+      expect(tokens.length).toBe(11)
       expect(tokens[0].value).toBe "elif"
       expect(tokens[0].scopes).toEqual ["source.qsharp", "keyword.control.conditional.elif.qsharp"]
       expect(tokens[2].value).toBe "("
       expect(tokens[2].scopes).toEqual ["source.qsharp", "punctuation.parenthesis.open.qsharp"]
-      expect(tokens[8].value).toBe ")"
-      expect(tokens[8].scopes).toEqual ["source.qsharp", "punctuation.parenthesis.close.qsharp"]
+      expect(tokens[9].value).toBe ")"
+      expect(tokens[9].scopes).toEqual ["source.qsharp", "punctuation.parenthesis.close.qsharp"]
 
     it "tokenizes `else` branches", ->
       {tokens} = grammar.tokenizeLine "else { Z(target); }"
@@ -250,28 +250,28 @@ describe "Q# grammar", ->
     it "tokenizes the `let` keyword", ->
       {tokens} = grammar.tokenizeLine "let (a, (b, c)) = (1, (2, 3));"
 
-      expect(tokens.length).toBe 2
+      expect(tokens.length).toBe 8
       expect(tokens[0].value).toBe "let"
       expect(tokens[0].scopes).toEqual ["source.qsharp", "storage.modifiers.let.qsharp"]
 
     it "tokenizes the `mutable` keyword", ->
       {tokens} = grammar.tokenizeLine "mutable counter = 0;"
 
-      expect(tokens.length).toBe 2
+      expect(tokens.length).toBe 4
       expect(tokens[0].value).toBe "mutable"
       expect(tokens[0].scopes).toEqual ["source.qsharp", "storage.modifiers.mutable.qsharp"]
 
     it "tokenizes the `set` keyword", ->
       {tokens} = grammar.tokenizeLine "set counter = counter + 1;"
 
-      expect(tokens.length).toBe 2
+      expect(tokens.length).toBe 4
       expect(tokens[0].value).toBe "set"
       expect(tokens[0].scopes).toEqual ["source.qsharp", "storage.modifiers.set.qsharp"]
 
     it "tokenizes the `new` keyword", ->
       {tokens} = grammar.tokenizeLine "mutable ary = new Int[i+1];"
 
-      expect(tokens.length).toBe 4
+      expect(tokens.length).toBe 6
       expect(tokens[2].value).toBe "new"
       expect(tokens[2].scopes).toEqual ["source.qsharp", "storage.modifiers.new.qsharp"]
 
@@ -289,6 +289,34 @@ describe "Q# grammar", ->
       expect(tokens.length).toBe 4
       expect(tokens[2].value).toBe "false"
       expect(tokens[2].scopes).toEqual ["source.qsharp", "constant.language.boolean.false.qsharp"]
+
+    it "tokenizes bare integers", ->
+      {tokens} = grammar.tokenizeLine "5"
+
+      expect(tokens.length).toBe 1
+      expect(tokens[0].value).toBe "5"
+      expect(tokens[0].scopes).toEqual ["source.qsharp", "constant.numeric.decimal.qsharp"]
+
+    it "tokenizes integers with exponents", ->
+      {tokens} = grammar.tokenizeLine "5e7"
+
+      expect(tokens.length).toBe 1
+      expect(tokens[0].value).toBe "5e7"
+      expect(tokens[0].scopes).toEqual ["source.qsharp", "constant.numeric.decimal.qsharp"]
+
+    it "tokenizes bare numbers with decimal places", ->
+      {tokens} = grammar.tokenizeLine "5.0"
+
+      expect(tokens.length).toBe 1
+      expect(tokens[0].value).toBe "5.0"
+      expect(tokens[0].scopes).toEqual ["source.qsharp", "constant.numeric.decimal.qsharp"]
+
+    it "tokenizes bare numbers with decimal places and exponents", ->
+      {tokens} = grammar.tokenizeLine "5.0e7"
+
+      expect(tokens.length).toBe 1
+      expect(tokens[0].value).toBe "5.0e7"
+      expect(tokens[0].scopes).toEqual ["source.qsharp", "constant.numeric.decimal.qsharp"]
 
     it "tokenizes string punctuation", ->
       {tokens} = grammar.tokenizeLine "\"Hello world!\""
