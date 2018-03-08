@@ -1,0 +1,41 @@
+<statement> ::= <comment>
+             |  <return-statement>
+             |  <if-statement>
+             |  <else-part>
+             |  <for-statement>
+             |  <repeat-statement>
+             |  <until-statement>
+             |  <fail-statement>
+
+<expression> ::= <interpolated-string>
+              |  <literal>
+              |  <expression-operators>
+
+<storage-modifiers> ::= "let"
+                     |  "mutable"
+                     |  "set"
+                     |  "new"
+
+<expression-operators> ::= "="
+                        |  "%" | "*" | "+" | "-" | "/" | "^"
+                        |  "!" | "&&" | "||"
+                        |  "==" | "!="
+                        |  "<=" | ">=" | "<" | ">"
+                        |  "~~~" | "^^^" | "&&&" | "|||"
+                        |  "<<<" | ">>>"
+
+<literal> ::= <boolean-literal>
+           |  <numeric-literal>
+           |  <string-literal>
+           |  <tuple-literal>
+
+<boolean-literal> ::= "true" | "false"
+
+<numeric-literal> ::= `bare integer`
+                   |  `bare float`
+                   |  `integer with exponent`
+                   |  `float with exponent`
+
+<string-literal> ::= `double-quoted string`
+
+<comment> ::= `double-slash comment` | `triple-slash (doc) comment`
