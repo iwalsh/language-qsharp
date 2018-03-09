@@ -4,18 +4,10 @@
   "qs"
 ],
 "patterns": [
-  {
-    "include": "#comment"
-  },
-  {
-    "include": "#statement"
-  },
-  {
-    "include": "#storage-modifiers"  # TODO: probably shouldn't be at top-level
-  },
-  {
-    "include": "#literal"  # TODO: shouldn't be at top-level
-  }
+  { "include": "#comment" },
+  { "include": "#statement" },
+  { "include": "#storage-modifiers" },  # TODO: probably shouldn't be at top-level
+  { "include": "#literal" }  # TODO: shouldn't be at top-level
 ],
 "repository": {
   "comment": {
@@ -51,9 +43,7 @@
             },
             "end": "(?=$)",
             "patterns": [
-              {
-                "include": "#documentation-comment"
-              }
+              { "include": "#documentation-comment" }
             ]
           }
         ]
@@ -63,12 +53,8 @@
   "documentation-comment": {
     # TODO: Is there a way to include the Markdown grammar here?
     "patterns": [
-      {
-        "include": "#documentation-comment-header"
-      },
-      {
-        "include": "#documentation-comment-cross-reference"
-      }
+      { "include": "#documentation-comment-header" },
+      { "include": "#documentation-comment-cross-reference" }
     ]
   },
   "documentation-comment-header": {
@@ -98,43 +84,23 @@
   },
   "expression": {
     "patterns": [
-      {
-        "include": "#interpolated-string"
-      },
-      {
-        "include": "#literal"
-      },
-      {
-        "include": "#expression-operators"
-      },
+      { "include": "#interpolated-string" },
+      { "include": "#literal" },
+      { "include": "#expression-operators" },
+      { "include": "#identifier" }
     ]
   },
   "statement": {
     "patterns": [
-      {
-        "include": "#comment"
-      },
-      {
-        "include": "#return-statement"
-      }
-      {
-        "include": "#if-statement"
-      },
-      {
-        "include": "#else-part"
-      },
-      {
-        "include": "#for-statement"
-      },
-      {
-        "include": "#repeat-statement"
-      },
-      {
-        "include": "#until-statement"
-      },
-      {
-        "include": "#fail-statement"
-      }
+      { "include": "#comment" },
+      { "include": "#return-statement" },
+      { "include": "#if-statement" },
+      { "include": "#else-part" },
+      { "include": "#for-statement" },
+      { "include": "#repeat-statement" },
+      { "include": "#until-statement" },
+      { "include": "#fail-statement" },
+      { "include": "#let-statement" }
     ]
   },
   "return-statement": {
@@ -147,12 +113,8 @@
     "end": "(?=;)"
     # TODO: inner patterns
     "patterns": [
-      {
-        "include": "#ref-modifier"
-      },
-      {
-        "include": "#expression"
-      }
+      { "include": "#ref-modifier" },
+      { "include": "#expression" }
     ]
   },
   "if-statement": {
@@ -181,14 +143,10 @@
           }
         },
         "patterns": [
-          {
-            "include": "#expression"
-          }
+          { "include": "#expression" }
         ]
       },
-      {
-        "include": "#statement"
-      }
+      { "include": "#statement" }
     ]
   },
   "else-part": {
@@ -200,9 +158,7 @@
     },
     "end": "(?<=\\})",
     "patterns": [
-      {
-        "include": "#statement"
-      }
+      { "include": "#statement" }
     ]
   },
   "for-statement": {
@@ -257,9 +213,7 @@
     },
     "end": "(?=;|})",  # TODO: should semicolons be allowed?
     "patterns": [
-      {
-        "include": "#statement"
-      }
+      { "include": "#statement" }
     ]
   },
   "until-statement": {
@@ -277,9 +231,7 @@
       }
     }
     "patterns": [
-      {
-        "include": "#expression"  # TODO: enforce boolean expression?
-      }
+      { "include": "#expression" } # TODO: enforce boolean expression?
     ]
   },
   "fail-statement": {
@@ -291,14 +243,36 @@
     },
     "end": "(?=;)",
     "patterns": [
-      {
-        "include": "#expression"
+      { "include": "#expression" }
+    ]
+  },
+  "let-statement": {
+    "begin": "(?x)\n\\b(let)\\b\\s*\n\\b([_[:alpha:]][_[:alnum:]]*)\\b\\s*\n(=)\\s*",
+    "beginCaptures": {
+      "1": {
+        "name": "storage.modifiers.let.qsharp"
+      },
+      "2": {
+        # TODO: Should this be "variable.other.readwrite.qsharp"?
+        "name": "entity.name.variable.local.qsharp"
+      },
+      "3": {
+        "name": "keyword.operator.assignment.qsharp"
       }
+    },
+    "end": "(?=;|\\))",
+    # TODO: Need endCaptures for the semicolon?
+    "patterns": [
+      # {
+      #   "include": "#query-body"
+      # },
+      { "include": "#expression" }
     ]
   },
   "storage-modifiers": {
     "patterns": [
       {
+        # TODO: Is this needed anymore now that we have the let-statement?
         "name": "storage.modifiers.let.qsharp",
         "match": "(?<!\\.)\\b(let)\\b"
       },
@@ -316,20 +290,16 @@
       }
     ]
   },
+  "identifier": {
+    "name": "variable.other.readwrite.qsharp",
+    "match": "[_[:alpha:]][_[:alnum:]]*"
+  },
   "literal": {
     "patterns": [
-      {
-      "include": "#boolean-literal"
-      },
-      {
-        "include": "#numeric-literal"
-      },
-      {
-        "include": "#string-literal"
-      },
-      {
-        "include": "#tuple-literal"
-      }
+      { "include": "#boolean-literal" },
+      { "include": "#numeric-literal" },
+      { "include": "#string-literal" },
+      { "include": "#tuple-literal" }
     ]
   },
   "boolean-literal": {
@@ -383,9 +353,7 @@
       }
     },
     "patterns": [
-      {
-        "include": "#string-character-escape"
-      }
+      { "include": "#string-character-escape" }
     ]
   },
   "string-character-escape": {
@@ -410,12 +378,8 @@
       }
     },
     "patterns": [
-      {
-        "include": "#string-character-escape"
-      },
-      {
-        "include": "#interpolation"
-      }
+      { "include": "#string-character-escape" },
+      { "include": "#interpolation" }
     ]
   },
   "interpolation": {
@@ -436,9 +400,7 @@
       }
     },
     "patterns": [
-      {
-        "include": "#expression"
-      }
+      { "include": "#expression" }
     ]
   },
   # TODO: need tests for these operators
@@ -452,10 +414,7 @@
         "name": "keyword.operator.arithmetic.qsharp",
         "match": "%|\\*|/|-|\\+|\\^"
       },
-      {
-        "name": "keyword.operator.logical.qsharp",
-        "match": "\\!|&&|\\|\\|"
-      },
+      { "include": "#logical-operators" },
       {
         "name": "keyword.operator.comparison.qsharp",
         "match": "==|!="
@@ -464,14 +423,72 @@
         "name": "keyword.operator.relational.qsharp",
         "match": "<=|>=|<|>"
       },
+      { "include": "#bitwise-operators" },
+      { "include": "#bit-shift-operators" }
+    ]
+  },
+  "logical-operators": {
+    "patterns": [
       {
-        "name": "keyword.operator.bitwise.qsharp",
-        "match": "\\&\\&\\&|~~~|\\^\\^\\^|\\|\\|\\|"
+        "before": "(?<!\\&)",  # Negative lookbehind `&`
+        "end": "(?!\\&)",  # Negative lookahead `&`
+        "name": "keyword.operator.logical.and.qsharp"
+        "matches": "&&"
       },
       {
-        "name": "keyword.operator.bitwise.shift.qsharp",
-        "match": "<<<|>>>"
+        "before": "(?<!\\|)",  # Negative lookbehind `|`
+        "end": "(?!\\|)",  # Negative lookahead `|`
+        "name": "keyword.operator.logical.or.qsharp"
+        "matches": "\\|\\|"
       },
+      {
+        "name": "keyword.operator.logical.not.qsharp",
+        "matches": "\\!"
+      }
+    ]
+  },
+  "bitwise-operators": {
+    "patterns": [
+      {
+        "before": "(?<!\\&)",  # Negative lookbehind `&`
+        "end": "(?!\\&)",  # Negative lookahead `&`
+        "name": "keyword.operator.bitwise.and.qsharp"
+        "matches": "&&&"
+      },
+      {
+        "before": "(?<!\\|)",  # Negative lookbehind `|`
+        "end": "(?!\\|)",  # Negative lookahead `|`
+        "name": "keyword.operator.bitwise.or.qsharp"
+        "matches": "\\|\\|\\|"
+      },
+      {
+        "before": "(?<!\\~)",  # Negative lookbehind `~`
+        "end": "(?!\\~)",  # Negative lookahead `~`
+        "name": "keyword.operator.bitwise.complement.qsharp"
+        "matches": "~~~"
+      },
+      {
+        "before": "(?<!\\^)",  # Negative lookbehind `^`
+        "end": "(?!\\^)",  # Negative lookahead `^`
+        "name": "keyword.operator.bitwise.xor.qsharp"
+        "matches": "\\^\\^\\^"
+      }
+    ]
+  },
+  "bit-shift-operators": {
+    "patterns": [
+      {
+        "before": "(?<!\\<)",  # Negative lookbehind `<`
+        "end": "(?!\\<)",  # Negative lookahead `<`
+        "name": "keyword.operator.bitwise.shift.left.qsharp"
+        "matches": "<<<"
+      },
+      {
+        "before": "(?<!\\>)",  # Negative lookbehind `>`
+        "end": "(?!\\>)",  # Negative lookahead `>`
+        "name": "keyword.operator.bitwise.shift.right.qsharp"
+        "matches": ">>>"
+      }
     ]
   }
 }

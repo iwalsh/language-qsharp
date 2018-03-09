@@ -1,3 +1,5 @@
+This grammar is my own best effort at modeling the Q# language - it is NOT official documentation from Microsoft. Use at your own risk!
+
 <statement> ::= <comment>
              |  <return-statement>
              |  <if-statement>
@@ -6,6 +8,7 @@
              |  <repeat-statement>
              |  <until-statement>
              |  <fail-statement>
+             |  <let-statement>
 
 <expression> ::= <interpolated-string>
               |  <literal>
@@ -18,11 +21,17 @@
 
 <expression-operators> ::= "="
                         |  "%" | "*" | "+" | "-" | "/" | "^"
-                        |  "!" | "&&" | "||"
+                        |  <logical-operators>
                         |  "==" | "!="
                         |  "<=" | ">=" | "<" | ">"
-                        |  "~~~" | "^^^" | "&&&" | "|||"
-                        |  "<<<" | ">>>"
+                        |  <bitwise-operators>
+                        |  <bit-shift-operators>
+
+<logical-operators> ::=  "!" | "&&" | "||"
+
+<bitwise-operators> ::= "~~~" | "^^^" | "&&&" | "|||"
+
+<bit-shift-operators> ::= "<<<" | ">>>"
 
 <literal> ::= <boolean-literal>
            |  <numeric-literal>

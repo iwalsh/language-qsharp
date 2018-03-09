@@ -225,6 +225,16 @@ describe "Q# grammar", ->
       expect(tokens[3].scopes).toEqual ["source.qsharp", "string.quoted.double.qsharp"]
       expect(tokens[4].scopes).toEqual ["source.qsharp", "string.quoted.double.qsharp", "punctuation.definition.string.end.qsharp"]
 
+  describe "`let` statment", ->
+    it "tokenizes the keyword, variable name, and assignment operator", ->
+      {tokens} = grammar.tokenizeLine "let a = 1;"
+      values = (token.value for token in tokens)
+
+      expect(values).toEqual [ "let", " ", "a", " ", "=", " ", "1", ";" ]
+      expect(tokens[0].scopes).toEqual ["source.qsharp", "storage.modifiers.let.qsharp"]
+      expect(tokens[2].scopes).toEqual ["source.qsharp", "entity.name.variable.local.qsharp"]
+      expect(tokens[4].scopes).toEqual ["source.qsharp", "keyword.operator.assignment.qsharp"]
+
   describe "storage modifiers", ->
     # FIXME: tuple tokenization incorrect
     it "tokenizes the `let` keyword", ->
@@ -337,7 +347,7 @@ describe "Q# grammar", ->
       values = (token.value for token in tokens)
 
       expect(values).toEqual ["let", " ", "foo", " ", "=", " ", "1", ";"]
-      expect(values[4].scopes).toEqual ["source.qsharp", "keyword.operator.assignment.qsharp"]
+      expect(tokens[4].scopes).toEqual ["source.qsharp", "keyword.operator.assignment.qsharp"]
 
   describe "arithmetic expression-operators", ->
     it "tokenizes `+`", ->
@@ -345,42 +355,42 @@ describe "Q# grammar", ->
       values = (token.value for token in tokens)
 
       expect(values).toEqual ["let", " ", "foo", " ", "=", " ", "1", " ", "+", " ", "1", ";"]
-      expect(values[8].scopes).toEqual ["source.qsharp", "keyword.operator.arithmetic.qsharp"]
+      expect(tokens[8].scopes).toEqual ["source.qsharp", "keyword.operator.arithmetic.qsharp"]
 
     it "tokenizes `-`", ->
       {tokens} = grammar.tokenizeLine "let foo = 1 - 1;"
       values = (token.value for token in tokens)
 
       expect(values).toEqual ["let", " ", "foo", " ", "=", " ", "1", " ", "-", " ", "1", ";"]
-      expect(values[8].scopes).toEqual ["source.qsharp", "keyword.operator.arithmetic.qsharp"]
+      expect(tokens[8].scopes).toEqual ["source.qsharp", "keyword.operator.arithmetic.qsharp"]
 
     it "tokenizes `*`", ->
       {tokens} = grammar.tokenizeLine "let foo = 1 * 1;"
       values = (token.value for token in tokens)
 
       expect(values).toEqual ["let", " ", "foo", " ", "=", " ", "1", " ", "*", " ", "1", ";"]
-      expect(values[8].scopes).toEqual ["source.qsharp", "keyword.operator.arithmetic.qsharp"]
+      expect(tokens[8].scopes).toEqual ["source.qsharp", "keyword.operator.arithmetic.qsharp"]
 
     it "tokenizes `/`", ->
       {tokens} = grammar.tokenizeLine "let foo = 1 / 1;"
       values = (token.value for token in tokens)
 
       expect(values).toEqual ["let", " ", "foo", " ", "=", " ", "1", " ", "/", " ", "1", ";"]
-      expect(values[8].scopes).toEqual ["source.qsharp", "keyword.operator.arithmetic.qsharp"]
+      expect(tokens[8].scopes).toEqual ["source.qsharp", "keyword.operator.arithmetic.qsharp"]
 
     it "tokenizes `^`", ->
       {tokens} = grammar.tokenizeLine "let foo = 1 ^ 1;"
       values = (token.value for token in tokens)
 
       expect(values).toEqual ["let", " ", "foo", " ", "=", " ", "1", " ", "^", " ", "1", ";"]
-      expect(values[8].scopes).toEqual ["source.qsharp", "keyword.operator.arithmetic.qsharp"]
+      expect(tokens[8].scopes).toEqual ["source.qsharp", "keyword.operator.arithmetic.qsharp"]
 
     it "tokenizes `%`", ->
       {tokens} = grammar.tokenizeLine "let foo = 1 % 1;"
       values = (token.value for token in tokens)
 
       expect(values).toEqual ["let", " ", "foo", " ", "=", " ", "1", " ", "%", " ", "1", ";"]
-      expect(values[8].scopes).toEqual ["source.qsharp", "keyword.operator.arithmetic.qsharp"]
+      expect(tokens[8].scopes).toEqual ["source.qsharp", "keyword.operator.arithmetic.qsharp"]
 
   describe "logical expression-operators", ->
     it "tokenizes `!`", ->
@@ -388,21 +398,21 @@ describe "Q# grammar", ->
       values = (token.value for token in tokens)
 
       expect(values).toEqual ["let", " ", "foo", " ", "=", " ", "!", "false", ";"]
-      expect(values[6].scopes).toEqual ["source.qsharp", "keyword.operator.logical.qsharp"]
+      expect(tokens[6].scopes).toEqual ["source.qsharp", "keyword.operator.logical.not.qsharp"]
 
     it "tokenizes `&&`", ->
       {tokens} = grammar.tokenizeLine "let foo = true && false;"
       values = (token.value for token in tokens)
 
       expect(values).toEqual ["let", " ", "foo", " ", "=", " ", "true", " ", "&&", " ", "false", ";"]
-      expect(values[8].scopes).toEqual ["source.qsharp", "keyword.operator.logical.qsharp"]
+      expect(tokens[8].scopes).toEqual ["source.qsharp", "keyword.operator.logical.and.qsharp"]
 
     it "tokenizes `||`", ->
       {tokens} = grammar.tokenizeLine "let foo = true || false;"
       values = (token.value for token in tokens)
 
       expect(values).toEqual ["let", " ", "foo", " ", "=", " ", "true", " ", "||", " ", "false", ";"]
-      expect(values[8].scopes).toEqual ["source.qsharp", "keyword.operator.logical.qsharp"]
+      expect(tokens[8].scopes).toEqual ["source.qsharp", "keyword.operator.logical.or.qsharp"]
 
   describe "comparison expression-operators", ->
     it "tokenizes `==`", ->
@@ -410,14 +420,14 @@ describe "Q# grammar", ->
       values = (token.value for token in tokens)
 
       expect(values).toEqual ["let", " ", "foo", " ", "=", " ", "1", " ", "==", " ", "1", ";"]
-      expect(values[8].scopes).toEqual ["source.qsharp", "keyword.operator.comparison.qsharp"]
+      expect(tokens[8].scopes).toEqual ["source.qsharp", "keyword.operator.comparison.qsharp"]
 
     it "tokenizes `!=`", ->
       {tokens} = grammar.tokenizeLine "let foo = 1 != 1;"
       values = (token.value for token in tokens)
 
       expect(values).toEqual ["let", " ", "foo", " ", "=", " ", "1", " ", "!=", " ", "1", ";"]
-      expect(values[8].scopes).toEqual ["source.qsharp", "keyword.operator.comparison.qsharp"]
+      expect(tokens[8].scopes).toEqual ["source.qsharp", "keyword.operator.comparison.qsharp"]
 
   describe "relational expression-operators", ->
     it "tokenizes `<=`", ->
@@ -425,28 +435,28 @@ describe "Q# grammar", ->
       values = (token.value for token in tokens)
 
       expect(values).toEqual ["let", " ", "foo", " ", "=", " ", "1", " ", "<=", " ", "2", ";"]
-      expect(values[8].scopes).toEqual ["source.qsharp", "keyword.operator.relational.qsharp"]
+      expect(tokens[8].scopes).toEqual ["source.qsharp", "keyword.operator.relational.qsharp"]
 
     it "tokenizes `>=`", ->
       {tokens} = grammar.tokenizeLine "let foo = 1 >= 2;"
       values = (token.value for token in tokens)
 
       expect(values).toEqual ["let", " ", "foo", " ", "=", " ", "1", " ", ">=", " ", "2", ";"]
-      expect(values[8].scopes).toEqual ["source.qsharp", "keyword.operator.relational.qsharp"]
+      expect(tokens[8].scopes).toEqual ["source.qsharp", "keyword.operator.relational.qsharp"]
 
     it "tokenizes `<`", ->
       {tokens} = grammar.tokenizeLine "let foo = 1 < 2;"
       values = (token.value for token in tokens)
 
       expect(values).toEqual ["let", " ", "foo", " ", "=", " ", "1", " ", "<", " ", "2", ";"]
-      expect(values[8].scopes).toEqual ["source.qsharp", "keyword.operator.relational.qsharp"]
+      expect(tokens[8].scopes).toEqual ["source.qsharp", "keyword.operator.relational.qsharp"]
 
     it "tokenizes `>`", ->
       {tokens} = grammar.tokenizeLine "let foo = 1 > 2;"
       values = (token.value for token in tokens)
 
       expect(values).toEqual ["let", " ", "foo", " ", "=", " ", "1", " ", ">", " ", "2", ";"]
-      expect(values[8].scopes).toEqual ["source.qsharp", "keyword.operator.relational.qsharp"]
+      expect(tokens[8].scopes).toEqual ["source.qsharp", "keyword.operator.relational.qsharp"]
 
   describe "bitwise expression-operators", ->
     it "tokenizes `&&&`", ->
@@ -454,25 +464,25 @@ describe "Q# grammar", ->
       values = (token.value for token in tokens)
 
       expect(values).toEqual ["let", " ", "foo", " ", "=", " ", "1", " ", "&&&", " ", "3", ";"]
-      expect(values[8].scopes).toEqual ["source.qsharp", "keyword.operator.bitwise.qsharp"]
+      expect(tokens[8].scopes).toEqual ["source.qsharp", "keyword.operator.bitwise.and.qsharp"]
 
     it "tokenizes `|||`", ->
       {tokens} = grammar.tokenizeLine "let foo = 1 ||| 3;"
       values = (token.value for token in tokens)
 
       expect(values).toEqual ["let", " ", "foo", " ", "=", " ", "1", " ", "|||", " ", "3", ";"]
-      expect(values[8].scopes).toEqual ["source.qsharp", "keyword.operator.bitwise.qsharp"]
+      expect(tokens[8].scopes).toEqual ["source.qsharp", "keyword.operator.bitwise.or.qsharp"]
 
     it "tokenizes `^^^`", ->
       {tokens} = grammar.tokenizeLine "let foo = 1 ^^^ 3;"
       values = (token.value for token in tokens)
 
       expect(values).toEqual ["let", " ", "foo", " ", "=", " ", "1", " ", "^^^", " ", "3", ";"]
-      expect(values[8].scopes).toEqual ["source.qsharp", "keyword.operator.bitwise.qsharp"]
+      expect(tokens[8].scopes).toEqual ["source.qsharp", "keyword.operator.bitwise.xor.qsharp"]
 
     it "tokenizes `~~~`", ->
       {tokens} = grammar.tokenizeLine "let foo = ~~~3;"
       values = (token.value for token in tokens)
 
       expect(values).toEqual ["let", " ", "foo", " ", "=", " ", "~~~", "3", ";"]
-      expect(values[6].scopes).toEqual ["source.qsharp", "keyword.operator.bitwise.qsharp"]
+      expect(tokens[6].scopes).toEqual ["source.qsharp", "keyword.operator.bitwise.complement.qsharp"]
