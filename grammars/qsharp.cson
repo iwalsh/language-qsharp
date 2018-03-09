@@ -461,10 +461,10 @@
   "expression-operators": {
     "patterns": [
       {
-        "before": "(?<!\\=)",  # Negative lookbehind `=`
-        "end": "(?!\\=)",  # Negative lookahead `=`
-        "name": "keyword.operator.assignment.qsharp",
-        "match": "\\="
+        "match": "(?<!=)(=)(?!=)"
+        "captures": {
+          "1": { "name": "keyword.operator.assignment.qsharp" }
+        }
       },
       { "include": "#arithmetic-operators" },
       { "include": "#logical-operators" },
@@ -492,10 +492,10 @@
         "match": "/"
       },
       {
-        "before": "(?<!\\^)",  # Negative lookbehind `^`
-        "end": "(?!\\^)",  # Negative lookahead `^`
-        "name": "keyword.operator.arithmetic.exponentiation.qsharp",
-        "match": "\\^"
+        "match": "(?<!\\^)(\\^)(?!\\^)"
+        "captures": {
+          "1": { "name": "keyword.operator.arithmetic.exponentiation.qsharp" }
+        }
       },
       {
         "name": "keyword.operator.arithmetic.modulo.qsharp",
@@ -506,20 +506,22 @@
   "logical-operators": {
     "patterns": [
       {
-        "before": "(?<!&)",  # Negative lookbehind `&`
-        "end": "(?!&)",  # Negative lookahead `&`
-        "name": "keyword.operator.logical.and.qsharp"
-        "match": "&&"
+        "match": "(?<!&)(&&)(?!&)"
+        "captures": {
+          "1": { "name": "keyword.operator.logical.and.qsharp" }
+        }
       },
       {
-        "before": "(?<!\\|)",  # Negative lookbehind `|`
-        "end": "(?!\\|)",  # Negative lookahead `|`
-        "name": "keyword.operator.logical.or.qsharp"
-        "match": "\\|\\|"
+        "match": "(?<!\\|)(\\|\\|)(?!\\|)"
+        "captures": {
+          "1": { "name": "keyword.operator.logical.or.qsharp" }
+        }
       },
       {
-        "name": "keyword.operator.logical.not.qsharp",
-        "match": "\\!"
+        "match": "(!)(?!\\=)"
+        "captures": {
+          "1": { "name": "keyword.operator.logical.not.qsharp" }
+        }
       }
     ]
   },
@@ -530,7 +532,7 @@
         "match": "\\=\\="
       },
       {
-        "name": "keyword.operator.logical.not-equals.qsharp"
+        "name": "keyword.operator.comparison.not-equals.qsharp"
         "match": "!\\="
       }
     ]
@@ -546,12 +548,16 @@
         "match": ">\\="
       },
       {
-        "name": "keyword.operator.relational.less-than.qsharp"
-        "match": "<"
+        "match": "(?<!\\<)(<)(?!\\<|=)"
+        "captures": {
+          "1": { "name": "keyword.operator.relational.less-than.qsharp" }
+        }
       },
       {
-        "name": "keyword.operator.relational.greater-than.qsharp"
-        "match": ">"
+        "match": "(?<!\\>)(>)(?!\\>|=)"
+        "captures": {
+          "1": { "name": "keyword.operator.relational.greater-than.qsharp" }
+        }
       }
     ]
   }
