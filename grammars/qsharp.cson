@@ -506,20 +506,20 @@
   "logical-operators": {
     "patterns": [
       {
-        "before": "(?<!\\&)",  # Negative lookbehind `&`
-        "end": "(?!\\&)",  # Negative lookahead `&`
+        "before": "(?<!&)",  # Negative lookbehind `&`
+        "end": "(?!&)",  # Negative lookahead `&`
         "name": "keyword.operator.logical.and.qsharp"
-        "matches": "&&"
+        "match": "&&"
       },
       {
         "before": "(?<!\\|)",  # Negative lookbehind `|`
         "end": "(?!\\|)",  # Negative lookahead `|`
         "name": "keyword.operator.logical.or.qsharp"
-        "matches": "\\|\\|"
+        "match": "\\|\\|"
       },
       {
         "name": "keyword.operator.logical.not.qsharp",
-        "matches": "\\!"
+        "match": "\\!"
       }
     ]
   },
@@ -527,11 +527,11 @@
     "patterns": [
       {
         "name": "keyword.operator.comparison.equals.qsharp"
-        "matches": "\\=\\="
+        "match": "\\=\\="
       },
       {
         "name": "keyword.operator.logical.not-equals.qsharp"
-        "matches": "!\\="
+        "match": "!\\="
       }
     ]
   },
@@ -539,19 +539,19 @@
     "patterns": [
       {
         "name": "keyword.operator.relational.less-than-or-equal-to.qsharp"
-        "matches": "<\\="
+        "match": "<\\="
       },
       {
         "name": "keyword.operator.relational.greater-than-or-equal-to.qsharp"
-        "matches": ">\\="
+        "match": ">\\="
       },
       {
         "name": "keyword.operator.relational.less-than.qsharp"
-        "matches": "<"
+        "match": "<"
       },
       {
         "name": "keyword.operator.relational.greater-than.qsharp"
-        "matches": ">"
+        "match": ">"
       }
     ]
   }
@@ -561,50 +561,38 @@
         "before": "(?<!\\&)",  # Negative lookbehind `&`
         "end": "(?!\\&)",  # Negative lookahead `&`
         "name": "keyword.operator.bitwise.and.qsharp"
-        "matches": "&&&"
+        "match": "&&&"
       },
       {
         "before": "(?<!\\|)",  # Negative lookbehind `|`
         "end": "(?!\\|)",  # Negative lookahead `|`
         "name": "keyword.operator.bitwise.or.qsharp"
-        "matches": "\\|\\|\\|"
+        "match": "\\|\\|\\|"
       },
       {
         "before": "(?<!\\~)",  # Negative lookbehind `~`
         "end": "(?!\\~)",  # Negative lookahead `~`
         "name": "keyword.operator.bitwise.complement.qsharp"
-        "matches": "~~~"
+        "match": "~~~"
       },
       {
         "before": "(?<!\\^)",  # Negative lookbehind `^`
         "end": "(?!\\^)",  # Negative lookahead `^`
         "name": "keyword.operator.bitwise.xor.qsharp"
-        "matches": "\\^\\^\\^"
+        "match": "\\^\\^\\^"
       },
       {
         "before": "(?<!\\<)",  # Negative lookbehind `<`
         "end": "(?!\\<)",  # Negative lookahead `<`
         "name": "keyword.operator.bitwise.shift.left.qsharp"
-        "matches": "<<<"
+        "match": "<<<"
       },
       {
         "before": "(?<!\\<)",  # Negative lookbehind `<`
         "end": "(?!\\<)",  # Negative lookahead `<`
         "name": "keyword.operator.bitwise.shift.right.qsharp"
-        "matches": ">>>"
-      },
-      # {
-      #   "before": "(?<!\\>)",  # Negative lookbehind `>`
-      #   "end": "(?!\\>)",  # Negative lookahead `>`
-      #   "match": "(?<!\\.)\\b(>>>)\\b\\s*",
-      #   "captures": {
-      #     "1": { "name": "keyword.operator.bitwise.shift.right.qsharp" }
-      #   }
-      # },
-      # {
-      #   "name": "keyword.operator.bitwise.shift.right.qsharp",
-      #   "match": "\\b\\>\\>\\>\\b",
-      # }
+        "match": ">>>"
+      }
     ]
   },
 }
