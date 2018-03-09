@@ -1,4 +1,4 @@
-This grammar is my own best effort at modeling the Q# language - it is NOT official documentation from Microsoft. Use at your own risk!
+This grammar is my own best effort at modeling the Q# language - it is NOT official documentation and has no validation from Microsoft. Use at your own risk!
 
 <statement> ::= <comment>
              |  <return-statement>
@@ -15,6 +15,12 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
 <expression> ::= <interpolated-string>
               |  <literal>
               |  <expression-operators>
+              |  <identifier>
+              |  <parenthesized-expression>
+
+<parenthesized-expression> ::= "(" <expression> ")"
+
+<identifier> ::= /[_[:alpha:]][_[:alnum:]]*/
 
 <storage-modifiers> ::= "let"
                      |  "mutable"
@@ -24,18 +30,19 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
 <expression-operators> ::= "="
                         |  <arithmetic-operators>
                         |  <logical-operators>
-                        |  "==" | "!="
-                        |  "<=" | ">=" | "<" | ">"
+                        |  <comparison-operators>
+                        |  <relational-operators>
                         |  <bitwise-operators>
-                        |  <bit-shift-operators>
 
 <arithmetic-operators> ::= "%" | "*" | "+" | "-" | "/" | "^"
 
 <logical-operators> ::=  "!" | "&&" | "||"
 
-<bitwise-operators> ::= "~~~" | "^^^" | "&&&" | "|||"
+<comparison-operators> ::= "==" | "!="
 
-<bit-shift-operators> ::= "<<<" | ">>>"
+<relational-operators> ::= "<=" | ">=" | "<" | ">"
+
+<bitwise-operators> ::= "~~~" | "^^^" | "&&&" | "|||" | "<<<" | ">>>"
 
 <literal> ::= <boolean-literal>
            |  <numeric-literal>
