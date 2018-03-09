@@ -9,6 +9,8 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
              |  <until-statement>
              |  <fail-statement>
              |  <let-statement>
+             |  <mutable-statement>
+             |  <set-statement>
 
 <expression> ::= <interpolated-string>
               |  <literal>
@@ -20,12 +22,14 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
                      |  "new"
 
 <expression-operators> ::= "="
-                        |  "%" | "*" | "+" | "-" | "/" | "^"
+                        |  <arithmetic-operators>
                         |  <logical-operators>
                         |  "==" | "!="
                         |  "<=" | ">=" | "<" | ">"
                         |  <bitwise-operators>
                         |  <bit-shift-operators>
+
+<arithmetic-operators> ::= "%" | "*" | "+" | "-" | "/" | "^"
 
 <logical-operators> ::=  "!" | "&&" | "||"
 

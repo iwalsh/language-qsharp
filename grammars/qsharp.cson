@@ -100,7 +100,9 @@
       { "include": "#repeat-statement" },
       { "include": "#until-statement" },
       { "include": "#fail-statement" },
-      { "include": "#let-statement" }
+      { "include": "#let-statement" },
+      { "include": "#mutable-statement" },
+      { "include": "#set-statement" }
     ]
   },
   "return-statement": {
@@ -253,6 +255,26 @@
         "name": "storage.modifiers.let.qsharp"
       },
       "2": {
+        # TODO: Should this be "variable.other.readonly.qsharp"?
+        "name": "entity.name.variable.local.qsharp"
+      },
+      "3": {
+        "name": "keyword.operator.assignment.qsharp"
+      }
+    },
+    "end": "(?=;|\\))",
+    # TODO: Need endCaptures for the semicolon?
+    "patterns": [
+      { "include": "#expression" }
+    ]
+  },
+  "mutable-statement": {
+    "begin": "(?x)\n\\b(mutable)\\b\\s*\n\\b([_[:alpha:]][_[:alnum:]]*)\\b\\s*\n(=)\\s*",
+    "beginCaptures": {
+      "1": {
+        "name": "storage.modifiers.mutable.qsharp"
+      },
+      "2": {
         # TODO: Should this be "variable.other.readwrite.qsharp"?
         "name": "entity.name.variable.local.qsharp"
       },
@@ -263,12 +285,30 @@
     "end": "(?=;|\\))",
     # TODO: Need endCaptures for the semicolon?
     "patterns": [
-      # {
-      #   "include": "#query-body"
-      # },
       { "include": "#expression" }
     ]
   },
+  "set-statement": {
+    "begin": "(?x)\n\\b(set)\\b\\s*\n\\b([_[:alpha:]][_[:alnum:]]*)\\b\\s*\n(=)\\s*",
+    "beginCaptures": {
+      "1": {
+        # Is this really a "storage modifier"? More like a keywork...
+        "name": "storage.modifiers.set.qsharp"
+      },
+      "2": {
+        # TODO: Should this be "variable.other.readwrite.qsharp"?
+        "name": "entity.name.variable.local.qsharp"
+      },
+      "3": {
+        "name": "keyword.operator.assignment.qsharp"
+      }
+    },
+    "end": "(?=;|\\))",
+    # TODO: Need endCaptures for the semicolon?
+    "patterns": [
+      { "include": "#expression" }
+    ]
+  }
   "storage-modifiers": {
     "patterns": [
       {
@@ -291,6 +331,7 @@
     ]
   },
   "identifier": {
+    # TODO: should this be "entity.name.variable.local.qsharp"?
     "name": "variable.other.readwrite.qsharp",
     "match": "[_[:alpha:]][_[:alnum:]]*"
   },
@@ -403,17 +444,15 @@
       { "include": "#expression" }
     ]
   },
-  # TODO: need tests for these operators
   "expression-operators": {
     "patterns": [
       {
+        "before": "(?<!\\=)",  # Negative lookbehind `=`
+        "end": "(?!\\=)",  # Negative lookahead `=`
         "name": "keyword.operator.assignment.qsharp",
         "match": "\\="
       },
-      {
-        "name": "keyword.operator.arithmetic.qsharp",
-        "match": "%|\\*|/|-|\\+|\\^"
-      },
+      { "include": "#arithmetic-operators" },
       { "include": "#logical-operators" },
       {
         "name": "keyword.operator.comparison.qsharp",
@@ -427,6 +466,13 @@
       { "include": "#bit-shift-operators" }
     ]
   },
+  # {
+  #   "name": "keyword.operator.arithmetic.qsharp",
+  #   "match": "%|\\*|/|-|\\+|\\^"
+  # },
+  "arithmetic-operators": {
+    # TODO
+  }
   "logical-operators": {
     "patterns": [
       {
