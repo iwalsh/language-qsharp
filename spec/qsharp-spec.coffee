@@ -135,11 +135,12 @@ describe "Q# grammar", ->
 
   describe "statements", ->
     describe "return-statement", ->
+      # FIXME: Need to update for tuple expressions
       it "tokenizes the keyword", ->
         {tokens} = grammar.tokenizeLine "return ();"
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ["return", " ()", ";"]
+        expect(values).toEqual ["return", " ", "(", ")", ";"]
         expect(tokens[0].scopes).toEqual ["source.qsharp", "keyword.control.flow.return.qsharp"]
 
     describe "if-statement", ->
@@ -158,10 +159,10 @@ describe "Q# grammar", ->
         {tokens} = grammar.tokenizeLine "elif (i == 2) { Y(target); }"
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ["elif", " ", "(", "i ", "=", "=", " ", "2", ")", " { Y", "(", "target", ")", "; }"]
+        expect(values).toEqual ["elif", " ", "(", "i", " ", "=", "=", " ", "2", ")", " { Y", "(", "target", ")", "; }"]
         expect(tokens[0].scopes).toEqual ["source.qsharp", "keyword.control.conditional.elif.qsharp"]
         expect(tokens[2].scopes).toEqual ["source.qsharp", "punctuation.parenthesis.open.qsharp"]
-        expect(tokens[8].scopes).toEqual ["source.qsharp", "punctuation.parenthesis.close.qsharp"]
+        expect(tokens[9].scopes).toEqual ["source.qsharp", "punctuation.parenthesis.close.qsharp"]
 
       # FIXME: not tokenizing the block
       it "tokenizes `else` branches", ->
@@ -191,24 +192,24 @@ describe "Q# grammar", ->
         expect(tokens[8].scopes).toEqual ["source.qsharp", "punctuation.parenthesis.close.qsharp"]
 
     describe "repeat-statement", ->
-      # FIXME: Wrong block tokenization
+      # FIXME: Wrong curly-brace tokenization
       it "tokenizes the keyword", ->
         # TODO: need a more complete example?
         {tokens} = grammar.tokenizeLine "repeat { set sum = sum + 1; }"
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ["repeat", " { set sum = sum + 1", "; }"]
+        expect(values).toEqual ["repeat", " { ", "set", " ", "sum", " ", "=", " ", "sum", " ", "+", " ", "1", "; }"]
         expect(tokens[0].scopes).toEqual ["source.qsharp", "keyword.control.loop.repeat.qsharp"]
 
     describe "until-statement", ->
-      # FIXME: "==" and " Zero " and "result " tokenizations incorrect
+      # FIXME: "==" and curly brace tokenizations incorrect
       it "tokenizes the keywords", ->
         {tokens} = grammar.tokenizeLine "} until result == Zero fixup { (); }"
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ["} ", "until", " ", "result ", "=", "=", " Zero ", "fixup", " ", "{ (); }"]
+        expect(values).toEqual ["} ", "until", " ", "result", " ", "=", "=", " ", "Zero", " ", "fixup", " ", "{ (); }"]
         expect(tokens[1].scopes).toEqual ["source.qsharp", "keyword.control.loop.until.qsharp"]
-        expect(tokens[7].scopes).toEqual ["source.qsharp", "keyword.control.loop.fixup.qsharp"]
+        expect(tokens[10].scopes).toEqual ["source.qsharp", "keyword.control.loop.fixup.qsharp"]
 
     describe "fail-statement", ->
       it "tokenizes the keyword", ->
@@ -266,7 +267,6 @@ describe "Q# grammar", ->
       expect(values).toEqual [ "let", " (a, (b, c)) = (", "1", ", (", "2", ", ", "3", "));" ]
       expect(tokens[0].scopes).toEqual ["source.qsharp", "storage.modifiers.let.qsharp"]
 
-    # FIXME: assignment tokenization incorrect
     it "tokenizes the `mutable` keyword", ->
       {tokens} = grammar.tokenizeLine "mutable counter = 0;"
       values = (token.value for token in tokens)
@@ -274,7 +274,6 @@ describe "Q# grammar", ->
       expect(values).toEqual ["mutable", " ", "counter", " ", "=", " ", "0", ";"]
       expect(tokens[0].scopes).toEqual ["source.qsharp", "storage.modifiers.mutable.qsharp"]
 
-    # FIXME: assignment tokenization incorrect
     it "tokenizes the `set` keyword", ->
       {tokens} = grammar.tokenizeLine "set counter = counter + 1;"
       values = (token.value for token in tokens)
@@ -282,64 +281,58 @@ describe "Q# grammar", ->
       expect(values).toEqual ["set", " ", "counter", " ", "=", " ", "counter", " ", "+", " ", "1", ";"]
       expect(tokens[0].scopes).toEqual ["source.qsharp", "storage.modifiers.set.qsharp"]
 
-    # FIXME: RHS tokenization very incorrect
+    # FIXME: `new` is being tokenized as a "variable.other.readwrite.qsharp"
     it "tokenizes the `new` keyword", ->
       {tokens} = grammar.tokenizeLine "mutable ary = new Int[i+1];"
       values = (token.value for token in tokens)
 
-      expect(values).toEqual ["mutable", " ary = ", "new", " Int[i+", "1", "];" ]
-      expect(tokens[2].scopes).toEqual ["source.qsharp", "storage.modifiers.new.qsharp"]
+      expect(values).toEqual ["mutable", " ", "ary", " ", "=", " ", "new", " ", "Int", "[", "i", "+", "1", "]", ";" ]
+      expect(tokens[6].scopes).toEqual ["source.qsharp", "storage.modifiers.new.qsharp"]
 
   describe "literals", ->
     describe "boolean-literal", ->
-      # FIXME: assignent tokenization incorrect
       it "tokenizes boolean `true`", ->
         {tokens} = grammar.tokenizeLine "mutable condition = true;"
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ["mutable", " condition = ", "true", ";"]
-        expect(tokens[2].scopes).toEqual ["source.qsharp", "constant.language.boolean.true.qsharp"]
+        expect(values).toEqual ["mutable", " ", "condition", " ", "=", " ", "true", ";"]
+        expect(tokens[6].scopes).toEqual ["source.qsharp", "constant.language.boolean.true.qsharp"]
 
-      # FIXME: assignent tokenization incorrect
       it "tokenizes boolean `false`", ->
         {tokens} = grammar.tokenizeLine "mutable condition = false;"
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ["mutable", " condition = ", "false", ";"]
-        expect(tokens[2].scopes).toEqual ["source.qsharp", "constant.language.boolean.false.qsharp"]
+        expect(values).toEqual ["mutable", " ", "condition", " ", "=", " ", "false", ";"]
+        expect(tokens[6].scopes).toEqual ["source.qsharp", "constant.language.boolean.false.qsharp"]
 
     describe "numeric-literal", ->
-      # FIXME: assignment tokenization incorrect
       it "tokenizes bare integers", ->
         {tokens} = grammar.tokenizeLine "let five = 5;"
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ["let", " five = ", "5", ";"]
-        expect(tokens[2].scopes).toEqual ["source.qsharp", "constant.numeric.decimal.qsharp"]
+        expect(values).toEqual ["let", " ", "five", " ", "=", " ", "5", ";"]
+        expect(tokens[6].scopes).toEqual ["source.qsharp", "constant.numeric.decimal.qsharp"]
 
-      # FIXME: assignment tokenization incorrect
       it "tokenizes integers with exponents", ->
         {tokens} = grammar.tokenizeLine "let fiveMillion = 5e6;"
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ["let", " fiveMillion = ", "5e6", ";"]
-        expect(tokens[2].scopes).toEqual ["source.qsharp", "constant.numeric.decimal.qsharp"]
+        expect(values).toEqual ["let", " ", "fiveMillion", " ", "=", " ", "5e6", ";"]
+        expect(tokens[6].scopes).toEqual ["source.qsharp", "constant.numeric.decimal.qsharp"]
 
-      # FIXME: assignment tokenization incorrect
       it "tokenizes bare floats", ->
         {tokens} = grammar.tokenizeLine "let five_dot_zero = 5.0;"
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ["let", " five_dot_zero = ", "5.0", ";"]
-        expect(tokens[2].scopes).toEqual ["source.qsharp", "constant.numeric.decimal.qsharp"]
+        expect(values).toEqual ["let", " ", "five_dot_zero", " ", "=", " ", "5.0", ";"]
+        expect(tokens[6].scopes).toEqual ["source.qsharp", "constant.numeric.decimal.qsharp"]
 
-      # FIXME: assignment tokenization incorrect
       it "tokenizes bare floats with exponents", ->
         {tokens} = grammar.tokenizeLine "let _5Million = 5.0e6;"
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ["let", " _5Million = ", "5.0e6", ";"]
-        expect(tokens[2].scopes).toEqual ["source.qsharp", "constant.numeric.decimal.qsharp"]
+        expect(values).toEqual ["let", " ", "_5Million", " ", "=", " ", "5.0e6", ";"]
+        expect(tokens[6].scopes).toEqual ["source.qsharp", "constant.numeric.decimal.qsharp"]
 
     describe "string-literal", ->
       it "tokenizes string punctuation", ->
@@ -400,7 +393,7 @@ describe "Q# grammar", ->
         expect(values).toEqual ["let", " ", "foo", " ", "=", " ", "1", " ", "*", " ", "1", ";"]
         expect(tokens[8].scopes).toEqual ["source.qsharp", "keyword.operator.arithmetic.multiplication.qsharp"]
 
-      it "tokenizes divisionm (`/`)", ->
+      it "tokenizes division (`/`)", ->
         {tokens} = grammar.tokenizeLine "let foo = 1 / 1;"
         values = (token.value for token in tokens)
 
