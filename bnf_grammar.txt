@@ -18,8 +18,11 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
               |  <expression-operators>
               |  <identifier>
               |  <parenthesized-expression>
+              |  <punctuation-range>
 
 <parenthesized-expression> ::= "(" <expression> ")"
+
+<punctuation-range> ::= ".."
 
 <identifier> ::= /[_[:alpha:]][_[:alnum:]]*/
 

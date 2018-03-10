@@ -266,7 +266,7 @@ describe 'Q# grammar', ->
         expect(tokens[2].scopes).toEqual ['source.qsharp', 'entity.name.variable.local.qsharp']
         expect(tokens[4].scopes).toEqual ['source.qsharp', 'keyword.operator.assignment.qsharp']
 
-  describe 'storage modifiers', ->
+  describe 'storage-modifiers', ->
     # FIXME: `new` is being tokenized as a 'variable.other.readwrite.qsharp'
     it 'tokenizes the `new` keyword', ->
       {tokens} = grammar.tokenizeLine 'mutable ary = new Int[i+1];'
@@ -274,6 +274,30 @@ describe 'Q# grammar', ->
 
       expect(values).toEqual ['mutable', ' ', 'ary', ' ', '=', ' ', 'new', ' ', 'Int', '[', 'i', '+', '1', ']', ';' ]
       expect(tokens[6].scopes).toEqual ['source.qsharp', 'storage.modifiers.new.qsharp']
+
+  describe 'punctuation-range', ->
+    it 'tokenizes start/stop ranges', ->
+      {tokens} = grammar.tokenizeLine 'let range = 1..5;'
+      values = (token.value for token in tokens)
+
+      expect(values).toEqual ['let', ' ', 'range', ' ', '=', ' ', '1', '..', '5', ';']
+      expect(tokens[7].scopes).toEqual ['source.qsharp', 'punctuation.definition.range.qsharp']
+
+    it 'tokenizes start/step/stop ranges', ->
+      {tokens} = grammar.tokenizeLine 'let range = 1..2..5;'
+      values = (token.value for token in tokens)
+
+      expect(values).toEqual ['let', ' ', 'range', ' ', '=', ' ', '1', '..', '2', '..', '5', ';']
+      expect(tokens[7].scopes).toEqual ['source.qsharp', 'punctuation.definition.range.qsharp']
+      expect(tokens[9].scopes).toEqual ['source.qsharp', 'punctuation.definition.range.qsharp']
+
+    it 'tolerates whitespace in the range', ->
+      {tokens} = grammar.tokenizeLine 'let range = 1 .. 2 .. 5;'
+      values = (token.value for token in tokens)
+
+      expect(values).toEqual ['let', ' ', 'range', ' ', '=', ' ', '1', ' ', '..', ' ', '2', ' ', '..', ' ', '5', ';']
+      expect(tokens[8].scopes).toEqual ['source.qsharp', 'punctuation.definition.range.qsharp']
+      expect(tokens[12].scopes).toEqual ['source.qsharp', 'punctuation.definition.range.qsharp']
 
   describe 'literals', ->
     describe 'boolean-literal', ->

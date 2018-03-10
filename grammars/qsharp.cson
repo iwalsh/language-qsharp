@@ -16,9 +16,7 @@
       {
         "begin": "(^\\s+)?(?=//)",
         "beginCaptures": {
-          "1": {
-            "name": "punctuation.whitespace.comment.leading.qsharp"
-          }
+          "1": { "name": "punctuation.whitespace.comment.leading.qsharp" }
         },
         "end": "(?=$)",
         "patterns": [
@@ -27,9 +25,7 @@
             "name": "comment.line.double-slash.qsharp",
             "begin": "(?<!/)//(?!/)",
             "beginCaptures": {
-              "0": {
-                "name": "punctuation.definition.comment.qsharp"
-              }
+              "0": { "name": "punctuation.definition.comment.qsharp" }
             },
             "end": "(?=$)"
           },
@@ -38,9 +34,7 @@
             "name": "comment.block.documentation.qsharp",
             "begin": "(?<!/)///(?!/)",
             "beginCaptures": {
-              "0": {
-                "name": "punctuation.definition.comment.qsharp"
-              }
+              "0": { "name": "punctuation.definition.comment.qsharp" }
             },
             "end": "(?=$)",
             "patterns": [
@@ -62,9 +56,7 @@
     "name": "markup.heading.1.md.qsharp"
     "begin": "\\G\\s*(#)\\s+",
     "beginCaptures": {
-      "1": {
-        "name": "punctuation.definition.comment-header.qsharp"
-      }
+      "1": { "name": "punctuation.definition.comment-header.qsharp" }
     }
     "end": "\\s*(?=$)"
   },
@@ -72,15 +64,11 @@
     "name": "markup.underline.link.qsharp"
     "begin": "@\"",
     "beginCaptures": {
-      "0": {
-        "name": "punctuation.definition.cross-reference.begin.qsharp"
-      }
+      "0": { "name": "punctuation.definition.cross-reference.begin.qsharp" }
     }
     "end": "\"",
     "endCaptures": {
-      "0": {
-        "name": "punctuation.definition.cross-reference.end.qsharp"
-      }
+      "0": { "name": "punctuation.definition.cross-reference.end.qsharp" }
     }
   },
   "expression": {
@@ -89,7 +77,8 @@
       { "include": "#literal" },
       { "include": "#expression-operators" },
       { "include": "#identifier" },
-      { "include": "#parenthesized-expression" }
+      { "include": "#parenthesized-expression" },
+      { "include": "#punctuation-range"}  # REVIEW: is this the right home?
     ]
   },
   "statement": {
@@ -125,27 +114,19 @@
   "if-statement": {
     "begin": "(?<!\\.)\\b(if)|(elif)\\b\\s*(?=\\()",
     "beginCaptures": {
-      "1": {
-        "name": "keyword.control.conditional.if.qsharp"
-      },
-      "2": {
-        "name": "keyword.control.conditional.elif.qsharp"
-      },
+      "1": { "name": "keyword.control.conditional.if.qsharp" },
+      "2": { "name": "keyword.control.conditional.elif.qsharp" },
     },
     "end": "(?<=\\})",
     "patterns": [
       {
         "begin": "\\(",
         "beginCaptures": {
-          "0": {
-            "name": "punctuation.parenthesis.open.qsharp"
-          }
+          "0": { "name": "punctuation.parenthesis.open.qsharp" }
         },
         "end": "\\)",
         "endCaptures": {
-          "0": {
-            "name": "punctuation.parenthesis.close.qsharp"
-          }
+          "0": { "name": "punctuation.parenthesis.close.qsharp" }
         },
         "patterns": [
           { "include": "#expression" }
@@ -157,9 +138,7 @@
   "else-part": {
     "begin": "(?<!\\.)\\b(else)\\b",
     "beginCaptures": {
-      "1": {
-        "name": "keyword.control.conditional.else.qsharp"
-      }
+      "1": { "name": "keyword.control.conditional.else.qsharp" }
     },
     "end": "(?<=\\})",
     "patterns": [
@@ -169,36 +148,26 @@
   "for-statement": {
     "begin": "(?<!\\.)\\b(for)\\b\\s*(?=\\()",
     "beginCaptures": {
-      "1": {
-        "name": "keyword.control.loop.for.qsharp"
-      }
+      "1": { "name": "keyword.control.loop.for.qsharp" }
     },
     "end": "(?<=\\})", # TODO: No semicolon termination?
     "patterns": [
       {
         "begin": "\\(",
         "beginCaptures": {
-          "0": {
-            "name": "punctuation.parenthesis.open.qsharp"
-          }
+          "0": { "name": "punctuation.parenthesis.open.qsharp" }
         },
         "end": "\\)",
         "endCaptures": {
-          "0": {
-            "name": "punctuation.parenthesis.close.qsharp"
-          }
+          "0": { "name": "punctuation.parenthesis.close.qsharp" }
         },
         "patterns": [
           {
             # TODO: test thoroughly; compare C# `foreach`
             "match": "\\s*([_[:alpha:]][_[:alnum:]]*)\\s+(in)\\s+",
             "captures": {
-              "1": {
-                "name": "entity.name.variable.local.qsharp"
-              },
-              "2": {
-                "name": "keyword.control.loop.in.qsharp"
-              },
+              "1": { "name": "entity.name.variable.local.qsharp" },
+              "2": { "name": "keyword.control.loop.in.qsharp" },
               # "3": {
               # # TODO: a capture for the range expression
               # }
@@ -212,9 +181,7 @@
   "repeat-statement": {
     "begin": "(?<!\\.)\\b(repeat)\\b",
     "beginCaptures": {
-      "1": {
-        "name": "keyword.control.loop.repeat.qsharp"
-      }
+      "1": { "name": "keyword.control.loop.repeat.qsharp" }
     },
     "end": "(?=;|})",  # TODO: should semicolons be allowed?
     "patterns": [
@@ -224,16 +191,12 @@
   "until-statement": {
     "begin": "(?<!\\.)\\b(until)\\b\\s*",
     "beginCaptures": {
-      "1": {
-        "name": "keyword.control.loop.until.qsharp"
-      }
+      "1": { "name": "keyword.control.loop.until.qsharp" }
     },
     "end": "(?<!\\.)\\b(fixup)\\b\\s*",  # TODO: what about the fixup block?
     "endCaptures": {
-      "1": {
-        # TODO: Should `fixup` be captured in its own statement, "begin"?
-        "name": "keyword.control.loop.fixup.qsharp"
-      }
+      # TODO: Should `fixup` be captured in its own statement, "begin"?
+      "1": { "name": "keyword.control.loop.fixup.qsharp" }
     }
     "patterns": [
       { "include": "#expression" } # TODO: enforce boolean expression?
@@ -242,9 +205,7 @@
   "fail-statement": {
     "begin": "(?<!\\.)\\b(fail)\\b",
     "beginCaptures": {
-      "1": {
-        "name": "keyword.control.flow.fail.qsharp"
-      }
+      "1": { "name": "keyword.control.flow.fail.qsharp" }
     },
     "end": "(?=;)",
     "patterns": [
@@ -255,16 +216,10 @@
     # FIXME: Needs to allow tuple-deconstruction assignment
     "begin": "(?x)\n\\b(let)\\b\\s*\n\\b([_[:alpha:]][_[:alnum:]]*)\\b\\s*\n(=)\\s*",
     "beginCaptures": {
-      "1": {
-        "name": "keyword.binding.let.qsharp"
-      },
-      "2": {
-        # TODO: Should this be "variable.other.readonly.qsharp"?
-        "name": "entity.name.variable.local.qsharp"
-      },
-      "3": {
-        "name": "keyword.operator.assignment.qsharp"
-      }
+      "1": { "name": "keyword.binding.let.qsharp" },
+      # TODO: Should this be "variable.other.readonly.qsharp"?
+      "2": { "name": "entity.name.variable.local.qsharp" },
+      "3": { "name": "keyword.operator.assignment.qsharp" }
     },
     "end": "(?=;|\\))",
     # TODO: Need endCaptures for the semicolon?
@@ -275,16 +230,10 @@
   "mutable-statement": {
     "begin": "(?x)\n\\b(mutable)\\b\\s*\n\\b([_[:alpha:]][_[:alnum:]]*)\\b\\s*\n(=)\\s*",
     "beginCaptures": {
-      "1": {
-        "name": "keyword.binding.mutable.qsharp"
-      },
-      "2": {
-        # TODO: Should this be "variable.other.readwrite.qsharp"?
-        "name": "entity.name.variable.local.qsharp"
-      },
-      "3": {
-        "name": "keyword.operator.assignment.qsharp"
-      }
+      "1": { "name": "keyword.binding.mutable.qsharp" },
+      # TODO: Should this be "variable.other.readwrite.qsharp"?
+      "2": { "name": "entity.name.variable.local.qsharp" },
+      "3": { "name": "keyword.operator.assignment.qsharp" }
     },
     "end": "(?=;|\\))",
     # TODO: Need endCaptures for the semicolon?
@@ -295,16 +244,10 @@
   "set-statement": {
     "begin": "(?x)\n\\b(set)\\b\\s*\n\\b([_[:alpha:]][_[:alnum:]]*)\\b\\s*\n(=)\\s*",
     "beginCaptures": {
-      "1": {
-        "name": "keyword.binding.set.qsharp"
-      },
-      "2": {
-        # TODO: Should this be "variable.other.readwrite.qsharp"?
-        "name": "entity.name.variable.local.qsharp"
-      },
-      "3": {
-        "name": "keyword.operator.assignment.qsharp"
-      }
+      "1": { "name": "keyword.binding.set.qsharp" },
+      # TODO: Should this be "variable.other.readwrite.qsharp"?
+      "2": { "name": "entity.name.variable.local.qsharp" },
+      "3": { "name": "keyword.operator.assignment.qsharp" }
     },
     "end": "(?=;|\\))",
     # TODO: Need endCaptures for the semicolon?
@@ -322,9 +265,7 @@
       "0": { "name": "punctuation.curlybrace.close.qsharp" }
     },
     "patterns": [
-      {
-        "include": "#statement"
-      }
+      { "include": "#statement" }
     ]
   }
   "storage-modifiers": {
@@ -349,6 +290,10 @@
       { "include": "#expression" }
     ]
   },
+  "punctuation-range": {
+    "match": "\\.\\.",
+    "name": "punctuation.definition.range.qsharp"
+  }
   "identifier": {
     # TODO: should this be "entity.name.variable.local.qsharp"?
     "name": "variable.other.readwrite.qsharp",
@@ -405,18 +350,12 @@
     "name": "string.quoted.double.qsharp",
     "begin": "(?<!\$)\"",
     "beginCaptures": {
-      "0": {
-        "name": "punctuation.definition.string.begin.qsharp"
-      }
+      "0": { "name": "punctuation.definition.string.begin.qsharp" }
     },
     "end": "(\")|((?:[^\\\\\\n])$)",
     "endCaptures": {
-      "1": {
-        "name": "punctuation.definition.string.end.qsharp"
-      },
-      "2": {
-        "name": "invalid.illegal.newline.qsharp"
-      }
+      "1": { "name": "punctuation.definition.string.end.qsharp" },
+      "2": { "name": "invalid.illegal.newline.qsharp" }
     },
     "patterns": [
       { "include": "#string-character-escape" }
@@ -430,18 +369,12 @@
     "name": "string.quoted.double.qsharp",
     "begin": "\\$\"",
     "beginCaptures": {
-      "0": {
-        "name": "punctuation.definition.string.begin.qsharp"
-      }
+      "0": { "name": "punctuation.definition.string.begin.qsharp" }
     },
     "end": "(\")|((?:[^\\\\\\n])$)",
     "endCaptures": {
-      "1": {
-        "name": "punctuation.definition.string.end.qsharp"
-      },
-      "2": {
-        "name": "invalid.illegal.newline.qsharp"
-      }
+      "1": { "name": "punctuation.definition.string.end.qsharp" },
+      "2": { "name": "invalid.illegal.newline.qsharp" }
     },
     "patterns": [
       { "include": "#string-character-escape" },
@@ -452,18 +385,12 @@
     "name": "meta.interpolation.qsharp",
     "begin": "(?<=[^\\{])((?:\\{\\{)*)(\\{)(?=[^\\{])",
     "beginCaptures": {
-      "1": {
-        "name": "string.quoted.double.qsharp"
-      },
-      "2": {
-        "name": "punctuation.definition.interpolation.begin.qsharp"
-      }
+      "1": { "name": "string.quoted.double.qsharp" },
+      "2": { "name": "punctuation.definition.interpolation.begin.qsharp" }
     },
     "end": "\\}",
     "endCaptures": {
-      "0": {
-        "name": "punctuation.definition.interpolation.end.qsharp"
-      }
+      "0": { "name": "punctuation.definition.interpolation.end.qsharp" }
     },
     "patterns": [
       { "include": "#expression" }
@@ -479,12 +406,8 @@
       "0": { "name": "punctuation.parenthesis.close.qsharp" }
     },
     "patterns": [
-      {
-        "include": "#expression"
-      },
-      {
-        "include": "#punctuation-comma"
-      }
+      { "include": "#expression" },
+      { "include": "#punctuation-comma" }
     ]
   },
   "expression-operators": {
@@ -591,6 +514,7 @@
     ]
   }
   "bitwise-operators": {
+    # REVIEW:  Are these negative lookbehinds actually working like I think?
     "patterns": [
       {
         "before": "(?<!\\&)",  # Negative lookbehind `&`
