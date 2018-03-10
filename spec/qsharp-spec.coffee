@@ -148,7 +148,7 @@ describe "Q# grammar", ->
         {tokens} = grammar.tokenizeLine "if (i == 1) { X(target); }"
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ["if", " ", "(", "i", " ", "==", " ", "1", ")", " { X", "(", "target", ")", "; }"]
+        expect(values).toEqual ["if", " ", "(", "i", " ", "==", " ", "1", ")", " ", "{", " X(target); ",  "}"]
         expect(tokens[0].scopes).toEqual ["source.qsharp", "keyword.control.conditional.if.qsharp"]
         expect(tokens[2].scopes).toEqual ["source.qsharp", "punctuation.parenthesis.open.qsharp"]
         expect(tokens[8].scopes).toEqual ["source.qsharp", "punctuation.parenthesis.close.qsharp"]
@@ -157,7 +157,7 @@ describe "Q# grammar", ->
         {tokens} = grammar.tokenizeLine "elif (i == 2) { Y(target); }"
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ["elif", " ", "(", "i", " ", "==", " ", "2", ")", " { Y", "(", "target", ")", "; }"]
+        expect(values).toEqual ["elif", " ", "(", "i", " ", "==", " ", "2", ")", " ", "{", " Y(target); ", "}"]
         expect(tokens[0].scopes).toEqual ["source.qsharp", "keyword.control.conditional.elif.qsharp"]
         expect(tokens[2].scopes).toEqual ["source.qsharp", "punctuation.parenthesis.open.qsharp"]
         expect(tokens[8].scopes).toEqual ["source.qsharp", "punctuation.parenthesis.close.qsharp"]
@@ -167,7 +167,7 @@ describe "Q# grammar", ->
         {tokens} = grammar.tokenizeLine "else { Z(target); }"
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ["else", " { Z(target); }"]
+        expect(values).toEqual ["else", " ", "{", " Z(target); ", "}"]
         expect(tokens[0].scopes).toEqual ["source.qsharp", "keyword.control.conditional.else.qsharp"]
 
       # FIXME
@@ -190,22 +190,24 @@ describe "Q# grammar", ->
         expect(tokens[8].scopes).toEqual ["source.qsharp", "punctuation.parenthesis.close.qsharp"]
 
     describe "repeat-statement", ->
-      # FIXME: Wrong curly-brace tokenization
+      # FIXME: Wrong semicolon tokenization
       it "tokenizes the keyword", ->
         # TODO: need a more complete example?
         {tokens} = grammar.tokenizeLine "repeat { set sum = sum + 1; }"
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ["repeat", " { ", "set", " ", "sum", " ", "=", " ", "sum", " ", "+", " ", "1", "; }"]
+        expect(values).toEqual ["repeat", " ", "{", " ", "set", " ", "sum", " ", "=", " ", "sum", " ", "+", " ", "1", "; ", "}"]
         expect(tokens[0].scopes).toEqual ["source.qsharp", "keyword.control.loop.repeat.qsharp"]
+        expect(tokens[2].scopes).toEqual ["source.qsharp", "punctuation.curlybrace.open.qsharp"]
+        expect(tokens[16].scopes).toEqual ["source.qsharp", "punctuation.curlybrace.close.qsharp"]
 
     describe "until-statement", ->
-      # FIXME: curly brace tokenization incorrect
+      # FIXME: tuple and semicolon incorrect
       it "tokenizes the keywords", ->
         {tokens} = grammar.tokenizeLine "} until result == Zero fixup { (); }"
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ["} ", "until", " ", "result", " ", "==", " ", "Zero", " ", "fixup", " ", "{ (); }"]
+        expect(values).toEqual ["} ", "until", " ", "result", " ", "==", " ", "Zero", " ", "fixup", " ", "{", " (); ", "}"]
         expect(tokens[1].scopes).toEqual ["source.qsharp", "keyword.control.loop.until.qsharp"]
         expect(tokens[9].scopes).toEqual ["source.qsharp", "keyword.control.loop.fixup.qsharp"]
 

@@ -8,6 +8,7 @@
   { "include": "#statement" },
   { "include": "#storage-modifiers" },  # TODO: probably shouldn't be at top-level
   { "include": "#literal" }  # TODO: shouldn't be at top-level
+  { "include": "#punctuation-semicolon" }
 ],
 "repository": {
   "comment": {
@@ -103,7 +104,8 @@
       { "include": "#fail-statement" },
       { "include": "#let-statement" },
       { "include": "#mutable-statement" },
-      { "include": "#set-statement" }
+      { "include": "#set-statement" },
+      { "include": "#block" }
     ]
   },
   "return-statement": {
@@ -308,6 +310,21 @@
     # TODO: Need endCaptures for the semicolon?
     "patterns": [
       { "include": "#expression" }
+    ]
+  },
+  "block": {
+    "begin": "\\{",
+    "beginCaptures": {
+      "0": { "name": "punctuation.curlybrace.open.qsharp" }
+    },
+    "end": "\\}",
+    "endCaptures": {
+      "0": { "name": "punctuation.curlybrace.close.qsharp" }
+    },
+    "patterns": [
+      {
+        "include": "#statement"
+      }
     ]
   }
   "storage-modifiers": {
@@ -601,4 +618,8 @@
       }
     ]
   },
+  "punctuation-semicolon": {
+    "name": "punctuation.terminator.statement.qsharp",
+    "match": ";"
+  }
 }
