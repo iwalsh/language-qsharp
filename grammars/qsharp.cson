@@ -252,10 +252,11 @@
     ]
   },
   "let-statement": {
+    # FIXME: Needs to allow tuple-deconstruction assignment
     "begin": "(?x)\n\\b(let)\\b\\s*\n\\b([_[:alpha:]][_[:alnum:]]*)\\b\\s*\n(=)\\s*",
     "beginCaptures": {
       "1": {
-        "name": "storage.modifiers.let.qsharp"
+        "name": "keyword.binding.let.qsharp"
       },
       "2": {
         # TODO: Should this be "variable.other.readonly.qsharp"?
@@ -275,7 +276,7 @@
     "begin": "(?x)\n\\b(mutable)\\b\\s*\n\\b([_[:alpha:]][_[:alnum:]]*)\\b\\s*\n(=)\\s*",
     "beginCaptures": {
       "1": {
-        "name": "storage.modifiers.mutable.qsharp"
+        "name": "keyword.binding.mutable.qsharp"
       },
       "2": {
         # TODO: Should this be "variable.other.readwrite.qsharp"?
@@ -295,8 +296,7 @@
     "begin": "(?x)\n\\b(set)\\b\\s*\n\\b([_[:alpha:]][_[:alnum:]]*)\\b\\s*\n(=)\\s*",
     "beginCaptures": {
       "1": {
-        # Is this really a "storage modifier"? More like a keywork...
-        "name": "storage.modifiers.set.qsharp"
+        "name": "keyword.binding.set.qsharp"
       },
       "2": {
         # TODO: Should this be "variable.other.readwrite.qsharp"?
@@ -329,19 +329,7 @@
   }
   "storage-modifiers": {
     "patterns": [
-      # {
-      #   # TODO: Is this needed anymore now that we have the let-statement?
-      #   "name": "storage.modifiers.let.qsharp",
-      #   "match": "(?<!\\.)\\b(let)\\b"
-      # },
-      {
-        "name": "storage.modifiers.mutable.qsharp",
-        "match": "(?<!\\.)\\b(mutable)\\b"
-      },
-      {
-        "name": "storage.modifiers.set.qsharp",
-        "match": "(?<!\\.)\\b(set)\\b"
-      },
+      # TODO: are these really "storage modifiers?"
       {
         "name": "storage.modifiers.new.qsharp",
         "match": "(?<!\\.)\\b(new)\\b"
@@ -479,6 +467,24 @@
     },
     "patterns": [
       { "include": "#expression" }
+    ]
+  },
+  "tuple-literal": {
+    "begin": "(\\()(?=.*[:,])", # TODO: lookahead unnecessary?
+    "beginCaptures": {
+      "1": { "name": "punctuation.parenthesis.open.qsharp" }
+    },
+    "end": "\\)",
+    "endCaptures": {
+      "0": { "name": "punctuation.parenthesis.close.qsharp" }
+    },
+    "patterns": [
+      {
+        "include": "#expression"
+      },
+      {
+        "include": "#punctuation-comma"
+      }
     ]
   },
   "expression-operators": {
@@ -623,6 +629,10 @@
         "match": ">>>"
       }
     ]
+  },
+  "punctuation-comma": {
+    "name": "punctuation.separator.comma.qsharp",
+    "match": ","
   },
   "punctuation-semicolon": {
     "name": "punctuation.terminator.statement.qsharp",
