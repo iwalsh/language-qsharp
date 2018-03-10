@@ -334,6 +334,13 @@ describe "Q# grammar", ->
         expect(values).toEqual ["let", " ", "_5Million", " ", "=", " ", "5.0e6", ";"]
         expect(tokens[6].scopes).toEqual ["source.qsharp", "constant.numeric.decimal.qsharp"]
 
+      it "tokenizes hexadecimal numbers", ->
+        {tokens} = grammar.tokenizeLine "let hex = 0xdeadbeef;"
+        values = (token.value for token in tokens)
+
+        expect(values).toEqual ["let", " ", "hex", " ", "=", " ", "0xdeadbeef", ";"]
+        expect(tokens[6].scopes).toEqual ["source.qsharp", "constant.numeric.hex.qsharp"]
+
     describe "string-literal", ->
       it "tokenizes string punctuation", ->
         {tokens} = grammar.tokenizeLine "\"Hello world!\""

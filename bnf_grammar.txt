@@ -56,6 +56,7 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
                    |  `bare float`
                    |  `integer with exponent`
                    |  `float with exponent`
+                   |  `hexadecimal`
 
 <string-literal> ::= `double-quoted string`
 
