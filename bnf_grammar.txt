@@ -19,6 +19,7 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
               |  <identifier>
               |  <parenthesized-expression>
               |  <punctuation-range>
+              |  <array-creation-expression>
 
 <parenthesized-expression> ::= "(" <expression> ")"
 
@@ -26,10 +27,11 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
 
 <identifier> ::= /[_[:alpha:]][_[:alnum:]]*/
 
-<storage-modifiers> ::= "let"
-                     |  "mutable"
-                     |  "set"
-                     |  "new"
+<array-creation-expression> ::= "new" /[A-Z][_[:alnum:]]*/<bracketed-argument-list>
+
+<bracketed-argument-list> ::= <expression>
+                           |  <expression> ";" <bracketed-argument-list>
+
 
 <expression-operators> ::= "="
                         |  <arithmetic-operators>

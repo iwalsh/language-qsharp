@@ -266,15 +266,6 @@ describe 'Q# grammar', ->
         expect(tokens[2].scopes).toEqual ['source.qsharp', 'entity.name.variable.local.qsharp']
         expect(tokens[4].scopes).toEqual ['source.qsharp', 'keyword.operator.assignment.qsharp']
 
-  describe 'storage-modifiers', ->
-    # FIXME: `new` is being tokenized as a 'variable.other.readwrite.qsharp'
-    it 'tokenizes the `new` keyword', ->
-      {tokens} = grammar.tokenizeLine 'mutable ary = new Int[i+1];'
-      values = (token.value for token in tokens)
-
-      expect(values).toEqual ['mutable', ' ', 'ary', ' ', '=', ' ', 'new', ' ', 'Int', '[', 'i', '+', '1', ']', ';' ]
-      expect(tokens[6].scopes).toEqual ['source.qsharp', 'storage.modifiers.new.qsharp']
-
   describe 'punctuation-range', ->
     it 'tokenizes start/stop ranges', ->
       {tokens} = grammar.tokenizeLine 'let range = 1..5;'
@@ -298,6 +289,23 @@ describe 'Q# grammar', ->
       expect(values).toEqual ['let', ' ', 'range', ' ', '=', ' ', '1', ' ', '..', ' ', '2', ' ', '..', ' ', '5', ';']
       expect(tokens[8].scopes).toEqual ['source.qsharp', 'punctuation.definition.range.qsharp']
       expect(tokens[12].scopes).toEqual ['source.qsharp', 'punctuation.definition.range.qsharp']
+
+  describe 'array-creation-expression', ->
+    it 'tokenizes the keyword and punctuation', ->
+      {tokens} = grammar.tokenizeLine 'let ary = new Int[i+1];'
+      values = (token.value for token in tokens)
+
+      expect(values).toEqual ['let', ' ', 'ary', ' ', '=', ' ', 'new', ' ', 'Int', '[', 'i', '+', '1', ']', ';']
+      expect(tokens[6].scopes).toEqual ['source.qsharp', 'keyword.other.new.qsharp']
+      expect(tokens[8].scopes).toEqual ['source.qsharp', 'entity.name.type.qsharp']
+      expect(tokens[9].scopes).toEqual ['source.qsharp', 'punctuation.squarebracket.open.qsharp']
+      expect(tokens[13].scopes).toEqual ['source.qsharp', 'punctuation.squarebracket.close.qsharp']
+
+  describe 'arrays', ->
+    # TODO: literal syntax let ary = [1;2;3];
+    # TODO: concatentation let ary = [1;2;3] + [4;5;6];
+    # TODO: range let ary = a[1..3];
+    # TODO: indexing let first = a[0];
 
   describe 'literals', ->
     describe 'boolean-literal', ->
@@ -376,12 +384,13 @@ describe 'Q# grammar', ->
 
     describe 'tuple-literal', ->
       it 'tokenizes the punctation', ->
-        {tokens} = grammar.tokenizeLine 'let tuple = ();'
+        {tokens} = grammar.tokenizeLine 'let tuple = (1,2);'
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ['let', ' ', 'tuple', ' ', '=', ' ', '(', ')', ';']
+        expect(values).toEqual ['let', ' ', 'tuple', ' ', '=', ' ', '(', '1', ',', '2', ')', ';']
         expect(tokens[6].scopes).toEqual ['source.qsharp', 'punctuation.parenthesis.open.qsharp']
-        expect(tokens[7].scopes).toEqual ['source.qsharp', 'punctuation.parenthesis.close.qsharp']
+        expect(tokens[8].scopes).toEqual ['source.qsharp', 'punctuation.separator.comma.qsharp']
+        expect(tokens[10].scopes).toEqual ['source.qsharp', 'punctuation.parenthesis.close.qsharp']
 
       it 'tokenizes the inner expression', ->
         {tokens} = grammar.tokenizeLine 'let tuple = (1+2);'

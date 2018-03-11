@@ -6,7 +6,6 @@
 "patterns": [
   { "include": "#comment" },
   { "include": "#statement" },
-  { "include": "#storage-modifiers" },  # TODO: probably shouldn't be at top-level
   { "include": "#literal" }  # TODO: shouldn't be at top-level
   { "include": "#punctuation-semicolon" }
 ],
@@ -21,7 +20,7 @@
         "end": "(?=$)",
         "patterns": [
           {
-            # Double-slash comments
+            "comment": "Double-slash comments",
             "name": "comment.line.double-slash.qsharp",
             "begin": "(?<!/)//(?!/)",
             "beginCaptures": {
@@ -30,7 +29,7 @@
             "end": "(?=$)"
           },
           {
-            # Documentation (triple-slash) comments
+            "comment": "Documentation (triple-slash) comments",
             "name": "comment.block.documentation.qsharp",
             "begin": "(?<!/)///(?!/)",
             "beginCaptures": {
@@ -53,6 +52,7 @@
     ]
   },
   "documentation-comment-header": {
+    "comment": "A Markdown H1 header in the doc comment",
     "name": "markup.heading.1.md.qsharp"
     "begin": "\\G\\s*(#)\\s+",
     "beginCaptures": {
@@ -61,6 +61,7 @@
     "end": "\\s*(?=$)"
   },
   "documentation-comment-cross-reference": {
+    "comment": "Cross reference to operations, functions, and user-defined types",
     "name": "markup.underline.link.qsharp"
     "begin": "@\"",
     "beginCaptures": {
@@ -76,9 +77,10 @@
       { "include": "#interpolated-string" },
       { "include": "#literal" },
       { "include": "#expression-operators" },
-      { "include": "#identifier" },
       { "include": "#parenthesized-expression" },
-      { "include": "#punctuation-range"}  # REVIEW: is this the right home?
+      { "include": "#punctuation-range"},  # REVIEW: is this the right home?
+      { "include": "#array-creation-expression" },
+      { "include": "#identifier" }
     ]
   },
   "statement": {
@@ -100,9 +102,7 @@
   "return-statement": {
     "begin": "(?<!\\.)\\b(return)\\b",
     "beginCaptures": {
-      "1": {
-        "name": "keyword.control.flow.return.qsharp"
-      }
+      "1": { "name": "keyword.control.flow.return.qsharp" }
     },
     "end": "(?=;)"
     # TODO: inner patterns
@@ -267,15 +267,6 @@
     "patterns": [
       { "include": "#statement" }
     ]
-  }
-  "storage-modifiers": {
-    "patterns": [
-      # TODO: are these really "storage modifiers?"
-      {
-        "name": "storage.modifiers.new.qsharp",
-        "match": "(?<!\\.)\\b(new)\\b"
-      }
-    ]
   },
   "parenthesized-expression": {
     "begin": "\\(",
@@ -293,7 +284,41 @@
   "punctuation-range": {
     "match": "\\.\\.",
     "name": "punctuation.definition.range.qsharp"
-  }
+  },
+  "array-creation-expression": {
+    "begin": "\\b(new)\\b\\s*([A-Z][_[:alnum:]]*)(\\[)",
+    "beginCaptures": {
+      "1": { "name": "keyword.other.new.qsharp" }
+      "2": { "name": "entity.name.type.qsharp" }
+      # TODO: allow whitespace before "[" ??
+      "3": { "name": "punctuation.squarebracket.open.qsharp" }
+    },
+    "end": "\\]",
+    "endCaptures": {
+      "0": { "name": "punctuation.squarebracket.close.qsharp" }
+    }
+    "patterns": [
+      { "include": "#expression" }
+    ]
+  },
+  # TODO: this should be used for array-literals
+  "array-literal-elements": {
+    "begin": "\\[",
+    "beginCaptures": {
+      "0": { "name": "punctuation.squarebracket.open.qsharp" }
+    },
+    "end": "\\]",
+    "endCaptures": {
+      "0": { "name": "punctuation.squarebracket.close.qsharp" }
+    },
+    "patterns": [
+      { "include": "#expression" },
+      {
+        "name": "punctuation.separator.semicolon.qsharp",
+        "match": ";"
+      }
+    ]
+  },
   "identifier": {
     # TODO: should this be "entity.name.variable.local.qsharp"?
     "name": "variable.other.readwrite.qsharp",
