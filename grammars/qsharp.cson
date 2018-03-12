@@ -6,8 +6,9 @@
 "patterns": [
   { "include": "#comment" },
   { "include": "#statement" },
-  { "include": "#literal" }  # TODO: shouldn't be at top-level
-  { "include": "#punctuation-semicolon" }
+  { "include": "#literal" },  # TODO: shouldn't be at top-level
+  { "include": "#punctuation-semicolon" },
+  { "include": "#reserved-csharp-keywords" }
 ],
 "repository": {
   "comment": {
@@ -586,5 +587,30 @@
   "punctuation-semicolon": {
     "name": "punctuation.terminator.statement.qsharp",
     "match": ";"
+  },
+  "reserved-csharp-keywords": {
+    "commented": "Adapted from the grammar inside the Microsoft Quantum Development Kit Visual Studio Extension"
+    "patterns": [
+      {
+        "comment": "C# reserved words which can't be used in Q#, A-D",
+        "name": "invalid.illegal.reserved-csharp-keyword.a-d.qsharp",
+        "match": "\\b(abstract|as|base|bool|break|byte|case|catch|char|checked|class|const|continue|decimal|default|delegate|do|double)\\b"
+      },
+      {
+        "comment": "C# reserved words which can't be used in Q#, E-L",
+        "name": "invalid.illegal.reserved-csharp-keyword.e-l.qsharp",
+        "match": "\\b(enum|event|explicit|extern|finally|fixed|float|foreach|goto|implicit|int|interface|internal|is|lock|long)\\b"
+      },
+      {
+        "comment": "C# reserved words which can't be used in Q#, N-S",
+        "name": "invalid.illegal.reserved-csharp-keyword.n-s.qsharp",
+        "match": "\\b(null|object|operator|out|override|params|private|protected|public|readonly|ref|sbyte|sealed|short|sizeof|stackalloc)\\b"
+      },
+      {
+        "comment": "C# reserved words which can't be used in Q#, S-V",
+        "name": "invalid.illegal.reserved-csharp-keyword.s-v.qsharp",
+        "match": "\\b(static|string|struct|switch|this|throw|try|typeof|unit|ulong|unchecked|unsafe|ushort|virtual|void|volatile)\\b"
+      }
+    ]
   }
 }

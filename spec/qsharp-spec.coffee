@@ -559,3 +559,59 @@ describe 'Q# grammar', ->
 
         expect(values).toEqual ['let', ' ', 'foo', ' ', '=', ' ', '3', ' ', '>>>', ' ', '1', ';']
         expect(tokens[8].scopes).toEqual ['source.qsharp', 'keyword.operator.bitwise.shift.right.qsharp']
+
+  describe 'reserved-csharp-keywords, A-D', ->
+    [
+      'abstract', 'as', 'base', 'bool', 'break', 'byte', 'case', 'catch',
+      'char', 'checked', 'class', 'const', 'continue', 'decimal', 'default',
+      'delegate', 'do', 'double'
+    ].forEach((keyword) =>
+      it "reserves the C# keyword `#{keyword}`", =>
+        {tokens} = grammar.tokenizeLine "foo #{keyword} bar;"
+        values = (token.value for token in tokens)
+
+        expect(values).toEqual ['foo ', keyword, ' bar', ';']
+        expect(tokens[1].scopes).toEqual ['source.qsharp', 'invalid.illegal.reserved-csharp-keyword.a-d.qsharp']
+    );
+
+  describe 'reserved-csharp-keywords, E-L', ->
+    [
+      'enum', 'event', 'explicit', 'extern', 'finally', 'fixed', 'float',
+      'foreach', 'goto', 'implicit', 'int', 'interface', 'internal', 'is',
+      'lock', 'long'
+    ].forEach((keyword) =>
+      it "reserves the C# keyword `#{keyword}`", =>
+        {tokens} = grammar.tokenizeLine "foo #{keyword} bar;"
+        values = (token.value for token in tokens)
+
+        expect(values).toEqual ['foo ', keyword, ' bar', ';']
+        expect(tokens[1].scopes).toEqual ['source.qsharp', 'invalid.illegal.reserved-csharp-keyword.e-l.qsharp']
+    );
+
+  describe 'reserved-csharp-keywords, N-S', ->
+    [
+      'null', 'object', 'operator', 'out', 'override', 'params', 'private',
+      'protected', 'public', 'readonly', 'ref', 'sbyte', 'sealed', 'short',
+      'sizeof', 'stackalloc'
+    ].forEach((keyword) =>
+      it "reserves the C# keyword `#{keyword}`", =>
+        {tokens} = grammar.tokenizeLine "foo #{keyword} bar;"
+        values = (token.value for token in tokens)
+
+        expect(values).toEqual ['foo ', keyword, ' bar', ';']
+        expect(tokens[1].scopes).toEqual ['source.qsharp', 'invalid.illegal.reserved-csharp-keyword.n-s.qsharp']
+    );
+
+  describe 'reserved-csharp-keywords, S-V', ->
+    [
+      'static', 'string', 'struct', 'switch', 'this', 'throw', 'try', 'typeof',
+      'unit', 'ulong', 'unchecked', 'unsafe', 'ushort', 'virtual', 'void',
+      'volatile'
+    ].forEach((keyword) =>
+      it "reserves the C# keyword `#{keyword}`", =>
+        {tokens} = grammar.tokenizeLine "foo #{keyword} bar;"
+        values = (token.value for token in tokens)
+
+        expect(values).toEqual ['foo ', keyword, ' bar', ';']
+        expect(tokens[1].scopes).toEqual ['source.qsharp', 'invalid.illegal.reserved-csharp-keyword.s-v.qsharp']
+    );

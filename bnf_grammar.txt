@@ -1,4 +1,4 @@
-This grammar is my own best effort at modeling the Q# language - it is NOT official documentation and has no validation from Microsoft. Use at your own risk!
+This grammar is my own best effort at modeling the Q# language - it is NOT official documentation or endorsed by Microsoft in any way. Use at your own risk!
 
 <statement> ::= <comment>
              |  <return-statement>
@@ -66,3 +66,19 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
 <string-literal> ::= `double-quoted string`
 
 <comment> ::= `double-slash comment` | `triple-slash (doc) comment`
+
+<reserved-csharp-keyword.a-d> ::= abstract|as|base|bool|break|byte|case|catch
+                               |  char|checked|class|const|continue|decimal
+                               |  default|delegate|do|double
+
+<reserved-csharp-keyword.e-l> ::= enum|event|explicit|extern|finally|fixed
+                               |  float|foreach|goto|implicit|int|interface
+                               |  internal|is|lock|long
+
+<reserved-csharp-keyword.n-s> ::= null|object|operator|out|override|params
+                               |  private|protected|public|readonly|ref|sbyte
+                               |  sealed|short|sizeof|stackalloc
+
+<reserved-csharp-keyword.s-v> ::= static|string|struct|switch|this|throw|try
+                               |  typeof|unit|ulong|unchecked|unsafe|ushort
+                               |  virtual|void|volatile
