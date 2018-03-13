@@ -21,10 +21,14 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
               |  <parenthesized-expression>
               |  <punctuation-range>
               |  <array-creation-expression>
+              |  <primitive-type>
 
 <parenthesized-expression> ::= "(" <expression> ")"
 
 <punctuation-range> ::= ".."
+
+<primitive-type> ::= "Int" | "Double" | "Bool" | "Qubit" | "Pauli"
+                  |  "Result" | "Range" | "String"
 
 <identifier> ::= /[_[:alpha:]][_[:alnum:]]*/
 

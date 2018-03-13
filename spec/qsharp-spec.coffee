@@ -317,6 +317,18 @@ describe 'Q# grammar', ->
     # TODO: range let ary = a[1..3];
     # TODO: indexing let first = a[0];
 
+  describe 'primitive-type', ->
+    [
+      'Int', 'Double', 'Bool', 'Qubit', 'Pauli', 'Result', 'Range', 'String'
+    ].forEach((type) =>
+      it "recognizes the primitive type `#{type}`", =>
+        {tokens} = grammar.tokenizeLine "newtype MyType = (#{type});"
+        values = (token.value for token in tokens)
+
+        expect(values).toEqual ['newtype', ' ', 'MyType', ' ', '=', ' ', '(', type, ')', ';']
+        expect(tokens[7].scopes).toEqual ['source.qsharp', 'storage.type.qsharp']
+    );
+
   describe 'literals', ->
     describe 'boolean-literal', ->
       it 'tokenizes boolean `true`', ->

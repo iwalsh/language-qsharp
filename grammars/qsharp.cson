@@ -81,6 +81,7 @@
       { "include": "#parenthesized-expression" },
       { "include": "#punctuation-range"},  # REVIEW: is this the right home?
       { "include": "#array-creation-expression" },
+      { "include": "#primitive-type" },  # REVIEW: is this the right spot?
       { "include": "#identifier" }
     ]
   },
@@ -331,6 +332,14 @@
       {
         "name": "punctuation.separator.semicolon.qsharp",
         "match": ";"
+      }
+    ]
+  },
+  "primitive-type": {
+    "patterns": [
+      {
+        "name": "storage.type.qsharp",
+        "match": "(?<!\\.)\\b(Int|Double|Bool|Qubit|Pauli|Result|Range|String)\\b"
       }
     ]
   },
