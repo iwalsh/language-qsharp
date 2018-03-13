@@ -504,30 +504,14 @@
   "arithmetic-operators": {
     "patterns": [
       {
-        "name": "keyword.operator.arithmetic.addition.qsharp",
-        "match": "\\+"
-      },
-      {
-        "name": "keyword.operator.arithmetic.subtraction.qsharp",
-        "match": "-"
-      },
-      {
-        "name": "keyword.operator.arithmetic.multiplication.qsharp",
-        "match": "\\*"
-      },
-      {
-        "name": "keyword.operator.arithmetic.division.qsharp",
-        "match": "/"
+        "name": "keyword.operator.arithmetic.qsharp",
+        "match": "\\+|-|\\*|/|%"
       },
       {
         "match": "(?<!\\^)(\\^)(?!\\^)"
         "captures": {
-          "1": { "name": "keyword.operator.arithmetic.exponentiation.qsharp" }
+          "1": { "name": "keyword.operator.arithmetic.qsharp" }
         }
-      },
-      {
-        "name": "keyword.operator.arithmetic.modulo.qsharp",
-        "match": "%"
       }
     ]
   }
@@ -536,19 +520,19 @@
       {
         "match": "(?<!&)(&&)(?!&)"
         "captures": {
-          "1": { "name": "keyword.operator.logical.and.qsharp" }
+          "1": { "name": "keyword.operator.logical.qsharp" }
         }
       },
       {
         "match": "(?<!\\|)(\\|\\|)(?!\\|)"
         "captures": {
-          "1": { "name": "keyword.operator.logical.or.qsharp" }
+          "1": { "name": "keyword.operator.logical.qsharp" }
         }
       },
       {
         "match": "(!)(?!\\=)"
         "captures": {
-          "1": { "name": "keyword.operator.logical.not.qsharp" }
+          "1": { "name": "keyword.operator.logical.qsharp" }
         }
       }
     ]
@@ -556,35 +540,27 @@
   "comparison-operators": {
     "patterns": [
       {
-        "name": "keyword.operator.comparison.equals.qsharp"
-        "match": "\\=\\="
-      },
-      {
-        "name": "keyword.operator.comparison.not-equals.qsharp"
-        "match": "!\\="
+        "name": "keyword.operator.comparison.qsharp"
+        "match": "\\=\\=|!\\="
       }
     ]
   },
   "relational-operators": {
     "patterns": [
       {
-        "name": "keyword.operator.relational.less-than-or-equal-to.qsharp"
-        "match": "<\\="
-      },
-      {
-        "name": "keyword.operator.relational.greater-than-or-equal-to.qsharp"
-        "match": ">\\="
+        "name": "keyword.operator.relational.qsharp"
+        "match": "<\\=|>\\="
       },
       {
         "match": "(?<!\\<)(<)(?!\\<|=)"
         "captures": {
-          "1": { "name": "keyword.operator.relational.less-than.qsharp" }
+          "1": { "name": "keyword.operator.relational.qsharp" }
         }
       },
       {
         "match": "(?<!\\>)(>)(?!\\>|=)"
         "captures": {
-          "1": { "name": "keyword.operator.relational.greater-than.qsharp" }
+          "1": { "name": "keyword.operator.relational.qsharp" }
         }
       }
     ]
@@ -595,37 +571,37 @@
       {
         "before": "(?<!\\&)",  # Negative lookbehind `&`
         "end": "(?!\\&)",  # Negative lookahead `&`
-        "name": "keyword.operator.bitwise.and.qsharp"
+        "name": "keyword.operator.bitwise.qsharp"
         "match": "&&&"
       },
       {
         "before": "(?<!\\|)",  # Negative lookbehind `|`
         "end": "(?!\\|)",  # Negative lookahead `|`
-        "name": "keyword.operator.bitwise.or.qsharp"
+        "name": "keyword.operator.bitwise.qsharp"
         "match": "\\|\\|\\|"
       },
       {
         "before": "(?<!\\~)",  # Negative lookbehind `~`
         "end": "(?!\\~)",  # Negative lookahead `~`
-        "name": "keyword.operator.bitwise.complement.qsharp"
+        "name": "keyword.operator.bitwise.qsharp"
         "match": "~~~"
       },
       {
         "before": "(?<!\\^)",  # Negative lookbehind `^`
         "end": "(?!\\^)",  # Negative lookahead `^`
-        "name": "keyword.operator.bitwise.xor.qsharp"
+        "name": "keyword.operator.bitwise.qsharp"
         "match": "\\^\\^\\^"
       },
       {
         "before": "(?<!\\<)",  # Negative lookbehind `<`
         "end": "(?!\\<)",  # Negative lookahead `<`
-        "name": "keyword.operator.bitwise.shift.left.qsharp"
+        "name": "keyword.operator.bitwise.qsharp"
         "match": "<<<"
       },
       {
         "before": "(?<!\\<)",  # Negative lookbehind `<`
         "end": "(?!\\<)",  # Negative lookahead `<`
-        "name": "keyword.operator.bitwise.shift.right.qsharp"
+        "name": "keyword.operator.bitwise.qsharp"
         "match": ">>>"
       }
     ]
