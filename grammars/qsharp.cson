@@ -361,12 +361,8 @@
   "boolean-literal": {
     "patterns": [
       {
-        "name": "constant.language.boolean.true.qsharp",
-        "match": "(?<!\\.)\\btrue\\b"
-      },
-      {
-        "name": "constant.language.boolean.false.qsharp",
-        "match": "(?<!\\.)\\bfalse\\b"
+        "name": "constant.language.boolean.qsharp",
+        "match": "(?<!\\.)\\btrue|false\\b"
       }
     ]
   },

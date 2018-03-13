@@ -331,19 +331,16 @@ describe 'Q# grammar', ->
 
   describe 'literals', ->
     describe 'boolean-literal', ->
-      it 'tokenizes boolean `true`', ->
-        {tokens} = grammar.tokenizeLine 'mutable condition = true;'
-        values = (token.value for token in tokens)
+      [
+        'true', 'false'
+      ].forEach((bool) =>
+        it "tokenizes boolean `#{bool}`", =>
+          {tokens} = grammar.tokenizeLine "mutable condition = #{bool};"
+          values = (token.value for token in tokens)
 
-        expect(values).toEqual ['mutable', ' ', 'condition', ' ', '=', ' ', 'true', ';']
-        expect(tokens[6].scopes).toEqual ['source.qsharp', 'constant.language.boolean.true.qsharp']
-
-      it 'tokenizes boolean `false`', ->
-        {tokens} = grammar.tokenizeLine 'mutable condition = false;'
-        values = (token.value for token in tokens)
-
-        expect(values).toEqual ['mutable', ' ', 'condition', ' ', '=', ' ', 'false', ';']
-        expect(tokens[6].scopes).toEqual ['source.qsharp', 'constant.language.boolean.false.qsharp']
+          expect(values).toEqual ['mutable', ' ', 'condition', ' ', '=', ' ', bool, ';']
+          expect(tokens[6].scopes).toEqual ['source.qsharp', 'constant.language.boolean.qsharp']
+      );
 
     describe 'numeric-literal', ->
       it 'tokenizes bare integers', ->
