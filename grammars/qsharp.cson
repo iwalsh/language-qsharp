@@ -97,7 +97,8 @@
       { "include": "#let-statement" },
       { "include": "#mutable-statement" },
       { "include": "#set-statement" },
-      { "include": "#block" }
+      { "include": "#block" },
+      { "include": "#newtype-statement"}
     ]
   },
   "return-statement": {
@@ -267,6 +268,19 @@
     },
     "patterns": [
       { "include": "#statement" }
+    ]
+  },
+  "newtype-statement": {
+    "begin": "\\b(newtype)\\b\\s+\\b([_[:alpha:]][_[:alnum:]]*)\\b\\s*(=)\\s*",
+    "beginCaptures": {
+      "1": { "name": "keyword.other.newtype.qsharp" },
+      # TODO: enforce that the type starts with a capital?
+      "2": { "name": "entity.name.type.qsharp" },
+      "3": { "name": "keyword.operator.assignment.qsharp" }
+    },
+    "end": "(?=;|\\))",
+    "patterns": [
+      { "include": "#expression" }
     ]
   },
   "parenthesized-expression": {

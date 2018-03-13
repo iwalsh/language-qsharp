@@ -11,6 +11,7 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
              |  <let-statement>
              |  <mutable-statement>
              |  <set-statement>
+             |  <newtype-statement>
              |  <block>
 
 <expression> ::= <interpolated-string>

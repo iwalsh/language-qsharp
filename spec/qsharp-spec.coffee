@@ -266,6 +266,16 @@ describe 'Q# grammar', ->
         expect(tokens[2].scopes).toEqual ['source.qsharp', 'entity.name.variable.local.qsharp']
         expect(tokens[4].scopes).toEqual ['source.qsharp', 'keyword.operator.assignment.qsharp']
 
+    describe 'newtype-statement', ->
+      it 'tokenizes the keyword, type, and assignment operator', ->
+        {tokens} = grammar.tokenizeLine 'newtype TypeA = (Int, TypeB);'
+        values = (token.value for token in tokens)
+
+        expect(values).toEqual ['newtype', ' ', 'TypeA', ' ', '=', ' ', '(', 'Int', ',', ' ', 'TypeB', ')', ';']
+        expect(tokens[0].scopes).toEqual ['source.qsharp', 'keyword.other.newtype.qsharp']
+        expect(tokens[2].scopes).toEqual ['source.qsharp', 'entity.name.type.qsharp']
+        expect(tokens[4].scopes).toEqual ['source.qsharp', 'keyword.operator.assignment.qsharp']
+
   describe 'punctuation-range', ->
     it 'tokenizes start/stop ranges', ->
       {tokens} = grammar.tokenizeLine 'let range = 1..5;'
