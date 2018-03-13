@@ -329,6 +329,32 @@ describe 'Q# grammar', ->
         expect(tokens[7].scopes).toEqual ['source.qsharp', 'storage.type.qsharp']
     );
 
+  describe 'library-functions', ->
+    [
+      'X', 'Y', 'Z', 'H', 'HY', 'S', 'T', 'SWAP', 'CNOT', 'CCNOT', 'MultiX', 'R',
+      'RFrac', 'Rx', 'Ry', 'Rz', 'R1', 'R1Frac', 'Exp', 'ExpFrac', 'Measure',
+      'M', 'MultiM'
+    ].forEach((func) =>
+      it "tokenizes the builtin quantum function `#{func}`", =>
+        {tokens} = grammar.tokenizeLine "let res = #{func}(foo);"
+        values = (token.value for token in tokens)
+
+        expect(values).toEqual ['let', ' ', 'res', ' ', '=', ' ', func, '(', 'foo', ')', ';']
+        expect(tokens[6].scopes).toEqual ['source.qsharp', 'support.function.quantum.qsharp']
+    );
+
+    [
+      'Message', 'Length', 'Assert', 'AssertProb', 'AssertEqual', 'Random',
+      'Floor', 'Float', 'Start', 'Step', 'Stop'
+    ].forEach((func) =>
+      it "tokenizes the builtin classical function `#{func}`", =>
+        {tokens} = grammar.tokenizeLine "let res = #{func}(foo);"
+        values = (token.value for token in tokens)
+
+        expect(values).toEqual ['let', ' ', 'res', ' ', '=', ' ', func, '(', 'foo', ')', ';']
+        expect(tokens[6].scopes).toEqual ['source.qsharp', 'support.function.builtin.qsharp']
+    );
+
   describe 'literals', ->
     describe 'boolean-literal', ->
       [
@@ -451,6 +477,7 @@ describe 'Q# grammar', ->
       expect(tokens[2].scopes).toEqual ['source.qsharp', 'entity.name.variable.local.qsharp']
       expect(tokens[4].scopes).toEqual ['source.qsharp', 'keyword.operator.assignment.qsharp']
 
+    # TODO: Refactor
     describe 'arithmetic-operators', ->
       it 'tokenizes addition (`+`)', ->
         {tokens} = grammar.tokenizeLine 'let foo = 1 + 1;'
@@ -531,6 +558,7 @@ describe 'Q# grammar', ->
         expect(values).toEqual ['let', ' ', 'foo', ' ', '=', ' ', '1', ' ', '!=', ' ', '1', ';']
         expect(tokens[8].scopes).toEqual ['source.qsharp', 'keyword.operator.comparison.not-equals.qsharp']
 
+    # TODO: refactor
     describe 'relational-operators', ->
       it 'tokenizes less-than-or-equal-to (`<=`)', ->
         {tokens} = grammar.tokenizeLine 'let foo = 1 <= 2;'
@@ -560,6 +588,7 @@ describe 'Q# grammar', ->
         expect(values).toEqual ['let', ' ', 'foo', ' ', '=', ' ', '1', ' ', '>', ' ', '2', ';']
         expect(tokens[8].scopes).toEqual ['source.qsharp', 'keyword.operator.relational.greater-than.qsharp']
 
+    # TODO: Refactor
     describe 'bitwise-operators', ->
       it 'tokenizes bitwise-AND (`&&&`)', ->
         {tokens} = grammar.tokenizeLine 'let foo = 1 &&& 3;'

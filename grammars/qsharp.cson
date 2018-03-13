@@ -82,6 +82,7 @@
       { "include": "#punctuation-range"},  # REVIEW: is this the right home?
       { "include": "#array-creation-expression" },
       { "include": "#primitive-type" },  # REVIEW: is this the right spot?
+      { "include": "#library-function" },  # REVIEW: is this the right spot?
       { "include": "#identifier" }
     ]
   },
@@ -340,6 +341,18 @@
       {
         "name": "storage.type.qsharp",
         "match": "(?<!\\.)\\b(Int|Double|Bool|Qubit|Pauli|Result|Range|String)\\b"
+      }
+    ]
+  },
+  "library-function": {
+    "patterns": [
+      {
+        "name": "support.function.quantum.qsharp",
+        "match": "\\b(X|Y|Z|H|HY|S|T|SWAP|CNOT|CCNOT|MultiX|R|RFrac|Rx|Ry|Rz|R1|R1Frac|Exp|ExpFrac|Measure|M|MultiM)\\b"
+      },
+      {
+        "name": "support.function.builtin.qsharp",
+        "match": "\\b(Message|Length|Assert|AssertProb|AssertEqual|Random|Floor|Float|Start|Step|Stop)\\b"
       }
     ]
   },

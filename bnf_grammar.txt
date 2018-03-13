@@ -22,6 +22,7 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
               |  <punctuation-range>
               |  <array-creation-expression>
               |  <primitive-type>
+              |  <library-function>
 
 <parenthesized-expression> ::= "(" <expression> ")"
 
@@ -29,6 +30,8 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
 
 <primitive-type> ::= "Int" | "Double" | "Bool" | "Qubit" | "Pauli"
                   |  "Result" | "Range" | "String"
+
+<library-function> ::= <builtin-quantum> | <builtin-classical>
 
 <identifier> ::= /[_[:alpha:]][_[:alnum:]]*/
 
