@@ -353,7 +353,9 @@
       { "include": "#boolean-literal" },
       { "include": "#numeric-literal" },
       { "include": "#string-literal" },
-      { "include": "#tuple-literal" }
+      { "include": "#tuple-literal" },
+      { "include": "#pauli-literal" },
+      { "include": "#result-literal" }
     ]
   },
   "boolean-literal": {
@@ -457,6 +459,22 @@
     "patterns": [
       { "include": "#expression" },
       { "include": "#punctuation-comma" }
+    ]
+  },
+  "pauli-literal": {
+    "patterns": [
+      {
+        "name": "constant.language.pauli.qsharp",
+        "match": "(?<!\\.)\\bPauli(I|X|Y|Z)\\b"
+      }
+    ]
+  },
+  "result-literal": {
+    "patterns": [
+      {
+        "name": "constant.language.result.qsharp",
+        "match": "(?<!\\.)\\b(One|Zero)\\b"
+      }
     ]
   },
   "expression-operators": {

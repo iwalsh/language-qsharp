@@ -421,6 +421,30 @@ describe 'Q# grammar', ->
         expect(values).toEqual ['let', ' ', 'tuple', ' ', '=', ' ', '(', '1', '+', '2', ')', ';']
         expect(tokens[8].scopes).toEqual ['source.qsharp', 'keyword.operator.arithmetic.addition.qsharp']
 
+    describe 'pauli-literal', ->
+      [
+        'PauliI', 'PauliX', 'PauliY', 'PauliZ'
+      ].forEach((type) =>
+        it "recognizes the Pauli constant `#{type}`", =>
+          {tokens} = grammar.tokenizeLine "newtype MyType = (#{type});"
+          values = (token.value for token in tokens)
+
+          expect(values).toEqual ['newtype', ' ', 'MyType', ' ', '=', ' ', '(', type, ')', ';']
+          expect(tokens[7].scopes).toEqual ['source.qsharp', 'constant.language.pauli.qsharp']
+      );
+
+    describe 'result-literal', ->
+      [
+        'One', 'Zero'
+      ].forEach((type) =>
+        it "recognizes the Result constant `#{type}`", =>
+          {tokens} = grammar.tokenizeLine "newtype MyType = (#{type});"
+          values = (token.value for token in tokens)
+
+          expect(values).toEqual ['newtype', ' ', 'MyType', ' ', '=', ' ', '(', type, ')', ';']
+          expect(tokens[7].scopes).toEqual ['source.qsharp', 'constant.language.result.qsharp']
+      );
+
   describe 'expression-operators', ->
     it 'tokenizes assignment (`=`)', ->
       {tokens} = grammar.tokenizeLine 'let foo = 1;'

@@ -59,6 +59,8 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
            |  <numeric-literal>
            |  <string-literal>
            |  <tuple-literal>
+           |  <pauli-literal>
+           |  <result-literal>
 
 <boolean-literal> ::= "true" | "false"
 
@@ -69,6 +71,10 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
                    |  `hexadecimal`
 
 <string-literal> ::= `double-quoted string`
+
+<pauli-literal> ::= "PauliX" | "PauliY" | "PauliZ" | "PauliI"
+
+<result-literal> ::= "One" | "Zero"
 
 <comment> ::= `double-slash comment` | `triple-slash (doc) comment`
 
