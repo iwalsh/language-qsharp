@@ -164,8 +164,7 @@
       { "include": "#mutable-statement" },
       { "include": "#set-statement" },
       { "include": "#block" },
-      { "include": "#using-statement" },
-      { "include": "#borrowing-statement" }
+      { "include": "#using-or-borrowing-statement" }
     ]
   },
   "return-statement": {
@@ -337,12 +336,37 @@
       { "include": "#statement" }
     ]
   },
-  "using-statement": {
-    # TODO
+  "using-or-borrowing-statement": {
+    "begin": "\\b(using|borrowing)\\b\\s*(\\()?([_[:alpha:]][_[:alnum:]]*)\\s*(\\=)\\s*(Qubit)\\s*(?=\\[)",
+    "beginCaptures": {
+      "1": { "name": "keyword.other.qsharp" },
+      "2": { "name": "punctuation.parenthesis.open.qsharp" },
+      "3": { "name": "entity.name.variable.local.qsharp" },
+      "4": { "name": "keyword.operator.assignment.qsharp" },
+      "5": { "name": "entity.name.type.qsharp" }
+    },
+    "end": "(?<=\\})",
+    "patterns": [
+      {
+        "begin": "\\[",
+        "beginCaptures": {
+          "0": { "name": "punctuation.squarebracket.open.qsharp" }
+        },
+        "end": "\\]",
+        "endCaptures": {
+          "0": { "name": "punctuation.squarebracket.close.qsharp" }
+        },
+        "patterns": [
+          { "include": "#expression" }
+        ]
+      },
+      {
+        "name": "punctuation.parenthesis.close.qsharp",
+        "match": "\\)"
+      }
+      { "include": "#statement" }
+    ]
   },
-  "borrowing-statement": {
-
-  }
   "parenthesized-expression": {
     "begin": "\\(",
     "beginCaptures": {

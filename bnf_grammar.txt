@@ -27,6 +27,8 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
              |  <mutable-statement>
              |  <set-statement>
              |  <block>
+             |  <using-statement>
+             |  <borrowing-statement>
 
 <expression> ::= <interpolated-string>
               |  <literal>

@@ -294,6 +294,31 @@ describe 'Q# grammar', ->
         expect(tokens[2].scopes).toEqual ['source.qsharp', 'entity.name.variable.local.qsharp']
         expect(tokens[4].scopes).toEqual ['source.qsharp', 'keyword.operator.assignment.qsharp']
 
+    describe 'using-or-borrowing-statement', ->
+      it 'tokenizes the `using` statement', ->
+        {tokens} = grammar.tokenizeLine 'using (q = Qubit[1]) { }'
+        values = (token.value for token in tokens)
+
+        expect(values).toEqual ['using', ' ', '(', 'q', ' ', '=', ' ', 'Qubit', '[', '1', ']', ')', ' ', '{', ' ', '}' ]
+        expect(tokens[0].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
+        expect(tokens[3].scopes).toEqual ['source.qsharp', 'entity.name.variable.local.qsharp']
+        expect(tokens[5].scopes).toEqual ['source.qsharp', 'keyword.operator.assignment.qsharp']
+        expect(tokens[7].scopes).toEqual ['source.qsharp', 'entity.name.type.qsharp']
+        expect(tokens[8].scopes).toEqual ['source.qsharp', 'punctuation.squarebracket.open.qsharp']
+        expect(tokens[10].scopes).toEqual ['source.qsharp', 'punctuation.squarebracket.close.qsharp']
+
+      it 'tokenizes the `borrowing` statement', ->
+        {tokens} = grammar.tokenizeLine 'borrowing (q = Qubit[2]) { }'
+        values = (token.value for token in tokens)
+
+        expect(values).toEqual ['borrowing', ' ', '(', 'q', ' ', '=', ' ', 'Qubit', '[', '2', ']', ')', ' ', '{', ' ', '}' ]
+        expect(tokens[0].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
+        expect(tokens[3].scopes).toEqual ['source.qsharp', 'entity.name.variable.local.qsharp']
+        expect(tokens[5].scopes).toEqual ['source.qsharp', 'keyword.operator.assignment.qsharp']
+        expect(tokens[7].scopes).toEqual ['source.qsharp', 'entity.name.type.qsharp']
+        expect(tokens[8].scopes).toEqual ['source.qsharp', 'punctuation.squarebracket.open.qsharp']
+        expect(tokens[10].scopes).toEqual ['source.qsharp', 'punctuation.squarebracket.close.qsharp']
+
   describe 'punctuation-range', ->
     it 'tokenizes start/stop ranges', ->
       {tokens} = grammar.tokenizeLine 'let range = 1..5;'
