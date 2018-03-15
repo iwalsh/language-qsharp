@@ -40,6 +40,12 @@ describe 'Q# grammar', ->
       expect(tokens[8].scopes).toEqual ['source.qsharp', 'entity.name.type.qsharp']
       expect(tokens[10].scopes).toEqual ['source.qsharp', 'keyword.operator.assignment.qsharp']
 
+  describe 'function-definition', ->
+    # TODO
+
+  describe 'operation-definition', ->
+    # TODO
+
   describe 'comments', ->
     describe 'double-slash comments', ->
       it 'tokenizes the punctation and content', ->

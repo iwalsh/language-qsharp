@@ -34,8 +34,8 @@
       }
       { "include": "#open-directive" },
       { "include": "#newtype-directive" },
-      { "include": "#function-directive" },  # TODO
-      { "include": "#operation-directive" },  # TODO
+      { "include": "#function-definition" },
+      { "include": "#operation-definition" },
       { "include": "#statement" }  # TODO: Remove. Useful for testing, though
     ]
   },
@@ -53,11 +53,31 @@
       }
     ]
   },
-  "function-directive": {
-    # TODO
-    "patterns": []
+  "function-definition": {
+    # TODO: enforce uppercase function name?
+    "begin": "\\b(function)\\s+([_[:alpha:]][_[:alnum:]]*)\\s*(?=\\()",
+    "beginCaptures": {
+      "1": { "name": "keyword.other.qsharp" },
+      "2": { "name": "entity.name.function.qsharp" }
+    },
+    "end": "(?<=\\})",
+    "patterns": [
+      { "include": "#typed-argument-tuple" },
+      {
+        "name": "punctuation.separator.colon.qsharp",
+        "match": ":"
+      },
+      { "include": "return-type" },
+      { "include": "#block" }
+    ]
   },
-  "operation-directive": {
+  "typed-argument-tuple" : {
+    # TODO. E.g. (a : Double[], b : Double[])
+  },
+  "return-type": {
+    # TODO. E.g. Double or ()
+  }
+  "operation-definition": {
     # TODO
     "patterns": []
   },

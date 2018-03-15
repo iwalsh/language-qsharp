@@ -9,7 +9,7 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
 
 <namespace-declaration> ::= "namespace" `namespace` <namespace-body>
 
-<namespace-body> ::= <open-directive>* (<function-directive>|<operation-directive>|<newtype-directive>)*
+<namespace-body> ::= <open-directive>* (<newtype-directive>|<function-definition>|<operation-definition>)*
 
 <open-directive> ::= "open" `namespace` ";"
 

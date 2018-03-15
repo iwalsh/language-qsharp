@@ -20,6 +20,8 @@ Still TODO
 
   - Keywords: adjoint, self, auto, controlled
 
+  - newtype signatures: newtype DiscreteOracle = ((Int, Qubit[]) => ():Adjoint,Controlled);
+
 /// # Summary
 /// Given an operation and a target for that operation,
 /// applies the given operation twice.
