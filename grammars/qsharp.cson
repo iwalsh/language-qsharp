@@ -6,10 +6,13 @@
 "patterns": [
   { "include": "#namespace-declaration" },
   { "include": "#comment" },
-  { "include": "#statement" },
-  { "include": "#literal" },  # TODO: shouldn't be at top-level
   { "include": "#punctuation-semicolon" },
-  { "include": "#reserved-csharp-keywords" }
+  { "include": "#literal" },  # TODO: shouldn't be at top-level
+  { "include": "#reserved-csharp-keywords" },  # TODO: Tests. Right place for this?
+
+  # N.B. Q# does not actually allow statements at the top level of a program,
+  # but it is very convenient for testing that our grammar does.
+  { "include": "#statement" }
 ],
 "repository": {
   "namespace-declaration" : {
@@ -30,9 +33,9 @@
         "name": "punctuation.curlybrace.close.qsharp"
       }
       { "include": "#open-directive" },
+      { "include": "#newtype-directive" },
       { "include": "#function-directive" },  # TODO
       { "include": "#operation-directive" },  # TODO
-      { "include": "#newtype-directive" },  # TODO
       { "include": "#statement" }  # TODO: Remove. Useful for testing, though
     ]
   },
@@ -59,8 +62,18 @@
     "patterns": []
   },
   "newtype-directive": {
-    # TODO
-    "patterns": []
+    "begin": "\\b(newtype)\\b\\s+\\b([[:alpha:]][_[:alnum:]]*)\\b\\s*(=)\\s*",
+    "beginCaptures": {
+      "1": { "name": "keyword.other.qsharp" },
+      # TODO: enforce that the type starts with a capital?
+      "2": { "name": "entity.name.type.qsharp" },
+      "3": { "name": "keyword.operator.assignment.qsharp" }
+    },
+    "end": "(?=;)",
+    "patterns": [
+      # TODO: Should be restricted to #type-expression
+      { "include": "#expression" }
+    ]
   },
   "comment": {
     "patterns": [
@@ -151,7 +164,8 @@
       { "include": "#mutable-statement" },
       { "include": "#set-statement" },
       { "include": "#block" },
-      { "include": "#newtype-statement"}
+      { "include": "#using-statement" },
+      { "include": "#borrowing-statement" }
     ]
   },
   "return-statement": {
@@ -323,19 +337,12 @@
       { "include": "#statement" }
     ]
   },
-  "newtype-statement": {
-    "begin": "\\b(newtype)\\b\\s+\\b([_[:alpha:]][_[:alnum:]]*)\\b\\s*(=)\\s*",
-    "beginCaptures": {
-      "1": { "name": "keyword.other.newtype.qsharp" },
-      # TODO: enforce that the type starts with a capital?
-      "2": { "name": "entity.name.type.qsharp" },
-      "3": { "name": "keyword.operator.assignment.qsharp" }
-    },
-    "end": "(?=;|\\))",
-    "patterns": [
-      { "include": "#expression" }
-    ]
+  "using-statement": {
+    # TODO
   },
+  "borrowing-statement": {
+
+  }
   "parenthesized-expression": {
     "begin": "\\(",
     "beginCaptures": {
@@ -403,6 +410,7 @@
       },
       {
         "name": "support.function.builtin.qsharp",
+        # TODO: Should "Log" be included here?
         "match": "\\b(Message|Length|Assert|AssertProb|AssertEqual|Random|Floor|Float|Start|Step|Stop)\\b"
       }
     ]
@@ -666,7 +674,7 @@
     "match": ";"
   },
   "reserved-csharp-keywords": {
-    "commented": "Adapted from the grammar inside the Microsoft Quantum Development Kit Visual Studio Extension"
+    "comment": "Adapted from the grammar inside the Microsoft Quantum Development Kit Visual Studio Extension"
     "patterns": [
       {
         "comment": "C# reserved words which can't be used in Q#, A-D",

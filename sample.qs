@@ -16,7 +16,7 @@ Still TODO
   - operation syntax (=>), quantum
   - function syntax (->), classical
 
-  - type-parametrized functions/operations T'
+  - type-parametrized functions/operations 'T
 
   - Keywords: using, adjoint, self, auto, controlled, borrowing
 

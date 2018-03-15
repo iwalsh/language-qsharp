@@ -7,11 +7,13 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
            |  <puntuation-semicolon>
            |  <reserved-csharp-literal>
 
-<namespace-declaration> ::= "namespace" /[[:alpha:]][.[:alnum:]]*/ <namespace-body>
+<namespace-declaration> ::= "namespace" `namespace` <namespace-body>
 
-<namespace-body> ::= (<open-directive>|<function-directive>|<operation-directive>|<newtype-directive>)*
+<namespace-body> ::= <open-directive>* (<function-directive>|<operation-directive>|<newtype-directive>)*
 
-<open-directive> ::= "open" /[[:alpha:]][.[:alnum:]]*/ ";"
+<open-directive> ::= "open" `namespace` ";"
+
+<newtype-directive> ::= "newtype" `type name` "=" <type-expression>
 
 <statement> ::= <comment>
              |  <return-statement>
@@ -24,7 +26,6 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
              |  <let-statement>
              |  <mutable-statement>
              |  <set-statement>
-             |  <newtype-statement>
              |  <block>
 
 <expression> ::= <interpolated-string>

@@ -30,6 +30,16 @@ describe 'Q# grammar', ->
       expect(tokens[6].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
       expect(tokens[8].scopes).toEqual ['source.qsharp', 'entity.name.type.qsharp']
 
+  describe 'newtype-directive', ->
+    it 'tokenizes the keyword, name and assignment operator', ->
+      {tokens} = grammar.tokenizeLine 'namespace Hello.QSharp { newtype MyInt = (Int); }'
+      values = (token.value for token in tokens)
+
+      expect(values).toEqual ['namespace', ' ', 'Hello.QSharp', ' ', '{', ' ', 'newtype', ' ', 'MyInt', ' ', '=', ' ', '(', 'Int', ')', '; ', '}']
+      expect(tokens[6].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
+      expect(tokens[8].scopes).toEqual ['source.qsharp', 'entity.name.type.qsharp']
+      expect(tokens[10].scopes).toEqual ['source.qsharp', 'keyword.operator.assignment.qsharp']
+
   describe 'comments', ->
     describe 'double-slash comments', ->
       it 'tokenizes the punctation and content', ->
@@ -284,16 +294,6 @@ describe 'Q# grammar', ->
         expect(tokens[2].scopes).toEqual ['source.qsharp', 'entity.name.variable.local.qsharp']
         expect(tokens[4].scopes).toEqual ['source.qsharp', 'keyword.operator.assignment.qsharp']
 
-    describe 'newtype-statement', ->
-      it 'tokenizes the keyword, type, and assignment operator', ->
-        {tokens} = grammar.tokenizeLine 'newtype TypeA = (Int, TypeB);'
-        values = (token.value for token in tokens)
-
-        expect(values).toEqual ['newtype', ' ', 'TypeA', ' ', '=', ' ', '(', 'Int', ',', ' ', 'TypeB', ')', ';']
-        expect(tokens[0].scopes).toEqual ['source.qsharp', 'keyword.other.newtype.qsharp']
-        expect(tokens[2].scopes).toEqual ['source.qsharp', 'entity.name.type.qsharp']
-        expect(tokens[4].scopes).toEqual ['source.qsharp', 'keyword.operator.assignment.qsharp']
-
   describe 'punctuation-range', ->
     it 'tokenizes start/stop ranges', ->
       {tokens} = grammar.tokenizeLine 'let range = 1..5;'
@@ -340,11 +340,11 @@ describe 'Q# grammar', ->
       'Int', 'Double', 'Bool', 'Qubit', 'Pauli', 'Result', 'Range', 'String'
     ].forEach((type) =>
       it "recognizes the primitive type `#{type}`", =>
-        {tokens} = grammar.tokenizeLine "newtype MyType = (#{type});"
+        {tokens} = grammar.tokenizeLine "return #{type};"
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ['newtype', ' ', 'MyType', ' ', '=', ' ', '(', type, ')', ';']
-        expect(tokens[7].scopes).toEqual ['source.qsharp', 'storage.type.qsharp']
+        expect(values).toEqual ['return', ' ', type, ';']
+        expect(tokens[2].scopes).toEqual ['source.qsharp', 'storage.type.qsharp']
     );
 
   describe 'library-functions', ->
@@ -467,11 +467,11 @@ describe 'Q# grammar', ->
         'PauliI', 'PauliX', 'PauliY', 'PauliZ'
       ].forEach((type) =>
         it "recognizes the Pauli constant `#{type}`", =>
-          {tokens} = grammar.tokenizeLine "newtype MyType = (#{type});"
+          {tokens} = grammar.tokenizeLine "return #{type};"
           values = (token.value for token in tokens)
 
-          expect(values).toEqual ['newtype', ' ', 'MyType', ' ', '=', ' ', '(', type, ')', ';']
-          expect(tokens[7].scopes).toEqual ['source.qsharp', 'constant.language.pauli.qsharp']
+          expect(values).toEqual ['return', ' ', type, ';']
+          expect(tokens[2].scopes).toEqual ['source.qsharp', 'constant.language.pauli.qsharp']
       );
 
     describe 'result-literal', ->
@@ -479,11 +479,11 @@ describe 'Q# grammar', ->
         'One', 'Zero'
       ].forEach((type) =>
         it "recognizes the Result constant `#{type}`", =>
-          {tokens} = grammar.tokenizeLine "newtype MyType = (#{type});"
+          {tokens} = grammar.tokenizeLine "return #{type};"
           values = (token.value for token in tokens)
 
-          expect(values).toEqual ['newtype', ' ', 'MyType', ' ', '=', ' ', '(', type, ')', ';']
-          expect(tokens[7].scopes).toEqual ['source.qsharp', 'constant.language.result.qsharp']
+          expect(values).toEqual ['return', ' ', type, ';']
+          expect(tokens[2].scopes).toEqual ['source.qsharp', 'constant.language.result.qsharp']
       );
 
   describe 'expression-operators', ->
