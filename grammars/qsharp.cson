@@ -13,7 +13,7 @@
 ],
 "repository": {
   "namespace-declaration" : {
-    "begin": "(?<!\\.)\\b(namespace)\\b\\s+(([_[:alpha:]][\\.[:alnum:]]*))\\s*(?=\\{)",
+    "begin": "(?<!\\.)\\b(namespace)\\b\\s+([[:alpha:]][\\.[:alnum:]]*)\\s*(?=\\{)",
     "beginCaptures": {
       "1": { "name": "keyword.other.qsharp" },
       # REVIEW: Should this be entity.name.namespace.qsharp?
@@ -21,8 +21,46 @@
     },
     "end": "(?<=\\})",
     "patterns": [
-      { "include": "#block" }
+      {
+        "match": "\\{",
+        "name": "punctuation.curlybrace.open.qsharp"
+      },
+      {
+        "match": "\\}",
+        "name": "punctuation.curlybrace.close.qsharp"
+      }
+      { "include": "#open-directive" },
+      { "include": "#function-directive" },  # TODO
+      { "include": "#operation-directive" },  # TODO
+      { "include": "#newtype-directive" },  # TODO
+      { "include": "#statement" }  # TODO: Remove. Useful for testing, though
     ]
+  },
+  "open-directive": {
+    "begin": "(?<!\\.)\\b(open)\\b\\s+",
+    "beginCaptures": {
+      "1": { "name": "keyword.other.qsharp" }
+    },
+    "end": "(?=;)",
+    "patterns": [
+      {
+        # REVIEW: Should this be entity.name.namespace.qsharp?
+        "name": "entity.name.type.qsharp",
+        "match": "\\b[[:alpha:]][\\.[:alnum:]]*\\b"
+      }
+    ]
+  },
+  "function-directive": {
+    # TODO
+    "patterns": []
+  },
+  "operation-directive": {
+    # TODO
+    "patterns": []
+  },
+  "newtype-directive": {
+    # TODO
+    "patterns": []
   },
   "comment": {
     "patterns": [

@@ -7,7 +7,11 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
            |  <puntuation-semicolon>
            |  <reserved-csharp-literal>
 
-<namespace-declaration> ::= "namespace" /[[:alpha:]][.[:alnum:]]*/ <block>
+<namespace-declaration> ::= "namespace" /[[:alpha:]][.[:alnum:]]*/ <namespace-body>
+
+<namespace-body> ::= (<open-directive>|<function-directive>|<operation-directive>|<newtype-directive>)*
+
+<open-directive> ::= "open" /[[:alpha:]][.[:alnum:]]*/ ";"
 
 <statement> ::= <comment>
              |  <return-statement>

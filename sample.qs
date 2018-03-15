@@ -18,7 +18,7 @@ Still TODO
 
   - type-parametrized functions/operations T'
 
-  - Keywords: operation, using, adjoint, self, auto keyword, controlled borrowing
+  - Keywords: using, adjoint, self, auto, controlled, borrowing
 
 /// # Summary
 /// Given an operation and a target for that operation,
