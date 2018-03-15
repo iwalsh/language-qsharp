@@ -12,6 +12,15 @@ describe 'Q# grammar', ->
     expect(grammar).toBeDefined()
     expect(grammar.scopeName).toBe 'source.qsharp'
 
+  describe 'namespace-declaration', ->
+    it 'tokenizes the keyword and name', ->
+      {tokens} = grammar.tokenizeLine 'namespace Hello.QSharp { let foo = bar; }'
+      values = (token.value for token in tokens)
+      
+      expect(values).toEqual ['namespace', ' ', 'Hello.QSharp', ' ', '{', ' ', 'let', ' ', 'foo', ' ', '=', ' ', 'bar', '; ', '}']
+      expect(tokens[0].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
+      expect(tokens[2].scopes).toEqual ['source.qsharp', 'entity.name.type.qsharp']
+
   describe 'comments', ->
     describe 'double-slash comments', ->
       it 'tokenizes the punctation and content', ->

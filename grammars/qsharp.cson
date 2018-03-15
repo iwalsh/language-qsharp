@@ -4,6 +4,7 @@
   "qs"
 ],
 "patterns": [
+  { "include": "#namespace-declaration" },
   { "include": "#comment" },
   { "include": "#statement" },
   { "include": "#literal" },  # TODO: shouldn't be at top-level
@@ -11,6 +12,18 @@
   { "include": "#reserved-csharp-keywords" }
 ],
 "repository": {
+  "namespace-declaration" : {
+    "begin": "(?<!\\.)\\b(namespace)\\b\\s+(([_[:alpha:]][\\.[:alnum:]]*))\\s*(?=\\{)",
+    "beginCaptures": {
+      "1": { "name": "keyword.other.qsharp" },
+      # REVIEW: Should this be entity.name.namespace.qsharp?
+      "2": { "name": "entity.name.type.qsharp" },
+    },
+    "end": "(?<=\\})",
+    "patterns": [
+      { "include": "#block" }
+    ]
+  },
   "comment": {
     "patterns": [
       {

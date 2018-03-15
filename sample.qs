@@ -1,23 +1,24 @@
 Still TODO
   - Method calls
+
   - Tuple-deconstruction "let" statements
+
   - semicolons
+
   - research numeric literal recognized suffixes
+
   - Adjoint, Controlled functors (under "support" scope)
+
   - array literals [1;2;3]
   - array slicing  a[1..5]
   - array indexing  a[0]
+
   - operation syntax (=>), quantum
   - function syntax (->), classical
-  - type-parametrized functions/operations
-  - namespaces
-  - operation keyword
-  - using keyword
-  - adjoint keyword
-  - self keyword
-  - auto keyword
-  - controlled keyword
-  - borrowing keyword
+
+  - type-parametrized functions/operations T'
+
+  - Keywords: operation, using, adjoint, self, auto keyword, controlled borrowing
 
 /// # Summary
 /// Given an operation and a target for that operation,

@@ -1,5 +1,14 @@
 This grammar is my own best effort at modeling the Q# language - it is NOT official documentation or endorsed by Microsoft in any way. Use at your own risk!
 
+<program> ::= <namespace-declaration>
+           |  <comment>
+           |  <statement>
+           |  <literal>
+           |  <puntuation-semicolon>
+           |  <reserved-csharp-literal>
+
+<namespace-declaration> ::= "namespace" /[[:alpha:]][.[:alnum:]]*/ <block>
+
 <statement> ::= <comment>
              |  <return-statement>
              |  <if-statement>
