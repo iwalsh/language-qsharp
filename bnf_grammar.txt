@@ -13,7 +13,7 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
 
 <open-directive> ::= "open" `namespace` ";"
 
-<newtype-directive> ::= "newtype" `type name` "=" <type-expression>
+<newtype-directive> ::= "newtype" `type name` "=" <type-definition>
 
 <statement> ::= <comment>
              |  <return-statement>

@@ -91,8 +91,44 @@
     },
     "end": "(?=;)",
     "patterns": [
-      # TODO: Should be restricted to #type-expression
-      { "include": "#expression" }
+      { "include": "#type-definition" }
+    ]
+  },
+  "type-definition": {
+    "patterns": [
+      { "include": "#functor-name" },
+      { "include": "#basic-type" },
+      {
+        "name": "punctuation.arrow.qsharp",
+        "match": "->"
+      },
+      {
+        "name": "punctuation.fat-arrow.qsharp",
+        "match": "=>"
+      },
+      { "include": "#punctuation-colon" },
+      { "include": "#open-parenthesis" },
+      { "include": "#close-parenthesis" },
+      { "include": "#punctuation-comma" }
+    ]
+  },
+  "basic-type": {
+    "patterns": [
+      {
+        "comment": "Type parameters, simple types, and array types",
+        "name": "entity.name.type.qsharp",
+        # REVIEW: correct to enforce this capital letter?
+        "match": "(')?[A-Z][_[:alnum:]]*(\\[\\])?"
+      }
+    ]
+  },
+  "functor-name": {
+    "patterns": [
+      {
+        "match": "Adjoint|Controlled",
+        # REVIEW: correct scope? Maybe support.something?
+        "name": "entity.other.functor.qsharp"
+      }
     ]
   },
   "comment": {
@@ -380,10 +416,7 @@
           { "include": "#expression" }
         ]
       },
-      {
-        "name": "punctuation.parenthesis.close.qsharp",
-        "match": "\\)"
-      }
+      { "include": "#close-parenthesis" },
       { "include": "#statement" }
     ]
   },
@@ -716,6 +749,18 @@
   "punctuation-semicolon": {
     "name": "punctuation.terminator.statement.qsharp",
     "match": ";"
+  },
+  "punctuation-colon": {
+    "name": "punctuation.separator.colon.qsharp",
+    "match": ":"
+  },
+  "open-parenthesis": {
+    "match": "\\(",
+    "name": "punctuation.parenthesis.open.qsharp"
+  },
+  "close-parenthesis": {
+    "match": "\\)",
+    "name": "punctuation.parenthesis.close.qsharp"
   },
   "reserved-csharp-keywords": {
     "comment": "Adapted from the grammar inside the Microsoft Quantum Development Kit Visual Studio Extension"

@@ -7,20 +7,15 @@ Still TODO
 
   - research numeric literal recognized suffixes
 
-  - Adjoint, Controlled functors (under "support" scope)
-
   - array literals [1;2;3]
   - array slicing  a[1..5]
   - array indexing  a[0]
 
-  - operation syntax (=>), quantum
-  - function syntax (->), classical
-
-  - type-parametrized functions/operations 'T
-
   - Keywords: adjoint, self, auto, controlled
 
-  - newtype signatures: newtype DiscreteOracle = ((Int, Qubit[]) => ():Adjoint,Controlled);
+  - function definition
+
+  - operation definition
 
 /// # Summary
 /// Given an operation and a target for that operation,
