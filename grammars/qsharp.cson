@@ -19,8 +19,7 @@
     "begin": "(?<!\\.)\\b(namespace)\\b\\s+([[:alpha:]][\\.[:alnum:]]*)\\s*(?=\\{)",
     "beginCaptures": {
       "1": { "name": "keyword.other.qsharp" },
-      # REVIEW: Should this be entity.name.namespace.qsharp?
-      "2": { "name": "entity.name.type.qsharp" },
+      "2": { "name": "entity.name.namespace.qsharp" },
     },
     "end": "(?<=\\})",
     "patterns": [
@@ -31,10 +30,14 @@
       {
         "match": "\\}",
         "name": "punctuation.curlybrace.close.qsharp"
-      }
+      },
+      {
+        "match": "\\s+",
+        "name": "punctation.whitespace.qsharp"
+      },
       { "include": "#open-directive" },
-      { "include": "#newtype-directive" },
       { "include": "#function-definition" },
+      { "include": "#newtype-directive" },
       { "include": "#operation-definition" },
       { "include": "#statement" }  # TODO: Remove. Useful for testing, though
     ]
@@ -54,29 +57,30 @@
     ]
   },
   "function-definition": {
-    # TODO: enforce uppercase function name?
-    "begin": "\\b(function)\\s+([_[:alpha:]][_[:alnum:]]*)\\s*(?=\\()",
+    # "begin": "(?<!\\.)\\b(function)\\b\\s+\\b([A-Z][_[:alnum:]]*)\\b\\s*(?=\\()",
+    # "beginCaptures": {
+    #   "1": { "name": "keyword.other.qsharp" },
+    #   "2": { "name": "entity.name.function.qsharp" }
+    # },
+    "begin": "function",
     "beginCaptures": {
-      "1": { "name": "keyword.other.qsharp" },
-      "2": { "name": "entity.name.function.qsharp" }
+      "1": { "name": "keyword.other.qsharp" }
     },
-    "end": "(?<=\\})",
+    "end": "(?=\\{)",
+    #{}"end": "(?<=\\})",
     "patterns": [
-      { "include": "#typed-argument-tuple" },
       {
-        "name": "punctuation.separator.colon.qsharp",
-        "match": ":"
+        "match": "[A-Z][_[:alnum:]]*",
+        "name": "entity.name.function.qsharp"
       },
-      { "include": "return-type" },
-      { "include": "#block" }
+      { "include": "#type-definition" },
+      {
+        "match": "[a-z][_[:alnum:]]*",
+        "name": "variable.parameter.qsharp"
+      },
+      #{ "include": "#block" }
     ]
   },
-  "typed-argument-tuple" : {
-    # TODO. E.g. (a : Double[], b : Double[])
-  },
-  "return-type": {
-    # TODO. E.g. Double or ()
-  }
   "operation-definition": {
     # TODO
     "patterns": []

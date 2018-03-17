@@ -17,25 +17,36 @@ describe 'Q# grammar', ->
       {tokens} = grammar.tokenizeLine 'namespace Hello.QSharp { let foo = bar; }'
       values = (token.value for token in tokens)
 
-      expect(values).toEqual ['namespace', ' ', 'Hello.QSharp', ' ', '{', ' ', 'let', ' ', 'foo', ' ', '=', ' ', 'bar', '; ', '}']
+      expect(values).toEqual ['namespace', ' ', 'Hello.QSharp', ' ', '{', ' ', 'let', ' ', 'foo', ' ', '=', ' ', 'bar', ';', ' ', '}']
       expect(tokens[0].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
-      expect(tokens[2].scopes).toEqual ['source.qsharp', 'entity.name.type.qsharp']
+      expect(tokens[2].scopes).toEqual ['source.qsharp', 'entity.name.namespace.qsharp']
 
   describe 'open-directive', ->
     it 'tokenizes the keyword and name', ->
-      {tokens} = grammar.tokenizeLine 'namespace Hello.QSharp { open Microsoft.Quantum.Canon; }'
-      values = (token.value for token in tokens)
+      # {tokens} = grammar.tokenizeLine 'namespace Hello.QSharp { open Microsoft.Quantum.Canon; }'
+      # values = (token.value for token in tokens)
+      #
+      # expect(values).toEqual ['namespace', ' ', 'Hello.QSharp', ' ', '{', ' ', 'open', ' ', 'Microsoft.Quantum.Canon', ';', ' ', '}']
+      # expect(tokens[6].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
+      # expect(tokens[8].scopes).toEqual ['source.qsharp', 'entity.name.type.qsharp']
+      foo = '''
+            namespace Hello.QSharp {
+              open Microsoft.Quantum.Canon;
+            }
+            '''
+      tokens = grammar.tokenizeLines foo
+      values = (token.value for token in tokens[1])
 
-      expect(values).toEqual ['namespace', ' ', 'Hello.QSharp', ' ', '{', ' ', 'open', ' ', 'Microsoft.Quantum.Canon', '; ', '}']
-      expect(tokens[6].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
-      expect(tokens[8].scopes).toEqual ['source.qsharp', 'entity.name.type.qsharp']
+      expect(values).toEqual ['  ', 'open', ' ', 'Microsoft.Quantum.Canon', ';', '']
+      expect(tokens[1][1].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
+      expect(tokens[1][3].scopes).toEqual ['source.qsharp', 'entity.name.type.qsharp']
 
   describe 'newtype-directive', ->
     it 'tokenizes the keyword, name and assignment operator', ->
       {tokens} = grammar.tokenizeLine 'namespace Q { newtype T = (Int); }'
       values = (token.value for token in tokens)
 
-      expect(values).toEqual ['namespace', ' ', 'Q', ' ', '{', ' ', 'newtype', ' ', 'T', ' ', '=', ' ', '(', 'Int', ')', '; ', '}']
+      expect(values).toEqual ['namespace', ' ', 'Q', ' ', '{', ' ', 'newtype', ' ', 'T', ' ', '=', ' ', '(', 'Int', ')', ';', ' ', '}']
       expect(tokens[6].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
       expect(tokens[8].scopes).toEqual ['source.qsharp', 'entity.name.type.qsharp']
       expect(tokens[10].scopes).toEqual ['source.qsharp', 'keyword.operator.assignment.qsharp']
@@ -45,7 +56,7 @@ describe 'Q# grammar', ->
       {tokens} = grammar.tokenizeLine 'namespace Q { newtype T = (Int, Double); }'
       values = (token.value for token in tokens)
 
-      expect(values).toEqual ['namespace', ' ', 'Q', ' ', '{', ' ', 'newtype', ' ', 'T', ' ', '=', ' ', '(', 'Int', ',', ' ', 'Double', ')', '; ', '}']
+      expect(values).toEqual ['namespace', ' ', 'Q', ' ', '{', ' ', 'newtype', ' ', 'T', ' ', '=', ' ', '(', 'Int', ',', ' ', 'Double', ')', ';', ' ', '}']
       expect(tokens[13].scopes).toEqual ['source.qsharp', 'entity.name.type.qsharp']
       expect(tokens[14].scopes).toEqual ['source.qsharp', 'punctuation.separator.comma.qsharp']
       expect(tokens[16].scopes).toEqual ['source.qsharp', 'entity.name.type.qsharp']
@@ -54,21 +65,21 @@ describe 'Q# grammar', ->
       {tokens} = grammar.tokenizeLine 'namespace Q { newtype T = \'A; }'
       values = (token.value for token in tokens)
 
-      expect(values).toEqual ['namespace', ' ', 'Q', ' ', '{', ' ', 'newtype', ' ', 'T', ' ', '=', ' ', '\'A', '; ', '}']
+      expect(values).toEqual ['namespace', ' ', 'Q', ' ', '{', ' ', 'newtype', ' ', 'T', ' ', '=', ' ', '\'A', ';', ' ', '}']
       expect(tokens[12].scopes).toEqual ['source.qsharp', 'entity.name.type.qsharp']
 
     it 'supports array types', ->
       {tokens} = grammar.tokenizeLine 'namespace Q { newtype T = Qubit[]; }'
       values = (token.value for token in tokens)
 
-      expect(values).toEqual ['namespace', ' ', 'Q', ' ', '{', ' ', 'newtype', ' ', 'T', ' ', '=', ' ', 'Qubit[]', '; ', '}']
+      expect(values).toEqual ['namespace', ' ', 'Q', ' ', '{', ' ', 'newtype', ' ', 'T', ' ', '=', ' ', 'Qubit[]', ';', ' ', '}']
       expect(tokens[12].scopes).toEqual ['source.qsharp', 'entity.name.type.qsharp']
 
     it 'supports operation types using fat-arrow (=>)', ->
       {tokens} = grammar.tokenizeLine 'namespace Q { newtype T = (\'Tinput => \'Tresult); }'
       values = (token.value for token in tokens)
 
-      expect(values).toEqual ['namespace', ' ', 'Q', ' ', '{', ' ', 'newtype', ' ', 'T', ' ', '=', ' ', '(', '\'Tinput', ' ', '=>', ' ', '\'Tresult', ')', '; ', '}']
+      expect(values).toEqual ['namespace', ' ', 'Q', ' ', '{', ' ', 'newtype', ' ', 'T', ' ', '=', ' ', '(', '\'Tinput', ' ', '=>', ' ', '\'Tresult', ')', ';', ' ', '}']
       expect(tokens[13].scopes).toEqual ['source.qsharp', 'entity.name.type.qsharp']
       expect(tokens[15].scopes).toEqual ['source.qsharp', 'punctuation.fat-arrow.qsharp']
       expect(tokens[17].scopes).toEqual ['source.qsharp', 'entity.name.type.qsharp']
@@ -77,7 +88,7 @@ describe 'Q# grammar', ->
       {tokens} = grammar.tokenizeLine 'namespace Q { newtype T = (\'A[], \'A->\'A) -> \'A[]); }'
       values = (token.value for token in tokens)
 
-      expect(values).toEqual ['namespace', ' ', 'Q', ' ', '{', ' ', 'newtype', ' ', 'T', ' ', '=', ' ', '(', '\'A[]', ',', ' ', '\'A', '->', '\'A', ')', ' ', '->', ' ', '\'A[]', ')', '; ', '}']
+      expect(values).toEqual ['namespace', ' ', 'Q', ' ', '{', ' ', 'newtype', ' ', 'T', ' ', '=', ' ', '(', '\'A[]', ',', ' ', '\'A', '->', '\'A', ')', ' ', '->', ' ', '\'A[]', ')', ';', ' ', '}']
       expect(tokens[17].scopes).toEqual ['source.qsharp', 'punctuation.arrow.qsharp']
       expect(tokens[21].scopes).toEqual ['source.qsharp', 'punctuation.arrow.qsharp']
 
@@ -85,13 +96,23 @@ describe 'Q# grammar', ->
       {tokens} = grammar.tokenizeLine 'namespace Q { newtype T = (Int => (): Adjoint, Controlled); }'
       values = (token.value for token in tokens)
 
-      expect(values).toEqual ['namespace', ' ', 'Q', ' ', '{', ' ', 'newtype', ' ', 'T', ' ', '=', ' ', '(', 'Int', ' ', '=>', ' ', '(', ')', ':', ' ', 'Adjoint', ',', ' ', 'Controlled', ')', '; ', '}']
+      expect(values).toEqual ['namespace', ' ', 'Q', ' ', '{', ' ', 'newtype', ' ', 'T', ' ', '=', ' ', '(', 'Int', ' ', '=>', ' ', '(', ')', ':', ' ', 'Adjoint', ',', ' ', 'Controlled', ')', ';', ' ', '}']
       expect(tokens[19].scopes).toEqual ['source.qsharp', 'punctuation.separator.colon.qsharp']
       expect(tokens[21].scopes).toEqual ['source.qsharp', 'entity.other.functor.qsharp']
       expect(tokens[24].scopes).toEqual ['source.qsharp', 'entity.other.functor.qsharp']
 
   describe 'function-definition', ->
-    # TODO
+    it 'tokenizes the keyword, identifier, and types', ->
+      foo = '''
+            namepace Hello.QSharp {
+              function DotProduct (a : Double[], b : Double[]) : Double {}
+            }
+            '''
+      tokens = grammar.tokenizeLines foo
+      values = (token.value for token in tokens[1])
+
+      expect(values).toEqual ['  ', 'function', ' ', 'DotProduct', '(', 'a', ' ', ':', ' ', 'Double[]', ',', ' ', 'b', ' ', ':', ' ', 'Double[]', ')', ' ', ':', ' ', 'Double', ' ', '{', '}']
+
 
   describe 'operation-definition', ->
     # TODO
