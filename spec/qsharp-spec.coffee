@@ -176,7 +176,7 @@ describe 'Q# grammar', ->
       tokens = grammar.tokenizeLines program
       values = (token.value for token in tokens[2])
 
-      expect(values).toEqual ['    ', 'body', ' ', '{', ' ' , 'set', ' ', 'foo', ' ', '=', ' ', 'bar', '; ', '}']
+      expect(values).toEqual ['    ', 'body', ' ', '{', ' ' , 'set', ' ', 'foo', ' ', '=', ' ', 'bar', ';', ' ', '}']
       expect(tokens[2][1].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
 
     it 'tokenizes the `adjoint` and `auto` keywords', ->
@@ -223,7 +223,7 @@ describe 'Q# grammar', ->
       tokens = grammar.tokenizeLines program
       values = (token.value for token in tokens[2])
 
-      expect(values).toEqual ['    ', 'adjoint', ' ', '{', ' ' , 'set', ' ', 'foo', ' ', '=', ' ', 'bar', '; ', '}']
+      expect(values).toEqual ['    ', 'adjoint', ' ', '{', ' ' , 'set', ' ', 'foo', ' ', '=', ' ', 'bar', ';', ' ', '}']
       expect(tokens[2][1].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
 
     it 'tokenizes the `controlled` and `auto` keywords', ->
@@ -253,7 +253,7 @@ describe 'Q# grammar', ->
       tokens = grammar.tokenizeLines program
       values = (token.value for token in tokens[2])
 
-      expect(values).toEqual ['    ', 'controlled', ' ', '(', 'controls', ')', ' ', '{', ' ' , 'set', ' ', 'foo', ' ', '=', ' ', 'bar', '; ', '}']
+      expect(values).toEqual ['    ', 'controlled', ' ', '(', 'controls', ')', ' ', '{', ' ' , 'set', ' ', 'foo', ' ', '=', ' ', 'bar', ';', ' ', '}']
       expect(tokens[2][1].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
       expect(tokens[2][4].scopes).toEqual ['source.qsharp', 'variable.parameter.qsharp']
 
@@ -285,7 +285,7 @@ describe 'Q# grammar', ->
       tokens = grammar.tokenizeLines program
       values = (token.value for token in tokens[2])
 
-      expect(values).toEqual ['    ', 'adjoint', ' ', 'controlled', ' ', '(', 'controls', ')', ' ', '{', ' ' , 'set', ' ', 'foo', ' ', '=', ' ', 'bar', '; ', '}']
+      expect(values).toEqual ['    ', 'adjoint', ' ', 'controlled', ' ', '(', 'controls', ')', ' ', '{', ' ' , 'set', ' ', 'foo', ' ', '=', ' ', 'bar', ';', ' ', '}']
       expect(tokens[2][1].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
       expect(tokens[2][3].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
       expect(tokens[2][6].scopes).toEqual ['source.qsharp', 'variable.parameter.qsharp']
@@ -311,8 +311,8 @@ describe 'Q# grammar', ->
         {tokens} = grammar.tokenizeLine 'Not a comment // Comment!'
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ['Not a comment ', '//', ' Comment!']
-        expect(tokens[0].scopes).toEqual ['source.qsharp']
+        expect(values).toEqual ['Not', ' ', 'a', ' ', 'comment', ' ', '//', ' Comment!']
+        expect(tokens[0].scopes).toNotEqual ['source.qsharp', 'comment.line.double-slash.qsharp']
 
       it 'does not include subsequent lines in the comment', ->
         tokens = grammar.tokenizeLines '// Comment!\nNot a comment'
@@ -321,8 +321,8 @@ describe 'Q# grammar', ->
         expect(tokens[0][0].value).toBe '//'
         expect(tokens[0][1].value).toBe ' Comment!'
         # Line 1
-        expect(tokens[1][0].value).toBe 'Not a comment'
-        expect(tokens[1][0].scopes).toEqual ['source.qsharp']
+        expect(tokens[1][0].value).toBe 'Not'
+        expect(tokens[1][0].scopes).toNotEqual ['source.qsharp', 'comment.line.double-slash.qsharp']
 
       it 'ignores extra slashes in the comment body', ->
         {tokens} = grammar.tokenizeLine '// Comment! // The same comment'
@@ -351,8 +351,8 @@ describe 'Q# grammar', ->
         {tokens} = grammar.tokenizeLine 'Not a comment /// Comment!'
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ['Not a comment ', '///', ' Comment!']
-        expect(tokens[0].scopes).toEqual ['source.qsharp']
+        expect(values).toEqual ['Not', ' ', 'a', ' ', 'comment', ' ', '///', ' Comment!']
+        expect(tokens[0].scopes).toNotEqual ['source.qsharp', 'comment.line.double-slash.qsharp']
 
       it 'does not include subsequent lines in the comment', ->
         tokens = grammar.tokenizeLines '/// Comment!\nNot a comment'
@@ -361,8 +361,8 @@ describe 'Q# grammar', ->
         expect(tokens[0][0].value).toBe '///'
         expect(tokens[0][1].value).toBe ' Comment!'
         # Line 1
-        expect(tokens[1][0].value).toBe 'Not a comment'
-        expect(tokens[1][0].scopes).toEqual ['source.qsharp']
+        expect(tokens[1][0].value).toBe 'Not'
+        expect(tokens[1][0].scopes).toNotEqual ['source.qsharp', 'comment.line.double-slash.qsharp']
 
       it 'ignores extra slashes in the comment body', ->
         {tokens} = grammar.tokenizeLine '/// Comment! // The same comment'
@@ -425,7 +425,8 @@ describe 'Q# grammar', ->
         {tokens} = grammar.tokenizeLine 'if (i == 1) { X(target); }'
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ['if', ' ', '(', 'i', ' ', '==', ' ', '1', ')', ' ', '{', ' X(target); ',  '}']
+        expect(values).toEqual ['if', ' ', '(', 'i', ' ', '==', ' ', '1', ')', ' ', '{', ' ', 'X', '(', 'target', ')',
+        ';', ' ', '}']
         expect(tokens[0].scopes).toEqual ['source.qsharp', 'keyword.control.conditional.if.qsharp']
         expect(tokens[2].scopes).toEqual ['source.qsharp', 'punctuation.parenthesis.open.qsharp']
         expect(tokens[8].scopes).toEqual ['source.qsharp', 'punctuation.parenthesis.close.qsharp']
@@ -434,58 +435,51 @@ describe 'Q# grammar', ->
         {tokens} = grammar.tokenizeLine 'elif (i == 2) { Y(target); }'
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ['elif', ' ', '(', 'i', ' ', '==', ' ', '2', ')', ' ', '{', ' Y(target); ', '}']
+        expect(values).toEqual ['elif', ' ', '(', 'i', ' ', '==', ' ', '2', ')', ' ', '{', ' ', 'Y', '(', 'target', ')',
+        ';', ' ', '}']
         expect(tokens[0].scopes).toEqual ['source.qsharp', 'keyword.control.conditional.elif.qsharp']
         expect(tokens[2].scopes).toEqual ['source.qsharp', 'punctuation.parenthesis.open.qsharp']
         expect(tokens[8].scopes).toEqual ['source.qsharp', 'punctuation.parenthesis.close.qsharp']
 
-      # FIXME: not tokenizing the method call
       it 'tokenizes `else` branches', ->
         {tokens} = grammar.tokenizeLine 'else { Z(target); }'
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ['else', ' ', '{', ' Z(target); ', '}']
+        expect(values).toEqual ['else', ' ', '{', ' ', 'Z', '(', 'target', ')', ';', ' ', '}']
         expect(tokens[0].scopes).toEqual ['source.qsharp', 'keyword.control.conditional.else.qsharp']
 
-      # FIXME
-      # it 'does not match bodies without curly braces', ->
-      #   {tokens} = grammar.tokenizeLine 'if (i == 1) X(target);'
-      #
-      #   expect(tokens[0].value).not.toBe 'if'
-
     describe 'for-statement', ->
-      # FIXME: not tokenizing the range-literal
+      # FIXME: Not tokenizing the block
       it 'tokenizes the keywords and punctuation', ->
         {tokens} = grammar.tokenizeLine 'for (i in 0 .. 5) { set sum = sum + 1; }'
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ['for', ' ', '(', 'i', ' ', 'in', ' ', '0 .. 5', ')', ' { set sum = sum + 1; }']
+        expect(values).toEqual ['for', ' ', '(', 'i', ' ', 'in', ' ', '0', ' ', '..', ' ', '5', ')', ' { set sum = sum + 1; }']
         expect(tokens[0].scopes).toEqual ['source.qsharp', 'keyword.control.loop.for.qsharp']
         expect(tokens[2].scopes).toEqual ['source.qsharp', 'punctuation.parenthesis.open.qsharp']
         expect(tokens[3].scopes).toEqual ['source.qsharp', 'entity.name.variable.local.qsharp']
         expect(tokens[5].scopes).toEqual ['source.qsharp', 'keyword.control.loop.in.qsharp']
-        expect(tokens[8].scopes).toEqual ['source.qsharp', 'punctuation.parenthesis.close.qsharp']
+        expect(tokens[9].scopes).toEqual ['source.qsharp', 'punctuation.definition.range.qsharp']
+        expect(tokens[12].scopes).toEqual ['source.qsharp', 'punctuation.parenthesis.close.qsharp']
 
     describe 'repeat-statement', ->
-      # FIXME: Wrong semicolon tokenization
       it 'tokenizes the keyword', ->
         {tokens} = grammar.tokenizeLine 'repeat { set sum = sum + 1; }'
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ['repeat', ' ', '{', ' ', 'set', ' ', 'sum', ' ', '=', ' ', 'sum', ' ', '+', ' ', '1', '; ', '}']
+        expect(values).toEqual ['repeat', ' ', '{', ' ', 'set', ' ', 'sum', ' ', '=', ' ', 'sum', ' ', '+', ' ', '1', ';', ' ', '}']
         expect(tokens[0].scopes).toEqual ['source.qsharp', 'keyword.control.loop.repeat.qsharp']
         expect(tokens[2].scopes).toEqual ['source.qsharp', 'punctuation.curlybrace.open.qsharp']
-        expect(tokens[16].scopes).toEqual ['source.qsharp', 'punctuation.curlybrace.close.qsharp']
+        expect(tokens[17].scopes).toEqual ['source.qsharp', 'punctuation.curlybrace.close.qsharp']
 
       # TODO: need a more complete "repeat" example
 
     describe 'until-statement', ->
-      # FIXME: tuple and semicolon incorrect
       it 'tokenizes the keywords', ->
         {tokens} = grammar.tokenizeLine '} until result == Zero fixup { (); }'
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ['} ', 'until', ' ', 'result', ' ', '==', ' ', 'Zero', ' ', 'fixup', ' ', '{', ' (); ', '}']
+        expect(values).toEqual ['} ', 'until', ' ', 'result', ' ', '==', ' ', 'Zero', ' ', 'fixup', ' ', '{', ' ', '(', ')', ';', ' ', '}']
         expect(tokens[1].scopes).toEqual ['source.qsharp', 'keyword.control.loop.until.qsharp']
         expect(tokens[9].scopes).toEqual ['source.qsharp', 'keyword.control.loop.fixup.qsharp']
 
@@ -717,7 +711,7 @@ describe 'Q# grammar', ->
         {tokens} = grammar.tokenizeLine '"Hello \n world!"'
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ['"', 'Hello', ' ', '\n world!', '"']
+        expect(values).toEqual ['"', 'Hello', ' ', '\n ', 'world', '!', '"']
         expect(tokens[2].scopes).toEqual ['source.qsharp', 'string.quoted.double.qsharp', 'invalid.illegal.newline.qsharp']
 
     describe 'tuple-literal', ->
@@ -857,8 +851,8 @@ describe 'Q# grammar', ->
         {tokens} = grammar.tokenizeLine "foo #{keyword} bar;"
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ['foo ', keyword, ' bar', ';']
-        expect(tokens[1].scopes).toEqual ['source.qsharp', 'invalid.illegal.reserved-csharp-keyword.a-d.qsharp']
+        expect(values).toEqual ['foo', ' ', keyword, ' ', 'bar', ';']
+        expect(tokens[2].scopes).toEqual ['source.qsharp', 'invalid.illegal.reserved-csharp-keyword.a-d.qsharp']
     );
 
   describe 'reserved-csharp-keywords, E-L', ->
@@ -871,8 +865,8 @@ describe 'Q# grammar', ->
         {tokens} = grammar.tokenizeLine "foo #{keyword} bar;"
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ['foo ', keyword, ' bar', ';']
-        expect(tokens[1].scopes).toEqual ['source.qsharp', 'invalid.illegal.reserved-csharp-keyword.e-l.qsharp']
+        expect(values).toEqual ['foo', ' ', keyword, ' ', 'bar', ';']
+        expect(tokens[2].scopes).toEqual ['source.qsharp', 'invalid.illegal.reserved-csharp-keyword.e-l.qsharp']
     );
 
   describe 'reserved-csharp-keywords, N-S', ->
@@ -885,8 +879,8 @@ describe 'Q# grammar', ->
         {tokens} = grammar.tokenizeLine "foo #{keyword} bar;"
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ['foo ', keyword, ' bar', ';']
-        expect(tokens[1].scopes).toEqual ['source.qsharp', 'invalid.illegal.reserved-csharp-keyword.n-s.qsharp']
+        expect(values).toEqual ['foo', ' ', keyword, ' ', 'bar', ';']
+        expect(tokens[2].scopes).toEqual ['source.qsharp', 'invalid.illegal.reserved-csharp-keyword.n-s.qsharp']
     );
 
   describe 'reserved-csharp-keywords, S-V', ->
@@ -899,6 +893,6 @@ describe 'Q# grammar', ->
         {tokens} = grammar.tokenizeLine "foo #{keyword} bar;"
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ['foo ', keyword, ' bar', ';']
-        expect(tokens[1].scopes).toEqual ['source.qsharp', 'invalid.illegal.reserved-csharp-keyword.s-v.qsharp']
+        expect(values).toEqual ['foo', ' ', keyword, ' ', 'bar', ';']
+        expect(tokens[2].scopes).toEqual ['source.qsharp', 'invalid.illegal.reserved-csharp-keyword.s-v.qsharp']
     );

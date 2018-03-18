@@ -1,17 +1,26 @@
-Still TODO
-  - Method calls
+// Still TODO
+//   - Method calls
+//     - Callable expressions
+//     - Callable invocation expressions
+//     - partial application
+//
+//  - Tuple-deconstruction "let" statements
+//  - For-statement blocks
+//  - research numeric literal recognized suffixes
+//
+//  - array literals [1;2;3]
+//  - array slicing  a[1..5]
+//  - array indexing  a[0]
+//
 
-  - Review '; ' semicolon tokenizing
-
-  - Tuple-deconstruction "let" statements
-
-  - research numeric literal recognized suffixes
-
-  - array literals [1;2;3]
-  - array slicing  a[1..5]
-  - array indexing  a[0]
-
-  - Consolidate operation patterns
+// Nice-to-have, polishes:
+//   use "invalid.illegal" on lowercased types and function names
+//   move keywords higher in the heirarchy so they are highlighted sooner
+//   update the BNF grammar, note where it departs from the highlighting grammar
+//   consolidate operation patterns
+//   factor out common patterns for identifiers
+//
+//   Figure out how to make "block commenting" work via keyboard shortcut
 
 namespace Foo {
     /// # Summary
@@ -187,7 +196,7 @@ World";
 let e = ();
 let f = ("hello", 1, 2.0);
 let g = [1;2;3]
-let paulis = (PauliI, PauliX, PauliY, PualiZ);
+let paulis = (PauliI, PauliX, PauliY, PauliZ);
 let results = (One, Zero);
 
 // Test operators

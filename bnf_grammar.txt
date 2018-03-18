@@ -29,6 +29,7 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
              |  <block>
              |  <using-statement>
              |  <borrowing-statement>
+             |  <expression> ";"
 
 <expression> ::= <interpolated-string>
               |  <literal>
@@ -39,6 +40,8 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
               |  <array-creation-expression>
               |  <primitive-type>
               |  <library-function>
+              |  <callable>
+              |  <callable-invocation>
 
 <parenthesized-expression> ::= "(" <expression> ")"
 
