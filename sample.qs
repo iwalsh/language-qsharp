@@ -48,6 +48,18 @@ operation ApplyTwice<'T>(op : ('T => ()), target : 'T) : () {
     }
 }
 
+namespace Hello.QSharp {
+  open MyLibrary;
+}
+
+namespace Hello.QSharp {
+  let foo = bar;
+}
+
+namespace Hello.QSharp {
+  function DotProduct (a : Double[], b : Double[]) : Double {}
+}
+
 // Test `return`
 return 1;
 return ();

@@ -50,35 +50,25 @@
     "end": "(?=;)",
     "patterns": [
       {
-        # REVIEW: Should this be entity.name.namespace.qsharp?
-        "name": "entity.name.type.qsharp",
+        "name": "entity.name.namespace.qsharp",
         "match": "\\b[[:alpha:]][\\.[:alnum:]]*\\b"
       }
     ]
   },
   "function-definition": {
-    # "begin": "(?<!\\.)\\b(function)\\b\\s+\\b([A-Z][_[:alnum:]]*)\\b\\s*(?=\\()",
-    # "beginCaptures": {
-    #   "1": { "name": "keyword.other.qsharp" },
-    #   "2": { "name": "entity.name.function.qsharp" }
-    # },
-    "begin": "function",
+    "begin": "(?<!\\.)\\b(function)\\b\\s+([A-Z][_[:alnum:]]*)\\s*(?=\\()",
     "beginCaptures": {
-      "1": { "name": "keyword.other.qsharp" }
+      "1": { "name": "keyword.other.qsharp" },
+      "2": { "name": "entity.name.function.qsharp" }
     },
     "end": "(?=\\{)",
-    #{}"end": "(?<=\\})",
     "patterns": [
-      {
-        "match": "[A-Z][_[:alnum:]]*",
-        "name": "entity.name.function.qsharp"
-      },
       { "include": "#type-definition" },
       {
         "match": "[a-z][_[:alnum:]]*",
         "name": "variable.parameter.qsharp"
       },
-      #{ "include": "#block" }
+      { "include": "#block" }
     ]
   },
   "operation-definition": {
@@ -86,10 +76,9 @@
     "patterns": []
   },
   "newtype-directive": {
-    "begin": "\\b(newtype)\\b\\s+\\b([[:alpha:]][_[:alnum:]]*)\\b\\s*(=)\\s*",
+    "begin": "\\b(newtype)\\b\\s+\\b([[A-Z]][_[:alnum:]]*)\\b\\s*(=)\\s*",
     "beginCaptures": {
       "1": { "name": "keyword.other.qsharp" },
-      # TODO: enforce that the type starts with a capital?
       "2": { "name": "entity.name.type.qsharp" },
       "3": { "name": "keyword.operator.assignment.qsharp" }
     },

@@ -21,25 +21,45 @@ describe 'Q# grammar', ->
       expect(tokens[0].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
       expect(tokens[2].scopes).toEqual ['source.qsharp', 'entity.name.namespace.qsharp']
 
+    # FIXME: What's with the empty string token at the end of the line?
+    it 'tokenizes namespace bodies that span multiple lines', ->
+      program = '''
+                namespace Hello.QSharp {
+                  let foo = bar;
+                }
+                '''
+      tokens = grammar.tokenizeLines(program)
+      values = (token.value for token in tokens[0])
+      expect(values).toEqual ['namespace', ' ', 'Hello.QSharp', ' ', '{', '']
+      expect(tokens[0][0].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
+      expect(tokens[0][2].scopes).toEqual ['source.qsharp', 'entity.name.namespace.qsharp']
+
   describe 'open-directive', ->
     it 'tokenizes the keyword and name', ->
-      # {tokens} = grammar.tokenizeLine 'namespace Hello.QSharp { open Microsoft.Quantum.Canon; }'
-      # values = (token.value for token in tokens)
-      #
-      # expect(values).toEqual ['namespace', ' ', 'Hello.QSharp', ' ', '{', ' ', 'open', ' ', 'Microsoft.Quantum.Canon', ';', ' ', '}']
-      # expect(tokens[6].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
-      # expect(tokens[8].scopes).toEqual ['source.qsharp', 'entity.name.type.qsharp']
-      foo = '''
-            namespace Hello.QSharp {
-              open Microsoft.Quantum.Canon;
-            }
-            '''
-      tokens = grammar.tokenizeLines foo
+      program = '''
+                namespace Hello.QSharp {
+                  open Microsoft.Quantum.Canon;
+                }
+                '''
+      tokens = grammar.tokenizeLines program
       values = (token.value for token in tokens[1])
 
       expect(values).toEqual ['  ', 'open', ' ', 'Microsoft.Quantum.Canon', ';', '']
       expect(tokens[1][1].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
-      expect(tokens[1][3].scopes).toEqual ['source.qsharp', 'entity.name.type.qsharp']
+      expect(tokens[1][3].scopes).toEqual ['source.qsharp', 'entity.name.namespace.qsharp']
+
+    it 'tokenizes the surrounding namespace', ->
+      program = '''
+                namespace Hello.QSharp {
+                  open Microsoft.Quantum.Canon;
+                }
+                '''
+      tokens = grammar.tokenizeLines program
+      values = (token.value for token in tokens[0])
+
+      expect(values).toEqual ['namespace', ' ', 'Hello.QSharp', ' ', '{', '']
+      expect(tokens[0][0].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
+      expect(tokens[0][2].scopes).toEqual ['source.qsharp', 'entity.name.namespace.qsharp']
 
   describe 'newtype-directive', ->
     it 'tokenizes the keyword, name and assignment operator', ->
@@ -104,15 +124,17 @@ describe 'Q# grammar', ->
   describe 'function-definition', ->
     it 'tokenizes the keyword, identifier, and types', ->
       foo = '''
-            namepace Hello.QSharp {
-              function DotProduct (a : Double[], b : Double[]) : Double {}
+            namespace Hello.QSharp {
+              function DotProduct(a : Double[], b : Double[]) : Double {}
             }
             '''
       tokens = grammar.tokenizeLines foo
       values = (token.value for token in tokens[1])
 
       expect(values).toEqual ['  ', 'function', ' ', 'DotProduct', '(', 'a', ' ', ':', ' ', 'Double[]', ',', ' ', 'b', ' ', ':', ' ', 'Double[]', ')', ' ', ':', ' ', 'Double', ' ', '{', '}']
-
+      expect(tokens[1][1].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
+      expect(tokens[1][3].scopes).toEqual ['source.qsharp', 'entity.name.function.qsharp']
+      expect(tokens[1][5].scopes).toEqual ['source.qsharp', 'variable.parameter.qsharp']
 
   describe 'operation-definition', ->
     # TODO
