@@ -8,7 +8,7 @@
   { "include": "#comment" },
   { "include": "#punctuation-semicolon" },
   { "include": "#literal" },  # TODO: shouldn't be at top-level
-  { "include": "#reserved-csharp-keywords" },  # TODO: Tests. Right place for this?
+  { "include": "#reserved-csharp-keywords" },  # REVIEW: Is top-level correct?
 
   # N.B. Q# does not actually allow statements at the top level of a program,
   # but it is very convenient for testing that our grammar does.
@@ -51,7 +51,7 @@
     "patterns": [
       {
         "name": "entity.name.namespace.qsharp",
-        "match": "\\b[[:alpha:]][\\.[:alnum:]]*\\b"
+        "match": "\\b[A-Z][\\.[:alnum:]]*\\b"
       }
     ]
   },
@@ -72,8 +72,103 @@
     ]
   },
   "operation-definition": {
-    # TODO
-    "patterns": []
+    "begin": "(?<!\\.)\\b(operation)\\b\\s+([A-Z][_[:alnum:]]*)\\s*(?=\\()",
+    "beginCaptures": {
+      "1": { "name": "keyword.other.qsharp" },
+      "2": { "name": "entity.name.function.qsharp" }  # REVIEW: This seems "close enough".
+    },
+    "end": "(?<=\\})",
+    "patterns": [
+      { "include": "#type-definition" },
+      {
+        "match": "[a-z][_[:alnum:]]*",
+        "name": "variable.parameter.qsharp"
+      },
+      {
+        "begin": "\\{",
+        "beginCaptures": {
+          "0": { "name": "punctuation.curlybrace.open.qsharp" }
+        },
+        "end": "\\}",
+        "endCaptures": {
+          "0": { "name": "punctuation.curlybrace.close.qsharp" }
+        },
+        "patterns": [
+          { "include": "#body-definition" },
+          { "include": "#adjoint-definition" },
+          { "include": "#controlled-definition" },
+          { "include": "#controlled-adjoint-definition" }
+        ]
+      }
+    ]
+  },
+  "body-definition": {
+    "patterns": [
+      {
+        "name": "keyword.other.qsharp",
+        "match": "\\b(body)\\b"
+      },
+      { "include": "#block" }
+    ]
+  },
+  "adjoint-definition": {
+    "patterns": [
+      {
+        "name": "keyword.other.qsharp",
+        "match": "\\b(adjoint|self|auto)\\b"
+      },
+      { "include": "#block" }
+    ]
+  },
+  "controlled-definition": {
+    "patterns": [
+      {
+        "name": "keyword.other.qsharp",
+        "match": "\\b(controlled|auto)\\b"
+      },
+      {
+        "begin": "\\(",
+        "beginCaptures": {
+          "0": { "name": "punctuation.parenthesis.open.qsharp" }
+        },
+        "end": "\\)",
+        "endCaptures": {
+          "0": { "name": "punctation.parenthesis.close.qsharp" }
+        },
+        "patterns": [
+          {
+            "name": "variable.parameter.qsharp",
+            "match": "[a-z][_[:alnum:]]*"
+          }
+        ]
+      },
+      { "include": "#block" }
+    ]
+  },
+  "controlled-adjoint-definition": {
+    "patterns": [
+      {
+        "name": "keyword.other.qsharp",
+        "match": "\\b(adjoint|controlled|auto)\\b"
+      },
+      {
+        "begin": "\\(",
+        "beginCaptures": {
+          "0": { "name": "punctuation.parenthesis.open.qsharp" }
+        },
+        "end": "\\)",
+        "endCaptures": {
+          "0": { "name": "punctation.parenthesis.close.qsharp" }
+        },
+        "patterns": [
+          {
+            "name": "variable.parameter.qsharp",
+            "match": "[a-z][_[:alnum:]]*"
+          }
+        ]
+      },
+      { "include": "#block" }
+    ]
   },
   "newtype-directive": {
     "begin": "\\b(newtype)\\b\\s+\\b([[A-Z]][_[:alnum:]]*)\\b\\s*(=)\\s*",
@@ -110,7 +205,6 @@
       {
         "comment": "Type parameters, simple types, and array types",
         "name": "entity.name.type.qsharp",
-        # REVIEW: correct to enforce this capital letter?
         "match": "(')?[A-Z][_[:alnum:]]*(\\[\\])?"
       }
     ]
@@ -267,7 +361,7 @@
     "beginCaptures": {
       "1": { "name": "keyword.control.loop.for.qsharp" }
     },
-    "end": "(?<=\\})", # TODO: No semicolon termination?
+    "end": "(?<=\\})",
     "patterns": [
       {
         "begin": "\\(",

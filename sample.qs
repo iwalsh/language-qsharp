@@ -1,9 +1,9 @@
 Still TODO
   - Method calls
 
-  - Tuple-deconstruction "let" statements
+  - Review '; ' semicolon tokenizing
 
-  - semicolons
+  - Tuple-deconstruction "let" statements
 
   - research numeric literal recognized suffixes
 
@@ -11,40 +11,74 @@ Still TODO
   - array slicing  a[1..5]
   - array indexing  a[0]
 
-  - Keywords: adjoint, self, auto, controlled
+  - Consolidate operation patterns
 
-  - function definition
+namespace Foo {
+    /// # Summary
+    /// Given an operation and a target for that operation,
+    /// applies the given operation twice.
+    ///
+    /// # Input
+    /// ## op
+    /// The operation to be applied.
+    /// ## target
+    /// The target to which the operation is to be applied.
+    ///
+    /// # Type Parameters
+    /// ## 'T
+    /// The type expected by the given operation as its input.
+    ///
+    /// # Example
+    /// ```Q#
+    /// // Should be equivalent to the identity.
+    /// ApplyTwice(H, qubit);
+    /// ```
+    ///
+    /// # See Also
+    /// - Microsoft.Quantum.Primitive.H
+    /// - @"MyFile"
+    operation ApplyTwice<'T>(op : ('T => ()), target : 'T) : () {
+        // Comment
+        body {
+            op(target);  // Another comment
+            op(target);
+        }
+    }
+}
 
-  - operation definition
+namespace Microsoft.Quantum.Samples {
+    // Entangle two qubits.
+    // Assumes that both qubits are in the |0> state.
+    operation EPR (q1 : Qubit, q2 : Qubit) : () {
+        body
+        {
+            H(q2);
+            CNOT(q2, q1);
+        }
+    }
 
-/// # Summary
-/// Given an operation and a target for that operation,
-/// applies the given operation twice.
-///
-/// # Input
-/// ## op
-/// The operation to be applied.
-/// ## target
-/// The target to which the operation is to be applied.
-///
-/// # Type Parameters
-/// ## 'T
-/// The type expected by the given operation as its input.
-///
-/// # Example
-/// ```Q#
-/// // Should be equivalent to the identity.
-/// ApplyTwice(H, qubit);
-/// ```
-///
-/// # See Also
-/// - Microsoft.Quantum.Primitive.H
-/// - @"MyFile"
-operation ApplyTwice<'T>(op : ('T => ()), target : 'T) : () {
-    // Comment
-    body {
-        op(target);  // Another comment
-        op(target);
+    // Teleport the quantum state of the source to the target.
+    // Assumes that the target is in the |0> state.
+    operation Teleport (source : Qubit, target : Qubit) : () {
+        body {
+            // Get a temporary for the Bell pair
+            using (ancilla = Qubit[1]) {
+                let temp = ancilla[0];
+
+                // Create a Bell pair between the temporary and the target
+                EPR(target, temp);
+
+                // Do the teleportation
+                CNOT(source, temp);
+                H(source);
+                if (M(source) == One) {
+                    X(target);
+                }
+                if (M(temp) == One) {
+                    Z(target);
+                }
+            }
+        }
     }
 }
 
@@ -59,6 +93,8 @@ namespace Hello.QSharp {
 namespace Hello.QSharp {
   function DotProduct (a : Double[], b : Double[]) : Double {}
 }
+
+let foo abstract bar;
 
 // Test `return`
 return 1;
@@ -177,11 +213,13 @@ let z = 3 >= 3;
 let aa = 3 <= 3;
 
 // Test newtype
-newtype TypeA = (Int, TypeB);
-newtype typeA = (Int, TypeB);
-newtype TypeB = (Double, TypeC);
-newtype TypeC = (TypeA, Range);
-newtype IntPair : (Int, Int);
-newtype IntPairTransform : ((Int, Int) -> (Int, Int))
-newType IntPairTransform2 : ((Int, Int) -> IntPair)
-newType IntPairTransform3 : (IntPair -> (Int, Int))
+namespace My.NewTypes {
+  newtype TypeA = (Int, TypeB);
+  newtype typeA = (Int, TypeB);
+  newtype TypeB = (Double, TypeC);
+  newtype TypeC = (TypeA, Range);
+  newtype IntPair : (Int, Int);
+  newtype IntPairTransform : ((Int, Int) -> (Int, Int))
+  newType IntPairTransform2 : ((Int, Int) -> IntPair)
+  newType IntPairTransform3 : (IntPair -> (Int, Int))
+}

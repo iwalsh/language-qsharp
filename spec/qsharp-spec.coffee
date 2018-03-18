@@ -123,12 +123,12 @@ describe 'Q# grammar', ->
 
   describe 'function-definition', ->
     it 'tokenizes the keyword, identifier, and types', ->
-      foo = '''
-            namespace Hello.QSharp {
-              function DotProduct(a : Double[], b : Double[]) : Double {}
-            }
-            '''
-      tokens = grammar.tokenizeLines foo
+      program = '''
+                namespace Hello.QSharp {
+                  function DotProduct(a : Double[], b : Double[]) : Double {}
+                }
+                '''
+      tokens = grammar.tokenizeLines program
       values = (token.value for token in tokens[1])
 
       expect(values).toEqual ['  ', 'function', ' ', 'DotProduct', '(', 'a', ' ', ':', ' ', 'Double[]', ',', ' ', 'b', ' ', ':', ' ', 'Double[]', ')', ' ', ':', ' ', 'Double', ' ', '{', '}']
@@ -136,8 +136,159 @@ describe 'Q# grammar', ->
       expect(tokens[1][3].scopes).toEqual ['source.qsharp', 'entity.name.function.qsharp']
       expect(tokens[1][5].scopes).toEqual ['source.qsharp', 'variable.parameter.qsharp']
 
+    it 'tokenizes statements within the function body', ->
+      program = '''
+                namespace Hello.QSharp {
+                  function SetFooToBar() : Double {
+                    set foo = bar;
+                  }
+                }
+                '''
+      tokens = grammar.tokenizeLines program
+      values = (token.value for token in tokens[2])
+
+      expect(values).toEqual ['    ', 'set', ' ', 'foo', ' ', '=', ' ', 'bar', ';', '']
+      expect(tokens[2][1].scopes).toEqual ['source.qsharp', 'keyword.binding.set.qsharp']
+
   describe 'operation-definition', ->
-    # TODO
+    it 'tokenizes the keyword, identifier, and types', ->
+      program = '''
+                namespace Hello.QSharp {
+                  operation NoOp (q : Qubit) : () {}
+                }
+                '''
+      tokens = grammar.tokenizeLines program
+      values = (token.value for token in tokens[1])
+
+      expect(values).toEqual ['  ', 'operation', ' ', 'NoOp', ' ' , '(', 'q', ' ', ':', ' ', 'Qubit', ')', ' ', ':', ' ', '(', ')', ' ', '{', '}']
+      expect(tokens[1][1].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
+      expect(tokens[1][3].scopes).toEqual ['source.qsharp', 'entity.name.function.qsharp']
+      expect(tokens[1][6].scopes).toEqual ['source.qsharp', 'variable.parameter.qsharp']
+
+    it 'tokenizes the `body` keyword and block', ->
+      program = '''
+                namespace Hello.QSharp {
+                  operation SetFooToBar () : () {
+                    body { set foo = bar; }
+                  }
+                }
+                '''
+      tokens = grammar.tokenizeLines program
+      values = (token.value for token in tokens[2])
+
+      expect(values).toEqual ['    ', 'body', ' ', '{', ' ' , 'set', ' ', 'foo', ' ', '=', ' ', 'bar', '; ', '}']
+      expect(tokens[2][1].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
+
+    it 'tokenizes the `adjoint` and `auto` keywords', ->
+      program = '''
+                namespace Hello.QSharp {
+                  operation SetFooToBar () : () {
+                    body { set foo = bar; }
+                    adjoint auto
+                  }
+                }
+                '''
+      tokens = grammar.tokenizeLines program
+      values = (token.value for token in tokens[3])
+
+      expect(values).toEqual ['    ', 'adjoint', ' ', 'auto']
+      expect(tokens[3][1].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
+      expect(tokens[3][3].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
+
+    it 'tokenizes the `adjoint` and `self` keywords', ->
+      program = '''
+                namespace Hello.QSharp {
+                  operation SetFooToBar () : () {
+                    body { set foo = bar; }
+                    adjoint self
+                  }
+                }
+                '''
+      tokens = grammar.tokenizeLines program
+      values = (token.value for token in tokens[3])
+
+      expect(values).toEqual ['    ', 'adjoint', ' ', 'self']
+      expect(tokens[3][1].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
+      expect(tokens[3][3].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
+
+
+    it 'tokenizes `adjoint` blocks', ->
+      program = '''
+                namespace Hello.QSharp {
+                  operation SetFooToBar () : () {
+                    adjoint { set foo = bar; }
+                  }
+                }
+                '''
+      tokens = grammar.tokenizeLines program
+      values = (token.value for token in tokens[2])
+
+      expect(values).toEqual ['    ', 'adjoint', ' ', '{', ' ' , 'set', ' ', 'foo', ' ', '=', ' ', 'bar', '; ', '}']
+      expect(tokens[2][1].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
+
+    it 'tokenizes the `controlled` and `auto` keywords', ->
+      program = '''
+                namespace Hello.QSharp {
+                  operation SetFooToBar () : () {
+                    body { set foo = bar; }
+                    controlled auto
+                  }
+                }
+                '''
+      tokens = grammar.tokenizeLines program
+      values = (token.value for token in tokens[3])
+
+      expect(values).toEqual ['    ', 'controlled', ' ', 'auto']
+      expect(tokens[3][1].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
+      expect(tokens[3][3].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
+
+    it 'tokenizes `controlled` blocks', ->
+      program = '''
+                namespace Hello.QSharp {
+                  operation SetFooToBar () : () {
+                    controlled (controls) { set foo = bar; }
+                  }
+                }
+                '''
+      tokens = grammar.tokenizeLines program
+      values = (token.value for token in tokens[2])
+
+      expect(values).toEqual ['    ', 'controlled', ' ', '(', 'controls', ')', ' ', '{', ' ' , 'set', ' ', 'foo', ' ', '=', ' ', 'bar', '; ', '}']
+      expect(tokens[2][1].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
+      expect(tokens[2][4].scopes).toEqual ['source.qsharp', 'variable.parameter.qsharp']
+
+    it 'tokenizes the `controlled adjoint` and `auto` keywords ', ->
+      program = '''
+                namespace Hello.QSharp {
+                  operation SetFooToBar () : () {
+                    body { set foo = bar; }
+                    adjoint controlled auto
+                  }
+                }
+                '''
+      tokens = grammar.tokenizeLines program
+      values = (token.value for token in tokens[3])
+
+      expect(values).toEqual ['    ', 'adjoint', ' ', 'controlled', ' ', 'auto']
+      expect(tokens[3][1].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
+      expect(tokens[3][3].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
+      expect(tokens[3][5].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
+
+    it 'tokenizes `adjoint controlled` blocks', ->
+      program = '''
+                namespace Hello.QSharp {
+                  operation SetFooToBar () : () {
+                    adjoint controlled (controls) { set foo = bar; }
+                  }
+                }
+                '''
+      tokens = grammar.tokenizeLines program
+      values = (token.value for token in tokens[2])
+
+      expect(values).toEqual ['    ', 'adjoint', ' ', 'controlled', ' ', '(', 'controls', ')', ' ', '{', ' ' , 'set', ' ', 'foo', ' ', '=', ' ', 'bar', '; ', '}']
+      expect(tokens[2][1].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
+      expect(tokens[2][3].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
+      expect(tokens[2][6].scopes).toEqual ['source.qsharp', 'variable.parameter.qsharp']
 
   describe 'comments', ->
     describe 'double-slash comments', ->
