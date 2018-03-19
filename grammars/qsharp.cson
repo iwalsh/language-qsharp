@@ -290,9 +290,8 @@
       { "include": "#array-creation-expression" },
       { "include": "#primitive-type" },  # REVIEW: is this the right spot?
       { "include": "#library-function" },  # REVIEW: is this the right spot?
-      { "include": "#identifier" },
       { "include": "#callable" },
-      { "include": "#callable-invocation" }
+      { "include": "#identifier" }
     ]
   },
   "statement": {
@@ -585,29 +584,38 @@
     ]
   },
   "identifier": {
-    # TODO: should this be "entity.name.variable.local.qsharp"?
-    "name": "variable.other.readwrite.qsharp",
-    "match": "[_[:alpha:]][_[:alnum:]]*"
+    "name": "variable.other.qsharp",
+    "match": "[a-z][_[:alnum:]]*"
   },
   "callable": {
     "patterns": [
-      { "include": "#open-parenthesis" },
-      { "include": "#close-parenthesis" },
+      {
+        "begin": "\\(",
+        "beginCaptures": {
+          "0": { "name": "punctuation.parenthesis.open.qsharp" }
+        },
+        "end": "\\)",
+        "endCaptures": {
+          "0": { "name": "punctuation.parenthesis.close.qsharp" }
+        },
+        "patterns": [
+          { "include": "#functor-name" },
+          {
+            "name": "entity.name.function.qsharp",
+            "match": "\\b[A-Z][_[:alnum:]]*\\b"
+          },
+          {
+            "match": "\\s*\\b([_[a-z]][_[:alnum:]]*)\\b\\*",
+            "name": "variable.parameter.qsharp"
+          }
+        ]
+      },
       { "include": "#functor-name" },
       {
         "name": "entity.name.function.qsharp",
         "match": "\\b[A-Z][_[:alnum:]]*\\b"
-      }
-    ]
-  },
-  "callable-invocation": {
-    "patterns": [
-      { "include": "#callable" },
-      {
-        "comment": "Argument placeholder for partial application"
-        "match": "\\b(_)\\b",
-        "name": "variable.parameter.qsharp"
-      }
+      },
+      { "include": "#punctuation-comma" }
     ]
   },
   "literal": {
@@ -633,25 +641,25 @@
       # TODO: is uppercase "X" recognized for hex in Q#?
       {
         "name": "constant.numeric.hex.qsharp",
-        "match": "\\b0(x|X)[0-9a-fA-F_]+(U|u)?\\b"
+        "match": "\\b0(x|X)[0-9a-fA-F]+(U|u)?\\b"
       }
       # TODO: Are "f" and "m" supported in qsharp?
       {
         "name": "constant.numeric.decimal.qsharp",
-        "match": "\\b([0-9_]+)?\\.[0-9_]+((e|E)[0-9]+)?(F|f|M|m)?\\b"
+        "match": "\\b([0-9]+)?\\.[0-9]+((e|E)[0-9]+)?(F|f|M|m)?\\b"
       },
       {
         "name": "constant.numeric.decimal.qsharp",
-        "match": "\\b[0-9_]+(e|E)[0-9_]+(F|f|M|m)?\\b"
+        "match": "\\b[0-9]+(e|E)[0-9]+(F|f|M|m)?\\b"
       },
       {
         "name": "constant.numeric.decimal.qsharp",
-        "match": "\\b[0-9_]+(F|f|D|d|M|m)\\b"
+        "match": "\\b[0-9]+(F|f|D|d|M|m)\\b"
       },
       # TODO: Is the "u" suffix supported in Q#?
       {
         "name": "constant.numeric.decimal.qsharp",
-        "match": "\\b[0-9_]+(U|u)?\\b"
+        "match": "\\b[0-9]+(U|u)?\\b"
       }
     ]
   },

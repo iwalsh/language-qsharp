@@ -408,7 +408,7 @@ describe 'Q# grammar', ->
       expect(values).toEqual ['fail', ' ', '$"', 'Syndrome ', '{', 'syn', '}', ' is incorrect', '"', ';']
       expect(tokens[2].scopes).toEqual ['source.qsharp', 'string.quoted.double.qsharp', 'punctuation.definition.string.begin.qsharp']
       expect(tokens[4].scopes).toEqual ['source.qsharp', 'string.quoted.double.qsharp', 'meta.interpolation.qsharp', 'punctuation.definition.interpolation.begin.qsharp']
-      expect(tokens[5].scopes).toEqual ['source.qsharp', 'string.quoted.double.qsharp', 'meta.interpolation.qsharp', 'variable.other.readwrite.qsharp']
+      expect(tokens[5].scopes).toEqual ['source.qsharp', 'string.quoted.double.qsharp', 'meta.interpolation.qsharp', 'variable.other.qsharp']
       expect(tokens[6].scopes).toEqual ['source.qsharp', 'string.quoted.double.qsharp', 'meta.interpolation.qsharp', 'punctuation.definition.interpolation.end.qsharp']
 
   describe 'statements', ->
@@ -641,6 +641,40 @@ describe 'Q# grammar', ->
         expect(values).toEqual ['let', ' ', 'res', ' ', '=', ' ', func, '(', 'foo', ')', ';']
         expect(tokens[6].scopes).toEqual ['source.qsharp', 'support.function.builtin.qsharp']
     );
+
+  describe 'callable expressions', ->
+    it 'tokenizes the name and arguments', ->
+      {tokens} = grammar.tokenizeLine "{ Foo(1); }"
+      values = (token.value for token in tokens)
+
+      expect(values).toEqual ['{', ' ', 'Foo', '(', '1', ')', ';', ' ', '}']
+      expect(tokens[2].scopes).toEqual ['source.qsharp', 'entity.name.function.qsharp']
+
+    it 'tokenizes functors that are applied to the operation', ->
+      {tokens} = grammar.tokenizeLine "{ (Adjoint Foo)(1); }"
+      values = (token.value for token in tokens)
+
+      expect(values).toEqual ['{', ' ', '(', 'Adjoint', ' ', 'Foo', ')', '(', '1', ')', ';', ' ', '}']
+      expect(tokens[3].scopes).toEqual ['source.qsharp', 'entity.other.functor.qsharp']
+      expect(tokens[5].scopes).toEqual ['source.qsharp', 'entity.name.function.qsharp']
+
+  describe 'callable invocations', ->
+    it 'tokenizes the function name and arguments', ->
+      {tokens} = grammar.tokenizeLine "{ Foo(bar); }"
+      values = (token.value for token in tokens)
+
+      expect(values).toEqual ['{', ' ', 'Foo', '(', 'bar', ')', ';', ' ', '}']
+      # FIXME: I would like to scope this to 'variable.parameter.qsharp'
+      expect(tokens[4].scopes).toEqual ['source.qsharp', 'variable.other.qsharp']
+
+    it 'tokenizes invocations using partial application', ->
+      {tokens} = grammar.tokenizeLine "{ Foo(bar, _); }"
+      values = (token.value for token in tokens)
+
+      # FIXME: Underscore is not tokenized correctly: getting " _"
+      expect(values).toEqual ['{', ' ', 'Foo', '(', 'bar', ',', ' _', ')', ';', ' ', '}']
+      expect(tokens[4].scopes).toEqual ['source.qsharp', 'variable.other.qsharp']
+      #expect(tokens[7].scopes).toEqual ['source.qsharp', 'variable.other.qsharp']
 
   describe 'literals', ->
     describe 'boolean-literal', ->

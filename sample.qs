@@ -1,8 +1,4 @@
 // Still TODO
-//   - Method calls
-//     - Callable expressions
-//     - Callable invocation expressions
-//     - partial application
 //
 //  - Tuple-deconstruction "let" statements
 //  - For-statement blocks
