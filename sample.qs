@@ -1,7 +1,6 @@
 // Still TODO
 //
 //  - Tuple-deconstruction "let" statements
-//  - For-statement blocks
 //  - research numeric literal recognized suffixes
 //
 //  - array literals [1;2;3]

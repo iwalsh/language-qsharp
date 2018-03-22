@@ -449,18 +449,35 @@ describe 'Q# grammar', ->
         expect(tokens[0].scopes).toEqual ['source.qsharp', 'keyword.control.conditional.else.qsharp']
 
     describe 'for-statement', ->
-      # FIXME: Not tokenizing the block
       it 'tokenizes the keywords and punctuation', ->
-        {tokens} = grammar.tokenizeLine 'for (i in 0 .. 5) { set sum = sum + 1; }'
-        values = (token.value for token in tokens)
+        program = '''
+                  for (i in 0 .. 5) {
+                    set sum = sum + 1;
+                  }
+                  '''
+        tokens = grammar.tokenizeLines program
+        values = (token.value for token in tokens[0])
 
-        expect(values).toEqual ['for', ' ', '(', 'i', ' ', 'in', ' ', '0', ' ', '..', ' ', '5', ')', ' { set sum = sum + 1; }']
-        expect(tokens[0].scopes).toEqual ['source.qsharp', 'keyword.control.loop.for.qsharp']
-        expect(tokens[2].scopes).toEqual ['source.qsharp', 'punctuation.parenthesis.open.qsharp']
-        expect(tokens[3].scopes).toEqual ['source.qsharp', 'entity.name.variable.local.qsharp']
-        expect(tokens[5].scopes).toEqual ['source.qsharp', 'keyword.control.loop.in.qsharp']
-        expect(tokens[9].scopes).toEqual ['source.qsharp', 'punctuation.definition.range.qsharp']
-        expect(tokens[12].scopes).toEqual ['source.qsharp', 'punctuation.parenthesis.close.qsharp']
+        expect(values).toEqual ['for', ' ', '(', 'i', ' ', 'in', ' ', '0', ' ', '..', ' ', '5', ')', ' ', '{']
+        expect(tokens[0][0].scopes).toEqual ['source.qsharp', 'keyword.control.loop.for.qsharp']
+        expect(tokens[0][2].scopes).toEqual ['source.qsharp', 'punctuation.parenthesis.open.qsharp']
+        expect(tokens[0][3].scopes).toEqual ['source.qsharp', 'entity.name.variable.local.qsharp']
+        expect(tokens[0][5].scopes).toEqual ['source.qsharp', 'keyword.control.loop.in.qsharp']
+        expect(tokens[0][9].scopes).toEqual ['source.qsharp', 'punctuation.definition.range.qsharp']
+        expect(tokens[0][12].scopes).toEqual ['source.qsharp', 'punctuation.parenthesis.close.qsharp']
+        expect(tokens[0][14].scopes).toEqual ['source.qsharp', 'punctuation.curlybrace.open.qsharp']
+
+      it 'tokenizes the block', ->
+        program = '''
+                  for (i in 0 .. 5) {
+                    set sum = sum + 1;
+                  }
+                  '''
+        tokens = grammar.tokenizeLines program
+        values = (token.value for token in tokens[1])
+
+        expect(values).toEqual ['  ', 'set', ' ', 'sum', ' ', '=', ' ', 'sum', ' ', '+', ' ', '1', ';' ]
+        expect(tokens[1][1].scopes).toEqual ['source.qsharp', 'keyword.binding.set.qsharp']
 
     describe 'repeat-statement', ->
       it 'tokenizes the keyword', ->

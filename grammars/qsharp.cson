@@ -387,10 +387,11 @@
             "match": "\\b[a-z][_[:alnum:]]*\\b",
             "name": "entity.name.variable.local.qsharp"
           }
-          { "include": "#numeric-literal" }
-          { "include": "#punctuation-range"}
+          { "include": "#numeric-literal" },
+          { "include": "#punctuation-range" }
         ]
       },
+      { "include": "#block" }
     ]
   },
   "repeat-statement": {
@@ -429,7 +430,7 @@
   },
   "let-statement": {
     # FIXME: Needs to allow tuple-deconstruction assignment
-    "begin": "(?x)\n\\b(let)\\b\\s*\n\\b([_[:alpha:]][_[:alnum:]]*)\\b\\s*\n(=)\\s*",
+    "begin": "\\b(let)\\b\\s*\\b([_[:alpha:]][_[:alnum:]]*)\\b\\s*(\\=)\\s*",
     "beginCaptures": {
       "1": { "name": "keyword.binding.let.qsharp" },
       # TODO: Should this be "variable.other.readonly.qsharp"?
@@ -443,7 +444,7 @@
     ]
   },
   "mutable-statement": {
-    "begin": "(?x)\n\\b(mutable)\\b\\s*\n\\b([_[:alpha:]][_[:alnum:]]*)\\b\\s*\n(=)\\s*",
+    "begin": "\\b(mutable)\\b\\s*\\b([_[:alpha:]][_[:alnum:]]*)\\b\\s*(\\=)\\s*",
     "beginCaptures": {
       "1": { "name": "keyword.binding.mutable.qsharp" },
       # TODO: Should this be "variable.other.readwrite.qsharp"?
@@ -457,7 +458,7 @@
     ]
   },
   "set-statement": {
-    "begin": "(?x)\n\\b(set)\\b\\s*\n\\b([_[:alpha:]][_[:alnum:]]*)\\b\\s*\n(=)\\s*",
+    "begin": "\\b(set)\\b\\s*\\b([_[:alpha:]][_[:alnum:]]*)\\b\\s*(\\=)\\s*",
     "beginCaptures": {
       "1": { "name": "keyword.binding.set.qsharp" },
       # TODO: Should this be "variable.other.readwrite.qsharp"?
