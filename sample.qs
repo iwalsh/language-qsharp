@@ -1,12 +1,7 @@
 // Still TODO
 //
-//  - Tuple-deconstruction "let" statements
+//  - Tuple-deconstruction "mutable" statements?
 //  - research numeric literal recognized suffixes
-//
-//  - array literals [1;2;3]
-//  - array slicing  a[1..5]
-//  - array indexing  a[0]
-//
 
 // Nice-to-have, polishes:
 //   use "invalid.illegal" on lowercased types and function names

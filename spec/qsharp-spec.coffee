@@ -488,7 +488,34 @@ describe 'Q# grammar', ->
         expect(tokens[2].scopes).toEqual ['source.qsharp', 'punctuation.curlybrace.open.qsharp']
         expect(tokens[17].scopes).toEqual ['source.qsharp', 'punctuation.curlybrace.close.qsharp']
 
-      # TODO: need a more complete "repeat" example
+      it 'tokenizes the `until` and `fixup` keywords', ->
+        program = '''
+                  repeat {
+                    set result = result - 1;
+                  } until result == 0 fixup {
+                    ();
+                  }
+                  '''
+        tokens = grammar.tokenizeLines program
+        values = (token.value for token in tokens[2])
+
+        expect(values).toEqual ['}', ' ', 'until', ' ', 'result', ' ', '==', ' ', '0', ' ', 'fixup', ' ', '{']
+        expect(tokens[2][0].scopes).toEqual ['source.qsharp', 'punctuation.curlybrace.close.qsharp']
+        expect(tokens[2][2].scopes).toEqual ['source.qsharp', 'keyword.control.loop.until.qsharp']
+        expect(tokens[2][6].scopes).toEqual ['source.qsharp', 'keyword.operator.comparison.qsharp']
+        expect(tokens[2][10].scopes).toEqual ['source.qsharp', 'keyword.control.loop.fixup.qsharp']
+        expect(tokens[2][12].scopes).toEqual ['source.qsharp', 'punctuation.curlybrace.open.qsharp']
+
+      it 'tokenizes the `fixup` block', ->
+        program = '''
+                  repeat { set result = result - 1; } until result == 0 fixup {
+                    set foo = bar;
+                  }
+                  '''
+        tokens = grammar.tokenizeLines program
+        values = (token.value for token in tokens[1])
+
+        expect(values).toEqual ['  ', 'set', ' ', 'foo', ' ', '=', ' ', 'bar', ';']
 
     describe 'until-statement', ->
       it 'tokenizes the keywords', ->
@@ -523,15 +550,15 @@ describe 'Q# grammar', ->
 
         expect(values).toEqual [ 'let', ' ', 'a', ' ', '=', ' ', '1', ';' ]
         expect(tokens[0].scopes).toEqual ['source.qsharp', 'keyword.binding.let.qsharp']
-        expect(tokens[2].scopes).toEqual ['source.qsharp', 'entity.name.variable.local.qsharp']
+        expect(tokens[2].scopes).toEqual ['source.qsharp', 'variable.other.qsharp']
         expect(tokens[4].scopes).toEqual ['source.qsharp', 'keyword.operator.assignment.qsharp']
+        expect(tokens[7].scopes).toEqual ['source.qsharp', 'punctuation.terminator.statement.qsharp']
 
-      # FIXME: Not yet recognized as 'let'
       it 'supports tuple-deconstruction assignment', ->
         {tokens} = grammar.tokenizeLine 'let (a, (b, c)) = (1, (2, 3));'
         values = (token.value for token in tokens)
 
-        expect(values).toEqual [ 'let ', '(', 'a', ',', ' ', '(', 'b', ',', ' ', 'c', ')', ')', ' = ', '(', '1', ',', ' ', '(', '2', ',', ' ', '3', ')', ')', ';' ]
+        expect(values).toEqual [ 'let', ' ', '(', 'a', ',', ' ', '(', 'b', ',', ' ', 'c', ')', ')', ' ', '=', ' ', '(', '1', ',', ' ', '(', '2', ',', ' ', '3', ')', ')', ';' ]
         expect(tokens[0].scopes).toEqual ['source.qsharp', 'keyword.binding.let.qsharp']
 
     describe 'mutable-statement', ->
@@ -615,10 +642,38 @@ describe 'Q# grammar', ->
       expect(tokens[13].scopes).toEqual ['source.qsharp', 'punctuation.squarebracket.close.qsharp']
 
   describe 'arrays', ->
-    # TODO: literal syntax let ary = [1;2;3];
-    # TODO: concatentation let ary = [1;2;3] + [4;5;6];
-    # TODO: range let ary = a[1..3];
-    # TODO: indexing let first = a[0];
+    it 'tokenizes array literals', ->
+      {tokens} = grammar.tokenizeLine 'let ary = [1;2;3];'
+      values = (token.value for token in tokens)
+
+      expect(values).toEqual ['let', ' ', 'ary', ' ', '=', ' ', '[', '1', ';', '2', ';', '3', ']', ';']
+      expect(tokens[6].scopes).toEqual ['source.qsharp', 'punctuation.squarebracket.open.qsharp']
+      expect(tokens[7].scopes).toEqual ['source.qsharp', 'constant.numeric.decimal.qsharp']
+      expect(tokens[8].scopes).toEqual ['source.qsharp', 'punctuation.separator.semicolon.qsharp']
+      expect(tokens[12].scopes).toEqual ['source.qsharp', 'punctuation.squarebracket.close.qsharp']
+
+    it 'tokenizes array concatentation', ->
+      {tokens} = grammar.tokenizeLine 'let ary = [1;2;3] + [4;5;6];'
+      values = (token.value for token in tokens)
+
+      expect(values).toEqual ['let', ' ', 'ary', ' ', '=', ' ', '[', '1', ';', '2', ';', '3', ']', ' ', '+', ' ', '[', '4', ';', '5', ';', '6', ']', ';']
+      expect(tokens[14].scopes).toEqual ['source.qsharp', 'keyword.operator.arithmetic.qsharp']
+
+    it 'tokenizes array slicing', ->
+      {tokens} = grammar.tokenizeLine 'let ary = a[1..3];'
+      values = (token.value for token in tokens)
+
+      expect(values).toEqual ['let', ' ', 'ary', ' ', '=', ' ', 'a', '[', '1', '..', '3', ']', ';']
+      expect(tokens[6].scopes).toEqual ['source.qsharp', 'variable.other.qsharp']
+      expect(tokens[9].scopes).toEqual ['source.qsharp', 'punctuation.definition.range.qsharp']
+
+    it 'tokenizes array indexing', ->
+      {tokens} = grammar.tokenizeLine 'let first = a[0];'
+      values = (token.value for token in tokens)
+
+      expect(values).toEqual ['let', ' ', 'first', ' ', '=', ' ', 'a', '[', '0', ']', ';']
+      expect(tokens[6].scopes).toEqual ['source.qsharp', 'variable.other.qsharp']
+      expect(tokens[8].scopes).toEqual ['source.qsharp', 'constant.numeric.decimal.qsharp']
 
   describe 'primitive-type', ->
     [
@@ -728,10 +783,10 @@ describe 'Q# grammar', ->
         expect(tokens[6].scopes).toEqual ['source.qsharp', 'constant.numeric.decimal.qsharp']
 
       it 'tokenizes bare floats with exponents', ->
-        {tokens} = grammar.tokenizeLine 'let _5Million = 5.0e6;'
+        {tokens} = grammar.tokenizeLine 'let fiveMillion = 5.0e6;'
         values = (token.value for token in tokens)
 
-        expect(values).toEqual ['let', ' ', '_5Million', ' ', '=', ' ', '5.0e6', ';']
+        expect(values).toEqual ['let', ' ', 'fiveMillion', ' ', '=', ' ', '5.0e6', ';']
         expect(tokens[6].scopes).toEqual ['source.qsharp', 'constant.numeric.decimal.qsharp']
 
       it 'tokenizes hexadecimal numbers', ->
@@ -811,7 +866,7 @@ describe 'Q# grammar', ->
       values = (token.value for token in tokens)
 
       expect(values).toEqual ['let', ' ', 'foo', ' ', '=', ' ', '1', ';']
-      expect(tokens[2].scopes).toEqual ['source.qsharp', 'entity.name.variable.local.qsharp']
+      expect(tokens[2].scopes).toEqual ['source.qsharp', 'variable.other.qsharp']
       expect(tokens[4].scopes).toEqual ['source.qsharp', 'keyword.operator.assignment.qsharp']
 
     describe 'arithmetic-operators', ->

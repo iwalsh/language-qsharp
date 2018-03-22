@@ -7,7 +7,6 @@
   { "include": "#namespace-declaration" },
   { "include": "#comment" },
   { "include": "#punctuation-semicolon" },
-  { "include": "#literal" },  # TODO: shouldn't be at top-level
   { "include": "#reserved-csharp-keywords" },  # REVIEW: Is top-level correct?
 
   # N.B. Q# does not actually allow statements at the top level of a program,
@@ -284,6 +283,7 @@
       { "include": "#parenthesized-expression" },
       { "include": "#punctuation-range"},  # REVIEW: is this the right home?
       { "include": "#array-creation-expression" },
+      { "include": "#array-literal-elements" },
       { "include": "#primitive-type" },  # REVIEW: is this the right spot?
       { "include": "#library-function" },  # REVIEW: is this the right spot?
       { "include": "#callable" },
@@ -405,9 +405,8 @@
     "beginCaptures": {
       "1": { "name": "keyword.control.loop.until.qsharp" }
     },
-    "end": "(?<!\\.)\\b(fixup)\\b\\s*",  # TODO: what about the fixup block?
+    "end": "(?<!\\.)\\b(fixup)\\b\\s*",
     "endCaptures": {
-      # TODO: Should `fixup` be captured in its own statement, "begin"?
       "1": { "name": "keyword.control.loop.fixup.qsharp" }
     }
     "patterns": [
@@ -425,21 +424,17 @@
     ]
   },
   "let-statement": {
-    # FIXME: Needs to allow tuple-deconstruction assignment
-    "begin": "\\b(let)\\b\\s*\\b([_[:alpha:]][_[:alnum:]]*)\\b\\s*(\\=)\\s*",
+    "begin": "\\b(let)\\b",
     "beginCaptures": {
       "1": { "name": "keyword.binding.let.qsharp" },
-      # TODO: Should this be "variable.other.readonly.qsharp"?
-      "2": { "name": "entity.name.variable.local.qsharp" },
-      "3": { "name": "keyword.operator.assignment.qsharp" }
     },
-    "end": "(?=;|\\))",
-    # TODO: Need endCaptures for the semicolon?
+    "end": "(?=;)",
     "patterns": [
       { "include": "#expression" }
     ]
   },
   "mutable-statement": {
+    # TODO: does this need to support tuple-deconstruction assignment, like let?
     "begin": "\\b(mutable)\\b\\s*\\b([_[:alpha:]][_[:alnum:]]*)\\b\\s*(\\=)\\s*",
     "beginCaptures": {
       "1": { "name": "keyword.binding.mutable.qsharp" },
@@ -447,8 +442,7 @@
       "2": { "name": "entity.name.variable.local.qsharp" },
       "3": { "name": "keyword.operator.assignment.qsharp" }
     },
-    "end": "(?=;|\\))",
-    # TODO: Need endCaptures for the semicolon?
+    "end": "(?=;)",
     "patterns": [
       { "include": "#expression" }
     ]
@@ -461,8 +455,7 @@
       "2": { "name": "entity.name.variable.local.qsharp" },
       "3": { "name": "keyword.operator.assignment.qsharp" }
     },
-    "end": "(?=;|\\))",
-    # TODO: Need endCaptures for the semicolon?
+    "end": "(?=;)",
     "patterns": [
       { "include": "#expression" }
     ]
@@ -530,7 +523,6 @@
     "beginCaptures": {
       "1": { "name": "keyword.other.new.qsharp" }
       "2": { "name": "entity.name.type.qsharp" }
-      # TODO: allow whitespace before "[" ??
       "3": { "name": "punctuation.squarebracket.open.qsharp" }
     },
     "end": "\\]",
@@ -541,7 +533,6 @@
       { "include": "#expression" }
     ]
   },
-  # TODO: this should be used for array-literals
   "array-literal-elements": {
     "begin": "\\[",
     "beginCaptures": {
@@ -552,11 +543,11 @@
       "0": { "name": "punctuation.squarebracket.close.qsharp" }
     },
     "patterns": [
-      { "include": "#expression" },
       {
         "name": "punctuation.separator.semicolon.qsharp",
         "match": ";"
-      }
+      },
+      { "include": "#expression" },
     ]
   },
   "primitive-type": {
