@@ -21,7 +21,6 @@ describe 'Q# grammar', ->
       expect(tokens[0].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
       expect(tokens[2].scopes).toEqual ['source.qsharp', 'entity.name.namespace.qsharp']
 
-    # FIXME: What's with the empty string token at the end of the line?
     it 'tokenizes namespace bodies that span multiple lines', ->
       program = '''
                 namespace Hello.QSharp {
@@ -30,7 +29,7 @@ describe 'Q# grammar', ->
                 '''
       tokens = grammar.tokenizeLines(program)
       values = (token.value for token in tokens[0])
-      expect(values).toEqual ['namespace', ' ', 'Hello.QSharp', ' ', '{', '']
+      expect(values).toEqual ['namespace', ' ', 'Hello.QSharp', ' ', '{']
       expect(tokens[0][0].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
       expect(tokens[0][2].scopes).toEqual ['source.qsharp', 'entity.name.namespace.qsharp']
 
@@ -44,7 +43,7 @@ describe 'Q# grammar', ->
       tokens = grammar.tokenizeLines program
       values = (token.value for token in tokens[1])
 
-      expect(values).toEqual ['  ', 'open', ' ', 'Microsoft.Quantum.Canon', ';', '']
+      expect(values).toEqual ['  ', 'open', ' ', 'Microsoft.Quantum.Canon', ';']
       expect(tokens[1][1].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
       expect(tokens[1][3].scopes).toEqual ['source.qsharp', 'entity.name.namespace.qsharp']
 
@@ -57,7 +56,7 @@ describe 'Q# grammar', ->
       tokens = grammar.tokenizeLines program
       values = (token.value for token in tokens[0])
 
-      expect(values).toEqual ['namespace', ' ', 'Hello.QSharp', ' ', '{', '']
+      expect(values).toEqual ['namespace', ' ', 'Hello.QSharp', ' ', '{']
       expect(tokens[0][0].scopes).toEqual ['source.qsharp', 'keyword.other.qsharp']
       expect(tokens[0][2].scopes).toEqual ['source.qsharp', 'entity.name.namespace.qsharp']
 
@@ -147,7 +146,7 @@ describe 'Q# grammar', ->
       tokens = grammar.tokenizeLines program
       values = (token.value for token in tokens[2])
 
-      expect(values).toEqual ['    ', 'set', ' ', 'foo', ' ', '=', ' ', 'bar', ';', '']
+      expect(values).toEqual ['    ', 'set', ' ', 'foo', ' ', '=', ' ', 'bar', ';']
       expect(tokens[2][1].scopes).toEqual ['source.qsharp', 'keyword.binding.set.qsharp']
 
   describe 'operation-definition', ->

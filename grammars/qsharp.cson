@@ -31,10 +31,6 @@
         "match": "\\}",
         "name": "punctuation.curlybrace.close.qsharp"
       },
-      {
-        "match": "\\s+",
-        "name": "punctation.whitespace.qsharp"
-      },
       { "include": "#open-directive" },
       { "include": "#function-definition" },
       { "include": "#newtype-directive" },
@@ -606,7 +602,7 @@
             "match": "\\b[A-Z][_[:alnum:]]*\\b"
           },
           {
-            "match": "\\s*\\b([_[a-z]][_[:alnum:]]*)\\b\\*",
+            "match": "\\b([_[a-z]][_[:alnum:]]*)\\b",
             "name": "variable.parameter.qsharp"
           }
         ]
