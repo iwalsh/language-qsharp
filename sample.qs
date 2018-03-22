@@ -14,8 +14,6 @@
 //   update the BNF grammar, note where it departs from the highlighting grammar
 //   consolidate operation patterns
 //   factor out common patterns for identifiers
-//
-//   Figure out how to make "block commenting" work via keyboard shortcut
 
 namespace Foo {
     /// # Summary
