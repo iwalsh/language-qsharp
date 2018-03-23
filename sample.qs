@@ -1,7 +1,6 @@
 // Still TODO
 //
 //  - Tuple-deconstruction "mutable" statements?
-//  - research numeric literal recognized suffixes
 
 // Nice-to-have, polishes:
 //   use "invalid.illegal" on lowercased types and function names
