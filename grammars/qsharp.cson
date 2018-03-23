@@ -315,9 +315,7 @@
       "1": { "name": "keyword.control.flow.return.qsharp" }
     },
     "end": "(?=;)"
-    # TODO: inner patterns
     "patterns": [
-      { "include": "#ref-modifier" },
       { "include": "#expression" }
     ]
   },
@@ -410,7 +408,7 @@
       "1": { "name": "keyword.control.loop.fixup.qsharp" }
     }
     "patterns": [
-      { "include": "#expression" } # TODO: enforce boolean expression?
+      { "include": "#expression" }
     ]
   },
   "fail-statement": {

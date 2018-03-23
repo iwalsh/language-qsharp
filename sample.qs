@@ -1,9 +1,11 @@
 // Nice-to-have, polishes:
 //   use "invalid.illegal" on lowercased types and function names
-//   move keywords higher in the heirarchy so they are highlighted sooner
+//   move keywords higher in the hierarchy so they are highlighted sooner
 //   update the BNF grammar, note where it departs from the highlighting grammar
 //   consolidate operation patterns
 //   factor out common patterns for identifiers
+//   audit variable capture rules & scopes. (is [_[:alpha:]][[:alnum:]]* always correct?)
+//   audit lookbehind/lookaheads, remove unnecessary ones
 
 namespace Foo {
     /// # Summary
