@@ -434,7 +434,6 @@
     ]
   },
   "mutable-statement": {
-    # TODO: does this need to support tuple-deconstruction assignment, like let?
     "begin": "\\b(mutable)\\b\\s*\\b([_[:alpha:]][_[:alnum:]]*)\\b\\s*(\\=)\\s*",
     "beginCaptures": {
       "1": { "name": "keyword.binding.mutable.qsharp" },

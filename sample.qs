@@ -1,7 +1,3 @@
-// Still TODO
-//
-//  - Tuple-deconstruction "mutable" statements?
-
 // Nice-to-have, polishes:
 //   use "invalid.illegal" on lowercased types and function names
 //   move keywords higher in the heirarchy so they are highlighted sooner
