@@ -117,8 +117,8 @@ describe 'Q# grammar', ->
 
       expect(values).toEqual ['namespace', ' ', 'Q', ' ', '{', ' ', 'newtype', ' ', 'T', ' ', '=', ' ', '(', 'Int', ' ', '=>', ' ', '(', ')', ':', ' ', 'Adjoint', ',', ' ', 'Controlled', ')', ';', ' ', '}']
       expect(tokens[19].scopes).toEqual ['source.qsharp', 'punctuation.separator.colon.qsharp']
-      expect(tokens[21].scopes).toEqual ['source.qsharp', 'entity.other.functor.qsharp']
-      expect(tokens[24].scopes).toEqual ['source.qsharp', 'entity.other.functor.qsharp']
+      expect(tokens[21].scopes).toEqual ['source.qsharp', 'support.other.functor.qsharp']
+      expect(tokens[24].scopes).toEqual ['source.qsharp', 'support.other.functor.qsharp']
 
   describe 'function-definition', ->
     it 'tokenizes the keyword, identifier, and types', ->
@@ -726,7 +726,7 @@ describe 'Q# grammar', ->
       values = (token.value for token in tokens)
 
       expect(values).toEqual ['{', ' ', '(', 'Adjoint', ' ', 'Foo', ')', '(', '1', ')', ';', ' ', '}']
-      expect(tokens[3].scopes).toEqual ['source.qsharp', 'entity.other.functor.qsharp']
+      expect(tokens[3].scopes).toEqual ['source.qsharp', 'support.other.functor.qsharp']
       expect(tokens[5].scopes).toEqual ['source.qsharp', 'entity.name.function.qsharp']
 
   describe 'callable invocations', ->

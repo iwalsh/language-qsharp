@@ -2,18 +2,28 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
 
 <program> ::= <namespace-declaration>
            |  <comment>
-           |  <statement>
-           |  <literal>
-           |  <puntuation-semicolon>
-           |  <reserved-csharp-literal>
+           |  <punctuation-semicolon>
+           |  <reserved-csharp-keywords>
 
-<namespace-declaration> ::= "namespace" `namespace` <namespace-body>
+<namespace-declaration> ::= "namespace" <ns-identifier> "{" <namespace-body> "}"
 
 <namespace-body> ::= <open-directive>* (<newtype-directive>|<function-definition>|<operation-definition>)*
 
-<open-directive> ::= "open" `namespace` ";"
+<open-directive> ::= "open" <ns-identifier> ";"
 
-<newtype-directive> ::= "newtype" `type name` "=" <type-definition>
+<newtype-directive> ::= "newtype" <type-identifier> "=" <type-definition>
+
+<function-definition> ::= "function" <fn-identifier> <function-signature> <block>
+
+<operation-definition> ::= "operation" <fn-identifier> <operation-signature> (<op-body>|<op-adjoint>|<op-controlled>|<op-controlled-adjoint>)+
+
+<op-body> ::= "body" <block>
+
+<op-adjoint> ::= "adjoint"|"self"|"auto" <block>
+
+<op-controlled> ::= "controlled"|"auto" (<parameter>)? <block>
+
+<op-controlled-adjoint> ::= "controlled|auto" (<parameter>)? <block>
 
 <statement> ::= <comment>
              |  <return-statement>
@@ -115,3 +125,14 @@ This grammar is my own best effort at modeling the Q# language - it is NOT offic
 <reserved-csharp-keyword.s-v> ::= static|string|struct|switch|this|throw|try
                                |  typeof|unit|ulong|unchecked|unsafe|ushort
                                |  virtual|void|volatile
+
+
+Still TODO for BNF:
+  <namespace-identifier>
+  <type-identifier>
+  <fn-identifier>
+  <function-signature>
+  <operation-signature>
+  <type-definition>
+  <comment>
+  <documentation-comment>

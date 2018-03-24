@@ -7,7 +7,7 @@
   { "include": "#namespace-declaration" },
   { "include": "#comment" },
   { "include": "#punctuation-semicolon" },
-  { "include": "#reserved-csharp-keywords" },  # REVIEW: Is top-level correct?
+  { "include": "#reserved-csharp-keywords" },
 
   # N.B. Q# does not actually allow statements at the top level of a program,
   # but it is very convenient for testing that our grammar does.
@@ -34,7 +34,10 @@
       { "include": "#function-definition" },
       { "include": "#newtype-directive" },
       { "include": "#operation-definition" },
-      { "include": "#statement" }  # TODO: Remove. Useful for testing, though
+
+      # N.B. Q# does not allow bare statements at the top level of a namespace
+      # declaration, but it is convenient for tokenizing.
+      { "include": "#statement" }
     ]
   },
   "open-directive": {
@@ -70,7 +73,7 @@
     "begin": "(?<!\\.)\\b(operation)\\b\\s+([A-Z][_[:alnum:]]*)\\s*(?=\\()",
     "beginCaptures": {
       "1": { "name": "keyword.other.qsharp" },
-      "2": { "name": "entity.name.function.qsharp" }  # REVIEW: This seems "close enough".
+      "2": { "name": "entity.name.function.qsharp" }
     },
     "end": "(?<=\\})",
     "patterns": [
@@ -208,8 +211,7 @@
     "patterns": [
       {
         "match": "Adjoint|Controlled",
-        # REVIEW: correct scope? Maybe support.something?
-        "name": "entity.other.functor.qsharp"
+        "name": "support.other.functor.qsharp"
       }
     ]
   },
