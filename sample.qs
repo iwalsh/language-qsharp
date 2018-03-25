@@ -1,3 +1,9 @@
+// This file contains some examples of Q# language constructs.
+// I've used it to test the syntax highlighting while developing,
+// and also maintain a TODO list of unfinished tasks.
+// It's not a real Q# program and doesn't even compile -
+// it's for experimentation only.
+
 // Nice-to-have, polishes:
 //   use "invalid.illegal" on lowercased types and function names
 //   move keywords higher in the hierarchy so they are highlighted sooner
